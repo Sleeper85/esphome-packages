@@ -1,0 +1,87 @@
+# Updated : 2025.05.22
+# Version : 1.1.1
+# GitHub  : https://github.com/Sleeper85/esphome-packages
+
+# This YAML is free software: you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation, either version 3
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/gpl.html>.
+
+# +--------------------------------------+
+# |              Switch                  |
+# +--------------------------------------+
+switch:
+
+  - platform: modbus_controller            # 28 Low Power mode
+    use_write_multiple: true
+    modbus_controller_id: ${inverter_name}_modbus_controller
+    name: ${name} ${inverter_name} low power mode
+    id: ${inverter_name}_low_power_mode
+    register_type: holding
+    address: 28
+    bitmask: 0x04
+    icon: mdi:toggle-switch
+    entity_category: config
+
+  - platform: modbus_controller            # 28 MPPT Multi-Point Scanning
+    use_write_multiple: true
+    modbus_controller_id: ${inverter_name}_modbus_controller
+    name: ${name} ${inverter_name} mppt multipoint scanning
+    id: ${inverter_name}_mppt_multipoint_scanning
+    register_type: holding
+    address: 28
+    bitmask: 0x20
+    icon: mdi:toggle-switch
+    entity_category: config
+
+  - platform: modbus_controller            # 34 Low Noise mode
+    use_write_multiple: true
+    modbus_controller_id: ${inverter_name}_modbus_controller
+    name: ${name} ${inverter_name} low noise mode
+    id: ${inverter_name}_low_noise_mode
+    register_type: holding
+    address: 34
+    bitmask: 0x01
+    icon: mdi:toggle-switch
+    entity_category: config
+
+  - platform: modbus_controller            # 247 Solar Sell
+    use_write_multiple: true
+    modbus_controller_id: ${inverter_name}_modbus_controller
+    name: ${name} ${inverter_name} solar sell
+    id: ${inverter_name}_solar_sell
+    register_type: holding
+    address: 247
+    bitmask: 0x01
+    icon: mdi:toggle-switch
+    entity_category: config
+
+  - platform: modbus_controller            # 248 Time Of Use
+    use_write_multiple: true
+    modbus_controller_id: ${inverter_name}_modbus_controller
+    name: ${name} ${inverter_name} time of use
+    id: ${inverter_name}_time_of_use
+    register_type: holding
+    address: 248
+    bitmask: 0x01
+    icon: mdi:toggle-switch
+    entity_category: config
+
+  - platform: modbus_controller            # 326 Force Generator
+    use_write_multiple: true
+    modbus_controller_id: ${inverter_name}_modbus_controller
+    name: ${name} ${inverter_name} force generator
+    id: ${inverter_name}_force_generator
+    register_type: holding
+    address: 326
+    bitmask: 0x2000 # 2^13=8192 to target bit 13
+    icon: mdi:toggle-switch
+    entity_category: config

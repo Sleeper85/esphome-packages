@@ -1,0 +1,215 @@
+# Updated : 2025.05.22
+# Version : 1.1.1
+# GitHub  : https://github.com/Sleeper85/esphome-packages
+
+# This YAML is free software: you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation, either version 3
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/gpl.html>.
+
+# +--------------------------------------+
+# |              Number                  |
+# +--------------------------------------+
+number:
+
+  - platform: template                     # 201 Battery Equalization Voltage
+    name: ${name} ${inverter_name} battery equalization voltage
+    id: ${inverter_name}_battery_equalization_voltage_number
+    unit_of_measurement: 'V'
+    optimistic: true
+    icon: mdi:sine-wave
+    min_value: 50.00
+    max_value: 61.00
+    step: 0.1
+    initial_value: ${inverter_equalization_voltage}
+    restore_value: true
+    mode: ${inverter_input_number_mode}
+    entity_category: config
+    on_value:
+      then:
+        - lambda: |-
+            esphome::modbus_controller::ModbusController *controller = id(${inverter_name}_modbus_controller);
+            std::vector<uint16_t> battery_settings(1);
+            battery_settings[0]  = uint16_t(  (id(${inverter_name}_battery_equalization_voltage_number).state)*100 );
+            esphome::modbus_controller::ModbusCommandItem battery_command = esphome::modbus_controller::ModbusCommandItem::create_write_multiple_command(controller, 201, battery_settings.size(), battery_settings);
+            delay(200);
+            controller->queue_command(battery_command);
+            delay(200);
+
+  - platform: template                     # 202 Battery Absorption Voltage
+    name: ${name} ${inverter_name} battery absorption voltage
+    id: ${inverter_name}_battery_absorption_voltage_number
+    unit_of_measurement: 'V'
+    optimistic: true
+    icon: mdi:sine-wave
+    min_value: 50.00
+    max_value: 61.00
+    step: 0.1
+    initial_value: ${inverter_absorption_voltage}
+    restore_value: true
+    mode: ${inverter_input_number_mode}
+    entity_category: config
+    on_value:
+      then:
+        - lambda: |-
+            esphome::modbus_controller::ModbusController *controller = id(${inverter_name}_modbus_controller);
+            std::vector<uint16_t> battery_settings(1);
+            battery_settings[0]  = uint16_t(  (id(${inverter_name}_battery_absorption_voltage_number).state)*100 );
+            esphome::modbus_controller::ModbusCommandItem battery_command = esphome::modbus_controller::ModbusCommandItem::create_write_multiple_command(controller, 202, battery_settings.size(), battery_settings);
+            delay(200);
+            controller->queue_command(battery_command);
+            delay(200);
+
+  - platform: template                     # 203 Battery Float Voltage
+    name: ${name} ${inverter_name} battery float voltage
+    id: ${inverter_name}_battery_float_voltage_number
+    unit_of_measurement: 'V'
+    optimistic: true
+    icon: mdi:sine-wave
+    min_value: 50.00
+    max_value: 61.00
+    step: 0.1
+    initial_value: ${inverter_equalization_voltage}
+    restore_value: true
+    mode: ${inverter_input_number_mode}
+    entity_category: config
+    on_value:
+      then:
+        - lambda: |-
+            esphome::modbus_controller::ModbusController *controller = id(${inverter_name}_modbus_controller);
+            std::vector<uint16_t> battery_settings(1);
+            battery_settings[0]  = uint16_t(  (id(${inverter_name}_battery_float_voltage_number).state)*100 );
+            esphome::modbus_controller::ModbusCommandItem battery_command = esphome::modbus_controller::ModbusCommandItem::create_write_multiple_command(controller, 203, battery_settings.size(), battery_settings);
+            delay(200);
+            controller->queue_command(battery_command);
+            delay(200);
+
+  - platform: template                     # 220 Battery Shuntdown Voltage
+    name: ${name} ${inverter_name} battery shuntdown voltage
+    id: ${inverter_name}_battery_shuntdown_voltage_number
+    unit_of_measurement: 'V'
+    optimistic: true
+    icon: mdi:sine-wave
+    min_value: 40.00
+    max_value: 52.00
+    step: 0.1
+    initial_value: 48.00
+    restore_value: true
+    mode: ${inverter_input_number_mode}
+    entity_category: config
+    on_value:
+      then:
+        - lambda: |-
+            esphome::modbus_controller::ModbusController *controller = id(${inverter_name}_modbus_controller);
+            std::vector<uint16_t> battery_settings(1);
+            battery_settings[0]  = uint16_t(  (id(${inverter_name}_battery_shuntdown_voltage_number).state)*100 );
+            esphome::modbus_controller::ModbusCommandItem battery_command = esphome::modbus_controller::ModbusCommandItem::create_write_multiple_command(controller, 220, battery_settings.size(), battery_settings);
+            delay(200);
+            controller->queue_command(battery_command);
+            delay(200);
+
+  - platform: template                     # 222 Battery Low Voltage
+    name: ${name} ${inverter_name} battery low voltage
+    id: ${inverter_name}_battery_low_voltage_number
+    unit_of_measurement: 'V'
+    optimistic: true
+    icon: mdi:sine-wave
+    min_value: 40.00
+    max_value: 52.00
+    step: 0.1
+    initial_value: 50.00
+    restore_value: true
+    mode: ${inverter_input_number_mode}
+    entity_category: config
+    on_value:
+      then:
+        - lambda: |-
+            esphome::modbus_controller::ModbusController *controller = id(${inverter_name}_modbus_controller);
+            std::vector<uint16_t> battery_settings(1);
+            battery_settings[0]  = uint16_t(  (id(${inverter_name}_battery_low_voltage_number).state)*100 );
+            esphome::modbus_controller::ModbusCommandItem battery_command = esphome::modbus_controller::ModbusCommandItem::create_write_multiple_command(controller, 222, battery_settings.size(), battery_settings);
+            delay(200);
+            controller->queue_command(battery_command);
+            delay(200);
+
+  - platform: modbus_controller            # 210 Battery Max Charge Current
+    use_write_multiple: true
+    modbus_controller_id: ${inverter_name}_modbus_controller
+    name: ${name} ${inverter_name} battery max charge current
+    id: ${inverter_name}_battery_max_charge_current_number
+    unit_of_measurement: 'A'
+    icon: mdi:current-dc
+    address: 210
+    value_type: U_WORD
+    min_value: 5
+    max_value: 185
+    step: 5
+    mode: ${inverter_input_number_mode}
+    entity_category: config
+
+  - platform: modbus_controller            # 211 Battery Max Discharge Current
+    use_write_multiple: true
+    modbus_controller_id: ${inverter_name}_modbus_controller
+    name: ${name} ${inverter_name} battery max discharge current
+    id: ${inverter_name}_battery_max_discharge_current_number
+    unit_of_measurement: 'A'
+    icon: mdi:current-dc
+    address: 211
+    value_type: U_WORD
+    min_value: 0
+    max_value: 185
+    step: 5
+    mode: ${inverter_input_number_mode}
+    entity_category: config
+
+  - platform: modbus_controller            # 230 Grid Charge Battery current
+    use_write_multiple: true
+    modbus_controller_id: ${inverter_name}_modbus_controller
+    name: ${name} ${inverter_name} grid charge battery current
+    id: ${inverter_name}_grid_charge_battery_current_number
+    unit_of_measurement: 'A'
+    icon: mdi:current-dc
+    address: 230
+    value_type: U_WORD
+    min_value: 0
+    max_value: 185
+    step: 5
+    mode: ${inverter_input_number_mode}
+    entity_category: config
+
+  - platform: modbus_controller            # 245 Max Sell Power
+    use_write_multiple: true
+    modbus_controller_id: ${inverter_name}_modbus_controller
+    name: ${name} ${inverter_name} max sell power
+    id: ${inverter_name}_max_sell_power_number
+    address: 245
+    value_type: U_WORD
+    unit_of_measurement: 'W'
+    min_value: 0
+    max_value: 8000
+    step: 500
+    mode: ${inverter_input_number_mode}
+    entity_category: config
+
+  - platform: modbus_controller            # 293 Grid Peak Shaving Power
+    use_write_multiple: true
+    modbus_controller_id: ${inverter_name}_modbus_controller
+    name: ${name} ${inverter_name} grid peak shaving power
+    id: ${inverter_name}_grid_peak_shaving_power_number
+    address: 293
+    value_type: U_WORD
+    unit_of_measurement: 'W'
+    icon: mdi:power
+    min_value: 0
+    max_value: 8000
+    step: 500
+    mode: ${inverter_input_number_mode}
+    entity_category: config

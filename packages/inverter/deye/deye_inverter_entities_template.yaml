@@ -1,0 +1,204 @@
+# Updated : 2025.05.22
+# Version : 1.1.1
+# GitHub  : https://github.com/Sleeper85/esphome-packages
+
+# This YAML is free software: you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation, either version 3
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/gpl.html>.
+
+globals:
+  - id: ${inverter_name}_pv_energy_total_yesterday_global
+    type: float
+    restore_value: yes
+  - id: ${inverter_name}_ac_output_energy_yesterday_global
+    type: float
+    restore_value: yes
+  - id: ${inverter_name}_battery_charging_energy_yesterday_global
+    type: float
+    restore_value: yes
+  - id: ${inverter_name}_battery_discharging_energy_yesterday_global
+    type: float
+    restore_value: yes
+
+time:
+  - platform: homeassistant #sntp
+    id: !extend my_time
+    on_time:
+      - seconds: 59
+        minutes: 59
+        hours: 23
+        then:
+          - globals.set:
+              id: ${inverter_name}_pv_energy_total_yesterday_global
+              value: !lambda return ( id(${inverter_name}_pv_energy_total_yesterday_global) =  float( id(${inverter_name}_pv_energy_total_today).state) );
+          - globals.set:
+              id: ${inverter_name}_ac_output_energy_yesterday_global
+              value: !lambda return ( id(${inverter_name}_ac_output_energy_yesterday_global) =  float( id(${inverter_name}_ac_output_energy_today).state) );
+          - globals.set:
+              id: ${inverter_name}_battery_charging_energy_yesterday_global
+              value: !lambda return ( id(${inverter_name}_battery_charging_energy_yesterday_global) =  float( id(${inverter_name}_battery_charging_energy_today).state) );
+          - globals.set:
+              id: ${inverter_name}_battery_discharging_energy_yesterday_global
+              value: !lambda return ( id(${inverter_name}_battery_discharging_energy_yesterday_global) =  float( id(${inverter_name}_battery_discharging_energy_today).state) );
+
+sensor:
+
+  - platform: template
+    name: ${name} ${inverter_name} battery charging current
+    id: ${inverter_name}_battery_charging_current
+    unit_of_measurement: 'A'
+    accuracy_decimals: 2
+    icon: mdi:current-dc
+    device_class: current
+    state_class: measurement
+    update_interval: ${inverter_update_interval}
+    lambda: |-
+      if (id(${inverter_name}_battery_current).state >= 0)
+        return (id(${inverter_name}_battery_current).state);
+      else
+        return 0.0;
+
+  - platform: template
+    name: ${name} ${inverter_name} battery discharging current
+    id: ${inverter_name}_battery_discharging_current
+    unit_of_measurement: 'A'
+    accuracy_decimals: 2
+    icon: mdi:current-dc
+    device_class: current
+    state_class: measurement
+    update_interval: ${inverter_update_interval}
+    lambda: |-
+      if (id(${inverter_name}_battery_current).state < 0)
+        return ( - id(${inverter_name}_battery_current).state );
+      else
+        return 0.0;
+
+  - platform: template
+    name: ${name} ${inverter_name} battery charging power
+    id: ${inverter_name}_battery_charging_power
+    unit_of_measurement: 'W'
+    accuracy_decimals: 2
+    device_class: power
+    state_class: measurement
+    update_interval: ${inverter_update_interval}
+    lambda: return ( (id(${inverter_name}_battery_voltage).state) * (id(${inverter_name}_battery_charging_current).state) );
+
+  - platform: template
+    name: ${name} ${inverter_name} battery discharging power
+    id: ${inverter_name}_battery_discharging_power
+    unit_of_measurement: 'W'
+    accuracy_decimals: 2
+    device_class: power
+    state_class: measurement
+    update_interval: ${inverter_update_interval}
+    lambda: return ( (id(${inverter_name}_battery_voltage).state) * (id(${inverter_name}_battery_discharging_current).state) );
+
+  # Sum of PV1 and PV2 to get total PV Power
+  - platform: template
+    name: ${name} ${inverter_name} pv power total
+    id: ${inverter_name}_pv_power_total
+    unit_of_measurement: 'W'
+    accuracy_decimals: 2
+    device_class: power
+    state_class: measurement
+    update_interval: ${inverter_update_interval}
+    lambda: return (id(${inverter_name}_pv1_power).state + id(${inverter_name}_pv2_power).state);
+
+  # +--------------------------------------+
+  # |           Yesterday Power            |
+  # +--------------------------------------+
+  - platform: template
+    name: ${name} ${inverter_name} battery charging energy yesterday
+    id: ${inverter_name}_battery_charging_energy_yesterday
+    unit_of_measurement: 'kWh'
+    accuracy_decimals: 1
+    device_class: energy
+    state_class: measurement
+    lambda: return id(${inverter_name}_battery_charging_energy_yesterday_global);
+
+  - platform: template
+    name: ${name} ${inverter_name} battery discharging energy yesterday
+    id: ${inverter_name}_battery_discharging_energy_yesterday
+    unit_of_measurement: 'kWh'
+    accuracy_decimals: 1
+    device_class: energy
+    state_class: measurement
+    lambda: return id(${inverter_name}_battery_discharging_energy_yesterday_global);
+
+  - platform: template
+    name: ${name} ${inverter_name} pv energy total yesterday
+    id: ${inverter_name}_pv_energy_total_yesterday
+    unit_of_measurement: 'kWh'
+    accuracy_decimals: 1
+    device_class: energy
+    state_class: measurement
+    lambda: return id(${inverter_name}_pv_energy_total_yesterday_global);
+
+  - platform: template
+    name: ${name} ${inverter_name} ac output energy yesterday
+    id: ${inverter_name}_ac_output_energy_yesterday
+    unit_of_measurement: 'kWh'
+    accuracy_decimals: 1
+    device_class: energy
+    state_class: measurement
+    update_interval: ${inverter_update_interval}
+    lambda: return id(${inverter_name}_ac_output_energy_yesterday_global);
+
+  # +---------------------------------------+
+  # |    Essential & Non-essential Power    |
+  # +---------------------------------------+
+  - platform: template           # Essential Power based on register 175 + 167(LD) - 166
+    name: ${name} ${inverter_name} essential power
+    unit_of_measurement: 'W'
+    accuracy_decimals: 2
+    device_class: power
+    state_class: measurement
+    update_interval: ${inverter_update_interval}
+    lambda: return (id(${inverter_name}_ac_output_power).state + id(${inverter_name}_grid_power_limiter_1).state - id(${inverter_name}_aux_output_power).state);
+
+  - platform: template           # Non-essential Power 172 - 167(LD)
+    name: ${name} ${inverter_name} non-essential power
+    unit_of_measurement: 'W'
+    accuracy_decimals: 2
+    device_class: power
+    state_class: measurement
+    update_interval: ${inverter_update_interval}
+    lambda: return (id(${inverter_name}_grid_external_power_total).state - id(${inverter_name}_grid_power_limiter_1).state);
+
+  # +--------------------------------------+
+  # |         Total Daily Energy           |
+  # +--------------------------------------+
+  - platform: total_daily_energy
+    name: ${name} ${inverter_name} pv energy total today
+    id: ${inverter_name}_pv_energy_total_today
+    power_id: ${inverter_name}_pv_power_total
+    unit_of_measurement: 'kWh'
+    accuracy_decimals: 1
+    device_class: energy
+    state_class: measurement
+    method: trapezoid
+    filters:
+       # Multiplication factor from W to kW is 0.001
+       - multiply: 0.001
+
+  - platform: total_daily_energy
+    name: ${name} ${inverter_name} ac output energy today
+    id: ${inverter_name}_ac_output_energy_today
+    power_id: ${inverter_name}_ac_output_power
+    unit_of_measurement: 'kWh'
+    accuracy_decimals: 1
+    device_class: energy
+    state_class: measurement
+    method: trapezoid
+    filters:
+       # Multiplication factor from W to kW is 0.001
+       - multiply: 0.001
