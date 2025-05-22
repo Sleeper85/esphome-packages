@@ -1,5 +1,5 @@
 # Updated : 2025.05.22
-# Version : 1.1.1
+# Version : 1.1.2
 # GitHub  : https://github.com/Sleeper85/esphome-packages
 
 # This YAML is free software: you can redistribute it and/or
@@ -27,7 +27,7 @@
 #     dns2: 8.8.4.4
 
 logger:
-  level: INFO # VERBOSE / DEBUG / INFO / WARN
+  level: DEBUG # VERBOSE / DEBUG / INFO / WARN
 
 ota:
   platform: esphome
@@ -60,13 +60,12 @@ api:
 substitutions:
   # Name
   name: '' # Name that can be added as a second prefix after the friendly name, you can leave it blank.
-  hostname: 'deye-inverter' # This is the name of the node. It should always be unique in your ESPHome network.
+  hostname: 'deye-inverter' # This is the name of the ESP32 node. It should always be unique in your ESPHome network.
   friendly_name : 'Deye Inverter' # Prefix added in front of all entity names and also to classify them.
 
 # +--------------------------------------+
 # | Packages                             |
 # +--------------------------------------+
-
 packages:
 
   ############### >>> UNCOMMENT YOUR BOARD <<< ###############
@@ -116,12 +115,12 @@ packages:
       # ESP32_CAN (TJA105x, SN65HVD230, M5Stack CAN base/unit)
       # - path: 'packages/board/board_options_itf_canbus_esp32_can.yaml'
       #   vars:
-      #     canbus_node_id: 'canbus_1'
+      #     canbus_node_id: 'canbus_node_1'
       
       # MCP2515
       # - path: 'packages/board/board_options_itf_canbus_mcp2515.yaml'
       #   vars:
-      #     canbus_node_id: 'canbus_2'
+      #     canbus_node_id: 'canbus_node_2'
 
   ############################################################
 
@@ -130,7 +129,7 @@ packages:
     ref: main
     refresh: 0s
     files:
-      - path: 'packages\base\device_modbus.yaml'
+      - path: 'packages/base/device_modbus.yaml'
         vars:
           modbus_id: 'deye_modbus'
           modbus_role: 'client' # client / server
@@ -143,7 +142,7 @@ packages:
     ref: main
     refresh: 0s
     files:
-      - path: 'packages\inverter\deye\deye_inverter_standard.yaml'
+      - path: 'packages/inverter/deye/deye_inverter_standard.yaml'
         vars:
           inverter_name: 'deye'
           inverter_modbus_id: 'deye_modbus'
@@ -164,7 +163,7 @@ packages:
     ref: main
     refresh: 0s
     files:
-      - path: packages/base/device_debug_ESP32.yaml
+      - path: 'packages/base/device_debug_ESP32.yaml'
         vars:
           debug_name: 'Debug'
           debug_update_interval: '5s'
