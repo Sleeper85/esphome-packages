@@ -1,5 +1,5 @@
 # Updated : 2025.06.02
-# Version : 1.1.1
+# Version : 1.1.2
 # GitHub  : https://github.com/Sleeper85/esphome-packages
 
 # This YAML is free software: you can redistribute it and/or
@@ -21,7 +21,7 @@
 binary_sensor:
   #A1 | Over temperature inside the device
   - platform: modbus_controller
-    modbus_controller_id: modbus_controller_0
+    modbus_controller_id: ${scc_name}_modbus_controller
     name: "${scc_name} Over Temperature Device"
     entity_category: diagnostic
     device_class: problem
@@ -272,7 +272,7 @@ sensor:
   # PV parameters
   #A3
   - platform: modbus_controller
-    modbus_controller_id: modbus_controller_0
+    modbus_controller_id: ${scc_name}_modbus_controller
     name: "${scc_name} PV Input Voltage"
     address: 0x3100
     value_type: U_WORD
@@ -286,7 +286,7 @@ sensor:
     
   #A4
   - platform: modbus_controller
-    modbus_controller_id: modbus_controller_0
+    modbus_controller_id: ${scc_name}_modbus_controller
     name: "${scc_name} PV Input Current"
     address: 0x3101
     value_type: U_WORD
@@ -300,7 +300,7 @@ sensor:
   
   #A5 + A6
   - platform: modbus_controller
-    modbus_controller_id: modbus_controller_0
+    modbus_controller_id: ${scc_name}_modbus_controller
     id: "pv_input_power"
     name: "${scc_name} PV Input Power"
     address: 0x3102
@@ -315,7 +315,7 @@ sensor:
 
   #A11
   - platform: modbus_controller
-    modbus_controller_id: modbus_controller_0
+    modbus_controller_id: ${scc_name}_modbus_controller
     name: "${scc_name} Battery Temperature"
     address: 0x3110
     value_type: S_WORD
@@ -330,7 +330,7 @@ sensor:
 
   #A12
   - platform: modbus_controller
-    modbus_controller_id: modbus_controller_0
+    modbus_controller_id: ${scc_name}_modbus_controller
     name: "${scc_name} Device Temperature"
     address: 0x3111
     value_type: S_WORD
@@ -345,7 +345,7 @@ sensor:
 
   #A13
   - platform: modbus_controller
-    modbus_controller_id: modbus_controller_0
+    modbus_controller_id: ${scc_name}_modbus_controller
     name: "${scc_name} Battery Remaining Capacity"
     address: 0x311A
     value_type: U_WORD
@@ -358,7 +358,7 @@ sensor:
 
   #A14
   - platform: modbus_controller
-    modbus_controller_id: modbus_controller_0
+    modbus_controller_id: ${scc_name}_modbus_controller
     name: "${scc_name} Battery Rated System Voltage"
     address: 0x311D
     value_type: U_WORD
@@ -373,7 +373,7 @@ sensor:
 
   #A15
   - platform: modbus_controller
-    modbus_controller_id: modbus_controller_0
+    modbus_controller_id: ${scc_name}_modbus_controller
     id: "battery_status_raw_value"
     internal: true
     address: 0x3200
@@ -383,7 +383,7 @@ sensor:
     
   #A16
   - platform: modbus_controller
-    modbus_controller_id: modbus_controller_0
+    modbus_controller_id: ${scc_name}_modbus_controller
     id: "battery_charging_equipment_status_raw_value"
     internal: true
     address: 0x3201
@@ -393,7 +393,7 @@ sensor:
 
   #A28 + A29
   - platform: modbus_controller
-    modbus_controller_id: modbus_controller_0
+    modbus_controller_id: ${scc_name}_modbus_controller
     name: "${scc_name} PV Generated Energy Day"
     force_new_range: true
     address: 0x330C
@@ -409,7 +409,7 @@ sensor:
 
   #A30 + A31
   - platform: modbus_controller
-    modbus_controller_id: modbus_controller_0
+    modbus_controller_id: ${scc_name}_modbus_controller
     name: "${scc_name} PV Generated Energy Month"
     address: 0x330E
     value_type: U_DWORD_R
@@ -424,7 +424,7 @@ sensor:
 
   #A32 + A33
   - platform: modbus_controller
-    modbus_controller_id: modbus_controller_0
+    modbus_controller_id: ${scc_name}_modbus_controller
     name: "${scc_name} PV Generated Energy Year"
     address: 0x3310
     value_type: U_DWORD_R
@@ -439,7 +439,7 @@ sensor:
 
   #A34 + A35
   - platform: modbus_controller
-    modbus_controller_id: modbus_controller_0
+    modbus_controller_id: ${scc_name}_modbus_controller
     name: "${scc_name} PV Generated Energy Total"
     address: 0x3312
     value_type: U_DWORD_R
@@ -455,7 +455,7 @@ sensor:
   # Battery parameters
   #A36
   - platform: modbus_controller
-    modbus_controller_id: modbus_controller_0
+    modbus_controller_id: ${scc_name}_modbus_controller
     id: "battery_voltage_sensor"
     name: "${scc_name} Battery Voltage"
     address: 0x331A
@@ -470,7 +470,7 @@ sensor:
 
   #A37 + A38
   - platform: modbus_controller
-    modbus_controller_id: modbus_controller_0
+    modbus_controller_id: ${scc_name}_modbus_controller
     id: "battery_current_sensor"
     name: "${scc_name} Battery Current"
     address: 0x331B
@@ -498,7 +498,7 @@ sensor:
 
   #B6
   - platform: modbus_controller
-    modbus_controller_id: modbus_controller_0
+    modbus_controller_id: ${scc_name}_modbus_controller
     name: "${scc_name} Temperature Compensation Coefficient"
     entity_category: diagnostic
     address: 0x9002
@@ -514,7 +514,7 @@ sensor:
   
   #B7
   - platform: modbus_controller
-    modbus_controller_id: modbus_controller_0
+    modbus_controller_id: ${scc_name}_modbus_controller
     name: "${scc_name} Overvoltage Disconnect Voltage"
     entity_category: diagnostic
     address: 0x9003
@@ -530,7 +530,7 @@ sensor:
   
   #B8
   - platform: modbus_controller
-    modbus_controller_id: modbus_controller_0
+    modbus_controller_id: ${scc_name}_modbus_controller
     name: "${scc_name} Charging Limit Voltage"
     entity_category: diagnostic
     address: 0x9004
@@ -546,7 +546,7 @@ sensor:
   
   #B9
   - platform: modbus_controller
-    modbus_controller_id: modbus_controller_0
+    modbus_controller_id: ${scc_name}_modbus_controller
     name: "${scc_name} Overvoltage Reconnect Voltage"
     entity_category: diagnostic
     address: 0x9005
@@ -562,7 +562,7 @@ sensor:
   
   #B11
   - platform: modbus_controller
-    modbus_controller_id: modbus_controller_0
+    modbus_controller_id: ${scc_name}_modbus_controller
     name: "${scc_name} Boost Charging Voltage"
     entity_category: diagnostic
     address: 0x9007
@@ -578,7 +578,7 @@ sensor:
   
   #B12
   - platform: modbus_controller
-    modbus_controller_id: modbus_controller_0
+    modbus_controller_id: ${scc_name}_modbus_controller
     name: "${scc_name} Float Charging Voltage"
     entity_category: diagnostic
     address: 0x9008
@@ -594,7 +594,7 @@ sensor:
   
   #B13
   - platform: modbus_controller
-    modbus_controller_id: modbus_controller_0
+    modbus_controller_id: ${scc_name}_modbus_controller
     name: "${scc_name} Boost Reconnect Charging Voltage"
     entity_category: diagnostic
     address: 0x9009
@@ -610,7 +610,7 @@ sensor:
   
   #B14
   - platform: modbus_controller
-    modbus_controller_id: modbus_controller_0
+    modbus_controller_id: ${scc_name}_modbus_controller
     name: "${scc_name} Low Voltage Reconnect Voltage"
     entity_category: diagnostic
     address: 0x900A
@@ -626,7 +626,7 @@ sensor:
   
   #B15
   - platform: modbus_controller
-    modbus_controller_id: modbus_controller_0
+    modbus_controller_id: ${scc_name}_modbus_controller
     name: "${scc_name} Undervoltage Alarm Recovery Voltage"
     entity_category: diagnostic
     address: 0x900B
@@ -642,7 +642,7 @@ sensor:
   
   #B16
   - platform: modbus_controller
-    modbus_controller_id: modbus_controller_0
+    modbus_controller_id: ${scc_name}_modbus_controller
     name: "${scc_name} Undervoltage Alarm Voltage"
     entity_category: diagnostic
     address: 0x900C
@@ -658,7 +658,7 @@ sensor:
   
   #B17
   - platform: modbus_controller
-    modbus_controller_id: modbus_controller_0
+    modbus_controller_id: ${scc_name}_modbus_controller
     name: "${scc_name} Low Voltage Disconnect Voltage"
     entity_category: diagnostic
     address: 0x900D
@@ -674,7 +674,7 @@ sensor:
   
   #B18
   - platform: modbus_controller
-    modbus_controller_id: modbus_controller_0
+    modbus_controller_id: ${scc_name}_modbus_controller
     name: "${scc_name} Discharging Limit Voltage"
     entity_category: diagnostic
     address: 0x900E

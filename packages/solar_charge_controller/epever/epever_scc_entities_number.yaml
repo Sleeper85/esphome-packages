@@ -1,5 +1,5 @@
 # Updated : 2025.06.02
-# Version : 1.1.1
+# Version : 1.1.2
 # GitHub  : https://github.com/Sleeper85/esphome-packages
 
 # This YAML is free software: you can redistribute it and/or
@@ -24,7 +24,7 @@ script:
   - id: write_0x9003_to_0x900E_registers
     then:
       - lambda: |-
-          esphome::modbus_controller::ModbusController *controller = id(${scc_modbus_id});
+          esphome::modbus_controller::ModbusController *controller = id(${scc_name}_modbus_controller);
           std::vector<uint16_t> battery_settings(12);
           battery_settings[0]  = uint16_t((id(overvoltage_disconnect_voltage_number).state)*100);
           battery_settings[1]  = uint16_t((id(charging_limit_voltage_number).state)*100);
@@ -48,6 +48,7 @@ script:
 # +--------------------------------------+
 number:
   - platform: modbus_controller
+    modbus_controller_id: ${scc_name}_modbus_controller
     id: battery_capacity_number
     name: ${scc_name} Battery Capacity Number
     address: 0x9001
@@ -60,6 +61,7 @@ number:
     mode: ${scc_input_number_mode}
 
   - platform: modbus_controller
+    modbus_controller_id: ${scc_name}_modbus_controller
     id: temperature_compensation_coefficient_number
     name: ${scc_name} Temperature Compensation Coefficient Number
     address: 0x9002
@@ -70,9 +72,10 @@ number:
     max_value: 0
     step:  1
     multiply: -100
-    mode: ${scc_input_number_mode}  
+    mode: ${scc_input_number_mode}
 
   - platform: modbus_controller
+    modbus_controller_id: ${scc_name}_modbus_controller
     id: equalization_duration_number
     name: ${scc_name} Equalization Charging Time Number
     address: 0x906B
@@ -85,6 +88,7 @@ number:
     mode: ${scc_input_number_mode}
 
   - platform: modbus_controller
+    modbus_controller_id: ${scc_name}_modbus_controller
     id: boost_duration_number
     name: ${scc_name} Boost Charging Time Number
     address: 0x906C
@@ -94,7 +98,7 @@ number:
     min_value: 10
     max_value: 180
     step:  10
-    mode: ${scc_input_number_mode}    
+    mode: ${scc_input_number_mode}
 
   # +--------------------------------------+
   # |             Template                 |
