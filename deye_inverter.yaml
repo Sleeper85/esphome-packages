@@ -144,7 +144,7 @@ packages:
     files:
       - path: 'packages/inverter/deye/deye_inverter_standard.yaml'
         vars:
-          inverter_name: 'Inverter 1'
+          inverter_name: 'Inverter_1' # Name without space
           inverter_modbus_id: 'deye_modbus'
           inverter_modbus_address: '1'
           inverter_modbus_throttle: '0ms'
