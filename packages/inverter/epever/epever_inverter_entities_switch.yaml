@@ -1,5 +1,5 @@
 # Updated : 2025.06.02
-# Version : 1.1.1
+# Version : 1.1.2
 # GitHub  : https://github.com/Sleeper85/esphome-packages
 
 # This YAML is free software: you can redistribute it and/or
@@ -20,7 +20,7 @@ switch:
   # | Inverter                             |
   # +--------------------------------------+
   - platform: modbus_controller
-    modbus_controller_id: modbus_controller_1
+    modbus_controller_id: ${inverter_name}_modbus_controller
     name: "${inverter_name} Control Local-Remote"
     entity_category: config
     address: 0x11
@@ -28,7 +28,7 @@ switch:
     bitmask: 0x01
 
   - platform: modbus_controller
-    modbus_controller_id: modbus_controller_1
+    modbus_controller_id: ${inverter_name}_modbus_controller
     name: "${inverter_name} Inverter OFF-ON"
     entity_category: config
     address: 0xF
@@ -36,7 +36,7 @@ switch:
     bitmask: 0x01
     
   - platform: modbus_controller
-    modbus_controller_id: modbus_controller_1
+    modbus_controller_id: ${inverter_name}_modbus_controller
     name: "${inverter_name} Power saving OFF-ON"
     entity_category: config
     address: 0x4

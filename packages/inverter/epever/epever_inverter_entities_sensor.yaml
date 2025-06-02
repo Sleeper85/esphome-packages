@@ -1,5 +1,5 @@
 # Updated : 2025.06.02
-# Version : 1.1.1
+# Version : 1.1.2
 # GitHub  : https://github.com/Sleeper85/esphome-packages
 
 # This YAML is free software: you can redistribute it and/or
@@ -34,7 +34,7 @@ sensor:
   # | Inverter                             |
   # +--------------------------------------+
   - platform: modbus_controller
-    modbus_controller_id: modbus_controller_1
+    modbus_controller_id: ${inverter_name}_modbus_controller
     name: "${inverter_name} Load Input Voltage"
     address: 0x3108
     value_type: U_WORD
@@ -47,7 +47,7 @@ sensor:
       - multiply: 0.01
     
   - platform: modbus_controller
-    modbus_controller_id: modbus_controller_1
+    modbus_controller_id: ${inverter_name}_modbus_controller
     name: "${inverter_name} Load Input Current"
     address: 0x3109
     value_type: U_WORD
@@ -60,7 +60,7 @@ sensor:
       - multiply: 0.01
     
   - platform: modbus_controller
-    modbus_controller_id: modbus_controller_1
+    modbus_controller_id: ${inverter_name}_modbus_controller
     name: "${inverter_name} Load Input Power"
     address: 0x310A
     value_type: U_DWORD_R
@@ -73,7 +73,7 @@ sensor:
       - multiply: 0.01
     
   - platform: modbus_controller
-    modbus_controller_id: modbus_controller_1
+    modbus_controller_id: ${inverter_name}_modbus_controller
     name: "${inverter_name} Load Output Voltage"
     address: 0x310C
     value_type: U_WORD
@@ -86,7 +86,7 @@ sensor:
       - multiply: 0.01
     
   - platform: modbus_controller
-    modbus_controller_id: modbus_controller_1
+    modbus_controller_id: ${inverter_name}_modbus_controller
     name: "${inverter_name} Load Output Current"
     address: 0x310D
     value_type: U_WORD
@@ -99,7 +99,7 @@ sensor:
       - multiply: 0.01
     
   - platform: modbus_controller
-    modbus_controller_id: modbus_controller_1
+    modbus_controller_id: ${inverter_name}_modbus_controller
     name: "${inverter_name} Load Output Power"
     id: "inverter_load_output_power"
     address: 0x310E
@@ -113,7 +113,7 @@ sensor:
       - multiply: 0.01
 
   - platform: modbus_controller
-    modbus_controller_id: modbus_controller_1
+    modbus_controller_id: ${inverter_name}_modbus_controller
     name: "${inverter_name} Device Temperature"
     address: 0x3111
     value_type: S_WORD
@@ -126,7 +126,7 @@ sensor:
       - multiply: 0.01
 
   - platform: modbus_controller
-    modbus_controller_id: modbus_controller_1
+    modbus_controller_id: ${inverter_name}_modbus_controller
     name: "${inverter_name} Heak Sink Temperature"
     address: 0x3112
     value_type: S_WORD
@@ -139,7 +139,7 @@ sensor:
       - multiply: 0.01
 
   - platform: modbus_controller
-    modbus_controller_id: modbus_controller_1
+    modbus_controller_id: ${inverter_name}_modbus_controller
     name: "${inverter_name} Load status"
     id: "load_status_raw_value"
     address: 0x3202
@@ -151,7 +151,7 @@ switch:
   # | Inverter                             |
   # +--------------------------------------+
   - platform: modbus_controller
-    modbus_controller_id: modbus_controller_1
+    modbus_controller_id: ${inverter_name}_modbus_controller
     name: "${inverter_name} Control Local-Remote"
     entity_category: config
     address: 0x11
@@ -159,7 +159,7 @@ switch:
     bitmask: 0x01
 
   - platform: modbus_controller
-    modbus_controller_id: modbus_controller_1
+    modbus_controller_id: ${inverter_name}_modbus_controller
     name: "${inverter_name} Inverter OFF-ON"
     entity_category: config
     address: 0xF
@@ -167,7 +167,7 @@ switch:
     bitmask: 0x01
     
   - platform: modbus_controller
-    modbus_controller_id: modbus_controller_1
+    modbus_controller_id: ${inverter_name}_modbus_controller
     name: "${inverter_name} Power saving OFF-ON"
     entity_category: config
     address: 0x4

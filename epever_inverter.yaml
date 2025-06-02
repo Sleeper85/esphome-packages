@@ -1,5 +1,5 @@
 # Updated : 2025.06.02
-# Version : 1.1.1
+# Version : 1.1.2
 # GitHub  : https://github.com/Sleeper85/esphome-packages
 
 # This YAML is free software: you can redistribute it and/or
@@ -59,6 +59,7 @@ api:
 # +--------------------------------------+
 substitutions:
   # Name
+  name: '' # Name that can be added as a second prefix after the friendly name, you can leave it blank.
   hostname: 'epever-node' # This is the name of the ESP32 node. It should always be unique in your ESPHome network.
   friendly_name : 'Epever' # Prefix added in front of all entity names and also to classify them.
 
@@ -143,7 +144,7 @@ packages:
     files:
       - path: 'packages/inverter/epever/epever_inverter_full.yaml'
         vars:
-          inverter_name: 'Inverter 1'
+          inverter_name: 'Inverter_1' # Name without space
           inverter_modbus_id: 'epever_modbus'
           inverter_modbus_address: '3' # Epever SHI 3000
           inverter_modbus_throttle: '0ms'
