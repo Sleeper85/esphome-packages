@@ -1,0 +1,44 @@
+# Updated : 2025.06.02
+# Version : 1.1.1
+# GitHub  : https://github.com/Sleeper85/esphome-packages
+
+# This YAML is free software: you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation, either version 3
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/gpl.html>.
+
+switch:
+  # +--------------------------------------+
+  # | Inverter                             |
+  # +--------------------------------------+
+  - platform: modbus_controller
+    modbus_controller_id: modbus_controller_1
+    name: "${inverter_name} Control Local-Remote"
+    entity_category: config
+    address: 0x11
+    register_type: coil
+    bitmask: 0x01
+
+  - platform: modbus_controller
+    modbus_controller_id: modbus_controller_1
+    name: "${inverter_name} Inverter OFF-ON"
+    entity_category: config
+    address: 0xF
+    register_type: coil
+    bitmask: 0x01
+    
+  - platform: modbus_controller
+    modbus_controller_id: modbus_controller_1
+    name: "${inverter_name} Power saving OFF-ON"
+    entity_category: config
+    address: 0x4
+    register_type: coil
+    bitmask: 0x01
