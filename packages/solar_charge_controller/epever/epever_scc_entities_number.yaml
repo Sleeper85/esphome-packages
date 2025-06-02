@@ -1,0 +1,316 @@
+# Updated : 2025.06.02
+# Version : 1.1.1
+# GitHub  : https://github.com/Sleeper85/esphome-packages
+
+# This YAML is free software: you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation, either version 3
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/gpl.html>.
+
+# +--------------------------------------+
+# |              Script                  |
+# +--------------------------------------+
+# It's necessary to modify the following registers '0x9003 to 0x900E' at the same time.
+
+script:
+  - id: write_0x9003_to_0x900E_registers
+    then:
+      - lambda: |-
+          esphome::modbus_controller::ModbusController *controller = id(${scc_modbus_id});
+          std::vector<uint16_t> battery_settings(12);
+          battery_settings[0]  = uint16_t((id(overvoltage_disconnect_voltage_number).state)*100);
+          battery_settings[1]  = uint16_t((id(charging_limit_voltage_number).state)*100);
+          battery_settings[2]  = uint16_t((id(overvoltage_reconnect_voltage_number).state)*100);
+          battery_settings[3]  = uint16_t((id(equalization_charging_voltage_number).state)*100);
+          battery_settings[4]  = uint16_t((id(boost_charging_voltage_number).state)*100);
+          battery_settings[5]  = uint16_t((id(float_charging_voltage_number).state)*100);
+          battery_settings[6]  = uint16_t((id(boost_reconnect_charging_voltage_number).state)*100);
+          battery_settings[7]  = uint16_t((id(low_voltage_reconnect_voltage_number).state)*100);
+          battery_settings[8]  = uint16_t((id(undervoltage_alarm_recovery_voltage_number).state)*100);
+          battery_settings[9]  = uint16_t((id(undervoltage_alarm_voltage_number).state)*100);
+          battery_settings[10] = uint16_t(id(low_voltage_disconnect_voltage_number).state*100);
+          battery_settings[11] = uint16_t(id(discharging_limit_voltage_number).state*100);
+          esphome::modbus_controller::ModbusCommandItem battery_command = esphome::modbus_controller::ModbusCommandItem::create_write_multiple_command(controller, 0x9003, battery_settings.size(), battery_settings);
+          delay(200);
+          controller->queue_command(battery_command);
+          delay(200);
+
+# +--------------------------------------+
+# |              Number                  |
+# +--------------------------------------+
+number:
+  - platform: modbus_controller
+    id: battery_capacity_number
+    name: ${scc_name} Battery Capacity Number
+    address: 0x9001
+    value_type: U_WORD
+    unit_of_measurement: 'Ah'
+    icon: mdi:car-battery
+    min_value: 50
+    max_value: 1000
+    step:  10
+    mode: ${scc_input_number_mode}
+
+  - platform: modbus_controller
+    id: temperature_compensation_coefficient_number
+    name: ${scc_name} Temperature Compensation Coefficient Number
+    address: 0x9002
+    value_type: U_WORD
+    unit_of_measurement: "mV/°C/2V"
+    icon: mdi:thermometer
+    min_value: -10
+    max_value: 0
+    step:  1
+    multiply: -100
+    mode: ${scc_input_number_mode}  
+
+  - platform: modbus_controller
+    id: equalization_duration_number
+    name: ${scc_name} Equalization Charging Time Number
+    address: 0x906B
+    value_type: U_WORD
+    unit_of_measurement: 'min'
+    icon: mdi:timer-sand
+    min_value: 0
+    max_value: 180
+    step:  10
+    mode: ${scc_input_number_mode}
+
+  - platform: modbus_controller
+    id: boost_duration_number
+    name: ${scc_name} Boost Charging Time Number
+    address: 0x906C
+    value_type: U_WORD
+    unit_of_measurement: 'min'
+    icon: mdi:timer-sand
+    min_value: 10
+    max_value: 180
+    step:  10
+    mode: ${scc_input_number_mode}    
+
+  # +--------------------------------------+
+  # |             Template                 |
+  # +--------------------------------------+
+  # 0x9003
+  - platform: template
+    id: overvoltage_disconnect_voltage_number
+    name: ${scc_name} Overvoltage Disconnect Voltage Number
+    unit_of_measurement: "V"
+    icon: mdi:sine-wave
+    entity_category: config
+    optimistic: true
+    min_value: 10.00
+    max_value: 60.00
+    step:  0.1
+    initial_value: ${scc_overvoltage_disconnect_voltage}
+    restore_value: true
+    mode: ${scc_input_number_mode}
+    on_value:
+      then:       
+        - script.execute: write_0x9003_to_0x900E_registers
+
+  # 0x9004
+  - platform: template
+    id: charging_limit_voltage_number
+    name: ${scc_name} Charging Limit Voltage Number
+    unit_of_measurement: "V"
+    icon: mdi:sine-wave
+    entity_category: config
+    optimistic: true
+    min_value: 10.00
+    max_value: 60.00
+    step:  0.1
+    initial_value: ${scc_charging_limit_voltage}
+    restore_value: true
+    mode: ${scc_input_number_mode}
+    on_value:
+      then:       
+        - script.execute: write_0x9003_to_0x900E_registers
+
+  # 0x9005
+  - platform: template
+    id: overvoltage_reconnect_voltage_number
+    name: ${scc_name} Overvoltage Reconnect Voltage Number
+    unit_of_measurement: "V"
+    icon: mdi:sine-wave
+    entity_category: config
+    optimistic: true
+    min_value: 10.00
+    max_value: 60.00
+    step:  0.1
+    initial_value: ${scc_overvoltage_reconnect_voltage}
+    restore_value: true
+    mode: ${scc_input_number_mode}
+    on_value:
+      then:       
+        - script.execute: write_0x9003_to_0x900E_registers
+
+  # 0x9006
+  - platform: template
+    id: equalization_charging_voltage_number
+    name: ${scc_name} Equalization Charging Voltage Number
+    unit_of_measurement: "V"
+    icon: mdi:sine-wave
+    entity_category: config
+    optimistic: true
+    min_value: 10.00
+    max_value: 60.00
+    step:  0.1
+    initial_value: ${scc_equalization_charging_voltage}
+    restore_value: true
+    mode: ${scc_input_number_mode}
+    on_value:
+      then:       
+        - script.execute: write_0x9003_to_0x900E_registers        
+  
+  # 0x9007
+  - platform: template
+    id: boost_charging_voltage_number
+    name: ${scc_name} Boost Charging Voltage Number
+    unit_of_measurement: 'V'
+    optimistic: true
+    icon: mdi:sine-wave
+    entity_category: config
+    min_value: 10.00
+    max_value: 60.00
+    step: 0.10
+    initial_value: ${scc_boost_charging_voltage}
+    restore_value: true
+    mode: ${scc_input_number_mode}
+    on_value:
+      then:       
+        - script.execute: write_0x9003_to_0x900E_registers    
+
+  # 0x9008
+  - platform: template
+    id: float_charging_voltage_number
+    name: ${scc_name} Float Charging Voltage Number
+    unit_of_measurement: 'V'
+    optimistic: true
+    icon: mdi:sine-wave
+    entity_category: config
+    min_value: 10.00
+    max_value: 60.00
+    step: 0.10
+    initial_value: ${scc_float_charging_voltage}
+    restore_value: true
+    mode: ${scc_input_number_mode}
+    on_value:
+      then:       
+        - script.execute: write_0x9003_to_0x900E_registers    
+
+  # 0x9009
+  - platform: template
+    id: boost_reconnect_charging_voltage_number
+    name: ${scc_name} Boost Reconnect Charging Voltage Number
+    unit_of_measurement: 'V'
+    optimistic: true
+    icon: mdi:sine-wave
+    entity_category: config
+    min_value: 10.00
+    max_value: 60.00
+    step: 0.1
+    initial_value: ${scc_boost_reconnect_charging_voltage}
+    restore_value: true
+    mode: ${scc_input_number_mode}
+    on_value:
+      then:       
+        - script.execute: write_0x9003_to_0x900E_registers
+
+  # 0x900A
+  - platform: template
+    id: low_voltage_reconnect_voltage_number
+    name: ${scc_name} Low voltage Reconnect Voltage Number
+    unit_of_measurement: 'V'
+    optimistic: true
+    icon: mdi:sine-wave
+    entity_category: config
+    min_value: 10.00
+    max_value: 60.00
+    step: 0.1
+    initial_value: ${scc_low_voltage_reconnect_voltage}
+    restore_value: true
+    mode: ${scc_input_number_mode}
+    on_value:
+      then:       
+        - script.execute: write_0x9003_to_0x900E_registers
+
+  # 0x900B
+  - platform: template
+    id: undervoltage_alarm_recovery_voltage_number
+    name: ${scc_name} Undervoltage Alarm Recovery Voltage Number
+    unit_of_measurement: 'V'
+    optimistic: true
+    icon: mdi:sine-wave
+    entity_category: config
+    min_value: 10.00
+    max_value: 60.00
+    step: 0.1
+    initial_value: ${scc_undervoltage_alarm_recovery_voltage}
+    restore_value: true
+    mode: ${scc_input_number_mode}
+    on_value:
+      then:       
+        - script.execute: write_0x9003_to_0x900E_registers
+
+  # 0x900C
+  - platform: template
+    id: undervoltage_alarm_voltage_number
+    name: ${scc_name} Undervoltage Alarm Voltage
+    unit_of_measurement: 'V'
+    optimistic: true
+    icon: mdi:sine-wave
+    entity_category: config
+    min_value: 10.00
+    max_value: 60.00
+    step: 0.1
+    initial_value: ${scc_undervoltage_alarm_voltage}
+    restore_value: true
+    mode: ${scc_input_number_mode}
+    on_value:
+      then:       
+        - script.execute: write_0x9003_to_0x900E_registers
+
+  # 0x900D
+  - platform: template
+    id: low_voltage_disconnect_voltage_number
+    name: ${scc_name} Low Voltage Disconnect Voltage Number
+    unit_of_measurement: 'V'
+    optimistic: true
+    icon: mdi:sine-wave
+    entity_category: config
+    min_value: 10.00
+    max_value: 60.00
+    step: 0.1
+    initial_value: ${scc_low_voltage_disconnect_voltage}
+    restore_value: true
+    mode: ${scc_input_number_mode}
+    on_value:
+      then:       
+        - script.execute: write_0x9003_to_0x900E_registers        
+
+  # 0x900E
+  - platform: template
+    id: discharging_limit_voltage_number
+    name: ${scc_name} Discharging Limit Voltage Number
+    unit_of_measurement: 'V'
+    optimistic: true
+    icon: mdi:sine-wave
+    entity_category: config
+    min_value: 10.00
+    max_value: 60.00
+    step: 0.1
+    initial_value: ${scc_discharging_limit_voltage}
+    restore_value: true
+    mode: ${scc_input_number_mode}
+    on_value:
+      then:       
+        - script.execute: write_0x9003_to_0x900E_registers  

@@ -1,0 +1,31 @@
+# Updated : 2025.06.02
+# Version : 1.1.1
+# GitHub  : https://github.com/Sleeper85/esphome-packages
+
+# This YAML is free software: you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation, either version 3
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/gpl.html>.
+
+modbus_controller:
+ - id: ${scc_name}_modbus_controller
+   modbus_id: ${scc_modbus_id}
+   address: ${scc_modbus_address}
+   command_throttle: ${scc_modbus_throttle}
+   update_interval: ${scc_update_interval}
+   setup_priority: -10
+
+# +--------------------------------------+
+# |             Packages                 |
+# +--------------------------------------+
+packages:
+  epever_sensor: !include epever_scc_entities_sensor.yaml         # epever informations
+  epever_number: !include epever_scc_entities_number.yaml         # epever settings
