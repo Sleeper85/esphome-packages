@@ -474,7 +474,7 @@ sensor:
     id: "battery_current_sensor"
     name: "${scc_name} Battery Current"
     address: 0x331B
-    value_type: U_DWORD_R
+    value_type: S_DWORD_R
     register_type: read
     device_class: "current"
     state_class: "measurement"
