@@ -1,5 +1,5 @@
-# Updated : 2025.06.02
-# Version : 1.1.2
+# Updated : 2025.06.03
+# Version : 1.1.3
 # GitHub  : https://github.com/Sleeper85/esphome-packages
 
 # This YAML is free software: you can redistribute it and/or
@@ -144,7 +144,7 @@ packages:
     files:
       - path: 'packages/solar_charge_controller/epever/epever_scc_full.yaml'
         vars:
-          scc_name: 'SCC_1'                                         # Name without space
+          scc_name: 'SCC_1'                                         # Name without space (modbus controller id)
           scc_modbus_id: 'epever_modbus'
           scc_modbus_address: '1'
           scc_modbus_throttle: '0ms'
@@ -152,14 +152,14 @@ packages:
           scc_input_number_mode: 'box'                              # box / slider
           scc_skip_updates_1: "30"                                  # 30s
           scc_skip_updates_2: "300"                                 # 5min
-          # When the battery type is "USE," the Lithium battery voltage parameters follow the following logic:
-          # A. Over Voltage Disconnect Voltage > Over Charging Protection Voltage (Protection Circuit Modules(BMS))+0.2V;
+          # When the battery type is "USE" the Lithium battery voltage parameters follow the following logic :
+          # A. Over Voltage Disconnect Voltage > Over Charging Protection Voltage (BMS)+0.2V
           # B. Over Voltage Disconnect Voltage > Over Voltage Reconnect Voltage = Charging Limit Voltage
-          #    ≥ Equalize Charging Voltage = Boost Charging Voltage ≥ Float Charging Voltage > Boost Reconnect Charging Voltage;
-          # C. Low Voltage Reconnect Voltage > Low Voltage Disconnect Voltage ≥ Discharging Limit Voltage.
-          # D. Under Voltage Alarm Reconnect Voltage > Under Voltage Alarm Voltage ≥ Discharging Limit Voltage;
-          # E. Boost Reconnect Charging voltage > Low Voltage Reconnect Voltage;
-          # F. Low Voltage Disconnect Voltage ≥ Over Discharging Protection Voltage (BMS)+0.2V
+          #    ≥ Equalize Charging Voltage = Boost Charging Voltage ≥ Float Charging Voltage > Boost Reconnect Charging Voltage
+          # C. Low Voltage Reconnect Voltage > Low Voltage Disconnect Voltage ≥ Discharging Limit Voltage
+          # D. Under Voltage Alarm Reconnect Voltage > Under Voltage Alarm Voltage ≥ Discharging Limit Voltage
+          # E. Boost Reconnect Charging voltage > Low Voltage Reconnect Voltage
+          # F. Low Voltage Disconnect Voltage ≥ Discharging Limit Voltage (BMS)+0.2V
           scc_overvoltage_disconnect_voltage: '29.0'                # 3.625V/cell
           scc_charging_limit_voltage: '28.0'                        # 3.5V/cell
           scc_overvoltage_reconnect_voltage: '28.0'                 # 3.5V/cell

@@ -1,5 +1,5 @@
-# Updated : 2025.06.02
-# Version : 1.1.2
+# Updated : 2025.06.03
+# Version : 1.1.3
 # GitHub  : https://github.com/Sleeper85/esphome-packages
 
 # This YAML is free software: you can redistribute it and/or
@@ -19,7 +19,7 @@
 # |           Binary Sensor              |
 # +--------------------------------------+
 binary_sensor:
-  #A1 | Over temperature inside the device
+  # A1 | Over temperature inside the device
   - platform: modbus_controller
     modbus_controller_id: ${scc_name}_modbus_controller
     name: "${scc_name} Over Temperature Device"
@@ -31,7 +31,7 @@ binary_sensor:
     skip_updates: ${scc_skip_updates_1}
 
 # Battery Status Values
-  #A15 | D3-D0 | 00H | Normal Voltage
+  # A15 | D3-D0 | 00H | Normal Voltage
   - platform: template
     id: "battery_status_normal_voltage_binary_sensor"
     name: "${scc_name} Battery Status Normal Voltage"
@@ -43,7 +43,7 @@ binary_sensor:
       return false;
      }
 
-  #A15 | D3-D0 | 01H | Over Voltage
+  # A15 | D3-D0 | 01H | Over Voltage
   - platform: template
     id: "battery_status_over_voltage_binary_sensor"
     name: "${scc_name} Battery Status Over Voltage"
@@ -55,7 +55,7 @@ binary_sensor:
       return false;
      }
 
-  #A15 | D3-D0 | 02H | Under Voltage
+  # A15 | D3-D0 | 02H | Under Voltage
   - platform: template
     id: "battery_status_under_voltage_binary_sensor"
     name: "${scc_name} Battery Status Under Voltage"
@@ -67,7 +67,7 @@ binary_sensor:
       return false;
      }
 
-  #A15 | D3-D0 | 03H | Over Discharge
+  # A15 | D3-D0 | 03H | Over Discharge
   - platform: template
     id: "battery_status_over_discharge_binary_sensor"
     name: "${scc_name} Battery Status Over Discharge"
@@ -79,7 +79,7 @@ binary_sensor:
       return false;
      }
 
-  #A15 | D3-D0 | 04H | Fault
+  # A15 | D3-D0 | 04H | Fault
   - platform: template
     id: "battery_status_fault_binary_sensor"
     name: "${scc_name} Battery Status Fault"
@@ -91,7 +91,7 @@ binary_sensor:
         return false;
       }
 
-  #A15 | D7-D4 | 00H | Normal
+  # A15 | D7-D4 | 00H | Normal
   - platform: template
     id: "battery_status_normal_temp_sensor"
     name: "${scc_name} Battery Temp. Status Normal"
@@ -104,7 +104,7 @@ binary_sensor:
         return false;
       }
 
-  #A15 | D7-D4 | 01H | Over Temperature
+  # A15 | D7-D4 | 01H | Over Temperature
   - platform: template
     id: "battery_status_over_temp_sensor"
     name: "${scc_name} Battery Temp. Status Too High"
@@ -117,7 +117,7 @@ binary_sensor:
         return false;
       }
 
-  #A15 | D7-D4 | 02H | Low Temperature
+  # A15 | D7-D4 | 02H | Low Temperature
   - platform: template
     id: "battery_status_low_temp_sensor"
     name: "${scc_name} Battery Temp. Status Too Low"
@@ -130,7 +130,7 @@ binary_sensor:
         return false;
       }
 
-  #A15 | D8 | 00H | Battery inner resistance normal
+  # A15 | D8 | 00H | Battery inner resistance normal
   - platform: template
     id: "battery_status_inner_resistance_normal"
     name: "${scc_name} Battery Inner Resistance Normal"
@@ -143,7 +143,7 @@ binary_sensor:
         return false; // Normal
       }
 
-  #A15 | D8 | 01H | Battery inner resistance abnormal
+  # A15 | D8 | 01H | Battery inner resistance abnormal
   - platform: template
     id: "battery_status_inner_resistance_abnormal"
     name: "${scc_name} Battery Inner Resistance Abnormal"
@@ -157,7 +157,7 @@ binary_sensor:
       }
 
 # Charging Equipment Status Values
-  #A16 | D0 | 00H | Standby
+  # A16 | D0 | 00H | Standby
   - platform: template
     id: "battery_charging_equipment_status_standby_binary_sensor"
     name: "${scc_name} Charging Status Standby"
@@ -170,7 +170,7 @@ binary_sensor:
         return false;
       }
 
-  #A16 | D0 | 01H | Running
+  # A16 | D0 | 01H | Running
   - platform: template
     id: "battery_charging_equipment_status_running_binary_sensor"
     name: "${scc_name} Charging Status Running"
@@ -183,7 +183,7 @@ binary_sensor:
         return false;
       }
 
-  #A16 | D1 | 00H | Normal
+  # A16 | D1 | 00H | Normal
   - platform: template
     id: "battery_charging_equipment_status_normal_binary_sensor"
     name: "${scc_name} Charging Status Running"
@@ -196,7 +196,7 @@ binary_sensor:
         return false;
       }
 
-  #A16 | D1 | 01H | Fault
+  # A16 | D1 | 01H | Fault
   - platform: template
     id: "battery_charging_equipment_status_fault_binary_sensor"
     name: "${scc_name} Charging Status Running"
@@ -209,7 +209,7 @@ binary_sensor:
         return false;
       }
 
-  #A16 | D3-D2 | 00H | No Charging
+  # A16 | D3-D2 | 00H | No Charging
   - platform: template
     id: "battery_charging_equipment_status_no_charging_binary_sensor"
     name: "${scc_name} Charging Status No Charging"
@@ -223,7 +223,7 @@ binary_sensor:
         return false;
       }
 
-  #A16 | D3-D2 | 01H | Float
+  # A16 | D3-D2 | 01H | Float
   - platform: template
     id: "battery_charging_equipment_status_float_binary_sensor"
     name: "${scc_name} Charging Status Float"
@@ -237,7 +237,7 @@ binary_sensor:
         return false;
       }
 
-  #A16 | D3-D2 | 02H | Boost
+  # A16 | D3-D2 | 02H | Boost
   - platform: template
     id: "battery_charging_equipment_status_boost_binary_sensor"
     name: "${scc_name} Charging Status Boost"
@@ -251,7 +251,7 @@ binary_sensor:
         return false;
       }
     
-  #A16 | D3-D2 | 03H | Equalization
+  # A16 | D3-D2 | 03H | Equalization
   - platform: template
     id: "battery_charging_equipment_status_equalization_binary_sensor"
     name: "${scc_name} Charging Status Equalization"
@@ -270,7 +270,7 @@ binary_sensor:
 # +--------------------------------------+
 sensor:
   # PV parameters
-  #A3
+  # A3
   - platform: modbus_controller
     modbus_controller_id: ${scc_name}_modbus_controller
     name: "${scc_name} PV Input Voltage"
@@ -284,7 +284,7 @@ sensor:
     filters:
       - multiply: 0.01
     
-  #A4
+  # A4
   - platform: modbus_controller
     modbus_controller_id: ${scc_name}_modbus_controller
     name: "${scc_name} PV Input Current"
@@ -298,7 +298,7 @@ sensor:
     filters:
       - multiply: 0.01
   
-  #A5 + A6
+  # A5 + A6
   - platform: modbus_controller
     modbus_controller_id: ${scc_name}_modbus_controller
     id: "pv_input_power"
@@ -313,7 +313,7 @@ sensor:
     filters:
       - multiply: 0.01
 
-  #A11
+  # A11
   - platform: modbus_controller
     modbus_controller_id: ${scc_name}_modbus_controller
     name: "${scc_name} Battery Temperature"
@@ -328,7 +328,7 @@ sensor:
     filters:
       - multiply: 0.01
 
-  #A12
+  # A12
   - platform: modbus_controller
     modbus_controller_id: ${scc_name}_modbus_controller
     name: "${scc_name} Device Temperature"
@@ -343,10 +343,10 @@ sensor:
     filters:
       - multiply: 0.01
 
-  #A13
+  # A13
   - platform: modbus_controller
     modbus_controller_id: ${scc_name}_modbus_controller
-    name: "${scc_name} Battery Remaining Capacity"
+    name: "${scc_name} Battery SoC"
     address: 0x311A
     value_type: U_WORD
     register_type: read
@@ -356,7 +356,7 @@ sensor:
     unit_of_measurement: "%"
     accuracy_decimals: 0
 
-  #A14
+  # A14
   - platform: modbus_controller
     modbus_controller_id: ${scc_name}_modbus_controller
     name: "${scc_name} Battery Rated System Voltage"
@@ -371,7 +371,7 @@ sensor:
     filters:
       - multiply: 0.01
 
-  #A15
+  # A15
   - platform: modbus_controller
     modbus_controller_id: ${scc_name}_modbus_controller
     id: "battery_status_raw_value"
@@ -381,7 +381,7 @@ sensor:
     register_type: read
     skip_updates: ${scc_skip_updates_1}
     
-  #A16
+  # A16
   - platform: modbus_controller
     modbus_controller_id: ${scc_name}_modbus_controller
     id: "battery_charging_equipment_status_raw_value"
@@ -391,7 +391,7 @@ sensor:
     register_type: read
     skip_updates: ${scc_skip_updates_1}
 
-  #A28 + A29
+  # A28 + A29
   - platform: modbus_controller
     modbus_controller_id: ${scc_name}_modbus_controller
     name: "${scc_name} PV Generated Energy Day"
@@ -407,7 +407,7 @@ sensor:
     filters:
       - multiply: 0.01
 
-  #A30 + A31
+  # A30 + A31
   - platform: modbus_controller
     modbus_controller_id: ${scc_name}_modbus_controller
     name: "${scc_name} PV Generated Energy Month"
@@ -422,7 +422,7 @@ sensor:
     filters:
       - multiply: 0.01
 
-  #A32 + A33
+  # A32 + A33
   - platform: modbus_controller
     modbus_controller_id: ${scc_name}_modbus_controller
     name: "${scc_name} PV Generated Energy Year"
@@ -437,7 +437,7 @@ sensor:
     filters:
       - multiply: 0.01
 
-  #A34 + A35
+  # A34 + A35
   - platform: modbus_controller
     modbus_controller_id: ${scc_name}_modbus_controller
     name: "${scc_name} PV Generated Energy Total"
@@ -453,7 +453,7 @@ sensor:
       - multiply: 0.01
   
   # Battery parameters
-  #A36
+  # A36
   - platform: modbus_controller
     modbus_controller_id: ${scc_name}_modbus_controller
     id: "battery_voltage_sensor"
@@ -468,7 +468,7 @@ sensor:
     filters:
       - multiply: 0.01
 
-  #A37 + A38
+  # A37 + A38
   - platform: modbus_controller
     modbus_controller_id: ${scc_name}_modbus_controller
     id: "battery_current_sensor"
@@ -494,9 +494,37 @@ sensor:
     lambda: |-
       return (id(battery_voltage_sensor).state) * (id(battery_current_sensor).state);
   
-  # Holding register
+  # Modbus Function Code 3 = Read Holding Registers
 
-  #B6
+  # B4
+  # 0x00 User defined, 0x01 Sealed, 0x02 GEL, 0x03 Flooded
+  # 0x04 LFP 4S, 0x05 LFP 8S, 0x06 LFP 15S, 0x07 LFP 16S
+  # 0x08 LNCM 3S, 0x09 LNCM 6S, 0x0A LNCM 7S, 0x0B LNCM 13S, 0x0C LNCM 14S
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_name}_modbus_controller
+    name: "${scc_name} Battery Type"
+    entity_category: diagnostic
+    address: 0x9000
+    value_type: U_WORD
+    register_type: holding
+    skip_updates: ${scc_skip_updates_2}
+    accuracy_decimals: 0
+
+  # B5
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_name}_modbus_controller
+    name: "${scc_name} Battery Capacity"
+    entity_category: diagnostic
+    address: 0x9001
+    value_type: U_WORD
+    register_type: holding
+    skip_updates: ${scc_skip_updates_2}
+    state_class: "measurement"
+    unit_of_measurement: 'Ah'
+    icon: mdi:car-battery
+    accuracy_decimals: 0
+
+  # B6
   - platform: modbus_controller
     modbus_controller_id: ${scc_name}_modbus_controller
     name: "${scc_name} Temperature Compensation Coefficient"
@@ -512,7 +540,7 @@ sensor:
     filters:
       - multiply: 0.01
   
-  #B7
+  # B7
   - platform: modbus_controller
     modbus_controller_id: ${scc_name}_modbus_controller
     name: "${scc_name} Overvoltage Disconnect Voltage"
@@ -528,7 +556,7 @@ sensor:
     filters:
       - multiply: 0.01
   
-  #B8
+  # B8
   - platform: modbus_controller
     modbus_controller_id: ${scc_name}_modbus_controller
     name: "${scc_name} Charging Limit Voltage"
@@ -544,7 +572,7 @@ sensor:
     filters:
       - multiply: 0.01
   
-  #B9
+  # B9
   - platform: modbus_controller
     modbus_controller_id: ${scc_name}_modbus_controller
     name: "${scc_name} Overvoltage Reconnect Voltage"
@@ -560,7 +588,7 @@ sensor:
     filters:
       - multiply: 0.01
   
-  #B11
+  # B11
   - platform: modbus_controller
     modbus_controller_id: ${scc_name}_modbus_controller
     name: "${scc_name} Boost Charging Voltage"
@@ -576,7 +604,7 @@ sensor:
     filters:
       - multiply: 0.01
   
-  #B12
+  # B12
   - platform: modbus_controller
     modbus_controller_id: ${scc_name}_modbus_controller
     name: "${scc_name} Float Charging Voltage"
@@ -592,7 +620,7 @@ sensor:
     filters:
       - multiply: 0.01
   
-  #B13
+  # B13
   - platform: modbus_controller
     modbus_controller_id: ${scc_name}_modbus_controller
     name: "${scc_name} Boost Reconnect Charging Voltage"
@@ -608,7 +636,7 @@ sensor:
     filters:
       - multiply: 0.01
   
-  #B14
+  # B14
   - platform: modbus_controller
     modbus_controller_id: ${scc_name}_modbus_controller
     name: "${scc_name} Low Voltage Reconnect Voltage"
@@ -624,7 +652,7 @@ sensor:
     filters:
       - multiply: 0.01
   
-  #B15
+  # B15
   - platform: modbus_controller
     modbus_controller_id: ${scc_name}_modbus_controller
     name: "${scc_name} Undervoltage Alarm Recovery Voltage"
@@ -640,7 +668,7 @@ sensor:
     filters:
       - multiply: 0.01
   
-  #B16
+  # B16
   - platform: modbus_controller
     modbus_controller_id: ${scc_name}_modbus_controller
     name: "${scc_name} Undervoltage Alarm Voltage"
@@ -656,7 +684,7 @@ sensor:
     filters:
       - multiply: 0.01
   
-  #B17
+  # B17
   - platform: modbus_controller
     modbus_controller_id: ${scc_name}_modbus_controller
     name: "${scc_name} Low Voltage Disconnect Voltage"
@@ -672,7 +700,7 @@ sensor:
     filters:
       - multiply: 0.01
   
-  #B18
+  # B18
   - platform: modbus_controller
     modbus_controller_id: ${scc_name}_modbus_controller
     name: "${scc_name} Discharging Limit Voltage"
@@ -687,6 +715,18 @@ sensor:
     accuracy_decimals: 2
     filters:
       - multiply: 0.01
+
+  # B19
+  # 0-auto recognize, 1-12V, 2-24V, 3-36V，4-48V，5-60V，6-110V
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_name}_modbus_controller
+    name: "${scc_name} Battery Rated Voltage Level"
+    entity_category: diagnostic
+    address: 0x9067
+    value_type: U_WORD
+    register_type: holding
+    skip_updates: ${scc_skip_updates_2}
+    accuracy_decimals: 0
 
 # +--------------------------------------+
 # |             Text Sensor              |
