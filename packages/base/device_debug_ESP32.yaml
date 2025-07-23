@@ -1,6 +1,8 @@
-# Updated : 2025.05.22
-# Version : 1.1.1
-# GitHub  : https://github.com/Sleeper85/esphome-packages
+# Updated : 2025.07.11
+# Version : 1.1.4
+# GitHub  : https://github.com/Sleeper85/esphome-yambms
+
+# YamBMS ( Yet another multi-BMS Merging Solution )
 
 # This YAML is free software: you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -40,7 +42,7 @@ sensor:
       id: esp32_loop_time
 
   - platform: template
-    name: ${name} ${debug_name} Heap free (%)
+    name: ${name} ${debug_name} Heap free percent
     id: esp32_heap_free_percent
     unit_of_measurement: '%'
     accuracy_decimals: 2
@@ -52,7 +54,7 @@ sensor:
     lambda: return ( id(esp32_heap_free).state * 100 / 327680 );
 
   - platform: template
-    name: ${name} ${debug_name} Heap max block (%)
+    name: ${name} ${debug_name} Heap max block percent
     id: esp32_heap_max_block_percent
     unit_of_measurement: '%'
     accuracy_decimals: 2
