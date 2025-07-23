@@ -1,6 +1,8 @@
-# Updated : 2025.05.22
+# Updated : 2025.06.18
 # Version : 1.1.1
-# GitHub  : https://github.com/Sleeper85/esphome-packages
+# GitHub  : https://github.com/Sleeper85/esphome-yambms
+
+# YamBMS ( Yet another multi-BMS Merging Solution )
 
 # This YAML is free software: you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -15,8 +17,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/gpl.html>.
 
-esp32:
-  framework:
-    sdkconfig_options:
-      COMPILER_OPTIMIZATION_SIZE: y
-      CONFIG_ESP32_DEFAULT_CPU_FREQ_240: y
+uart:
+  - id: uart_5
+    tx_pin: ${tx_pin_5}
+    rx_pin: ${rx_pin_5}
+    baud_rate: 19200
+    rx_buffer_size: 256

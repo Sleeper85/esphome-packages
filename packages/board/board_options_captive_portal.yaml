@@ -1,4 +1,4 @@
-# Updated : 2025.04.02
+# Updated : 2025.01.10
 # Version : 1.1.1
 # GitHub  : https://github.com/Sleeper85/esphome-yambms
 
@@ -17,9 +17,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/gpl.html>.
 
-uart:
-  - id: uart_esp_3
-    tx_pin: ${tx_pin_3}
-    rx_pin: ${rx_pin_3}
-    baud_rate: 115200
-    rx_buffer_size: 512
+wifi:
+  ap:
+    ssid: "YamBMS Fallback Hotspot"
+    password: "Y4mBM$85"
+
+captive_portal:

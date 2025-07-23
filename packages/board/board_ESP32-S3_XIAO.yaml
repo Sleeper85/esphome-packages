@@ -1,6 +1,8 @@
-# Updated : 2025.05.22
-# Version : 1.1.1
-# GitHub  : https://github.com/Sleeper85/esphome-packages
+# Updated : 2025.06.12
+# Version : 1.1.4
+# GitHub  : https://github.com/Sleeper85/esphome-yambms
+
+# YamBMS ( Yet another multi-BMS Merging Solution )
 
 # This YAML is free software: you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -18,6 +20,7 @@
 substitutions:
   board_chip: "ESP32-S3"
   board_name: "DevKitC-1"
+  # Interfaces GPIOs
   # uart_esp_1
   tx_pin_1: '1'
   rx_pin_1: '2'
@@ -39,23 +42,17 @@ substitutions:
 packages:
   device_base: !include ../base/device_base.yaml
   device_base_wifi: !include ../base/device_base_wifi.yaml
-  device_cpu_freq_240: !include board_options_cpu_freq_240_esp32-s3.yaml
-  # psram: !include board_options_psram_settings.yaml
 
 esp32:
   board: esp32-s3-devkitc-1
   flash_size: 8MB # adjust according to your ESP32-S3 version
+  cpu_frequency: 240MHz 
   framework:
     type: esp-idf
 
 esphome:
   platformio_options:
     board_build.flash_mode: dio             # use Dual IO (dio) instead of Quad IO (qio) to prevent boot loop after flashing
-
-# PSRAM activation with default options
-# psram:
-#   mode: octal
-#   speed: 80MHz
 
 wifi:
   id: my_network

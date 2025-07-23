@@ -19,7 +19,8 @@
 
 substitutions:
   board_chip: "ESP32-S3"
-  board_name: "Atom S3 Lite"
+  board_name: "Atom S3"
+  display_update_interval: "500ms"
   # Interfaces GPIOs
   # uart_esp_1 (Grove port)
   tx_pin_1: '2'
@@ -42,7 +43,7 @@ substitutions:
 packages:
   device_base: !include ../base/device_base.yaml
   device_base_wifi: !include ../base/device_base_wifi.yaml
-  board_rgb_led: !include board_options_rgb_led_status.yaml
+  # display: !include board_options_display_128x128.yaml
 
 esp32:
   board: m5stack-atoms3
@@ -54,6 +55,13 @@ esp32:
 esphome:
   platformio_options:
     board_build.flash_mode: dio # use Dual IO (dio) instead of Quad IO (qio) to prevent boot loop after flashing
+  on_boot:
+  - priority: 600
+    then:
+    - lambda: !lambda |-
+        id(my_display).enable();
+        id(my_display).transfer_byte(0x11);
+        id(my_display).disable();
 
 wifi:
   id: my_network
@@ -65,16 +73,68 @@ logger:
   baud_rate: 0 # frees the 3rd UART and avoids some bugs like "WK2168 with canbus" or "BLE client with RS485 modbus"
   hardware_uart: USB_SERIAL_JTAG
 
+# +--------------------------------------+
+# | Inverter Heartbeat Light             |
+# +--------------------------------------+
+
 light:
-  # https://esphome.io/components/light/esp32_rmt_led_strip
   # ESP Light used to see the inverter heartbeat
   # Internal : only specifying an id without a name will implicitly set this to true.
-  - platform: esp32_rmt_led_strip
+  - platform: binary
     id: esp_light
-    rgb_order: GRB
-    pin: 35
-    num_leds: 1
-    # rmt_channel: 0
-    chipset: ws2812
-    entity_category: config
-    default_transition_length: 0ms
+    output: esp_output
+
+output:
+  # ESP32 board without LED
+  - platform: template
+    id: esp_output
+    type: binary
+    write_action:
+      - logger.log: "Inverter Heartbeat Output"
+      #- lambda: C++ code; # action to be performed at each inverter heartbeat
+
+# +--------------------------------------+
+# | Atom S3 related configuration        |
+# +--------------------------------------+
+
+spi:
+  - id: atom_spi_bus
+    clk_pin: 17
+    mosi_pin: 21
+
+binary_sensor:
+  - platform: gpio
+    id: atom_button
+    pin:
+      number: 41
+      inverted: true
+      mode:
+        input: true
+        pullup: true
+    filters:
+      - delayed_off: 10ms
+    on_press:
+      then:
+        - logger.log: Button Pressed
+        - display.page.show_next: my_display
+        #- display.page.show_previous: my_display
+
+display:
+  # Atom S3 display
+  # https://esphome.io/components/display/st7789v.html
+  - platform: st7789v
+    spi_id: atom_spi_bus
+    id: my_display
+    model: Custom
+    backlight_pin: 16
+    cs_pin: 15
+    dc_pin: 33
+    reset_pin: 34
+    height: 128
+    width: 128
+    offset_height: 2
+    offset_width: 1
+    eightbitcolor: true
+    update_interval: ${display_update_interval}
+    data_rate: 40Mhz
+    rotation: ${display_rotation}
