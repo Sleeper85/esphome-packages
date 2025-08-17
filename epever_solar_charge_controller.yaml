@@ -1,5 +1,5 @@
-# Updated : 2025.06.03
-# Version : 1.1.3
+# Updated : 2025.08.17
+# Version : 1.1.4
 # GitHub  : https://github.com/Sleeper85/esphome-packages
 
 # This YAML is free software: you can redistribute it and/or
@@ -144,7 +144,8 @@ packages:
     files:
       - path: 'packages/solar_charge_controller/epever/epever_scc_full.yaml'
         vars:
-          scc_name: 'SCC_1'                                         # Name without space (modbus controller id)
+          scc_id: 'scc_1'                                           # ID
+          scc_name: 'SCC 1'                                         # Name
           scc_modbus_id: 'epever_modbus'
           scc_modbus_address: '1'
           scc_modbus_throttle: '0ms'

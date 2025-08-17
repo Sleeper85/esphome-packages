@@ -1,5 +1,5 @@
 # Updated : 2025.08.17
-# Version : 1.1.4
+# Version : 1.1.5
 # GitHub  : https://github.com/Sleeper85/esphome-packages
 
 # This YAML is free software: you can redistribute it and/or
@@ -21,7 +21,7 @@
 binary_sensor:
   # A1 | Over temperature inside the device
   - platform: modbus_controller
-    modbus_controller_id: ${scc_name}_modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
     name: "${scc_name} Over Temperature Device"
     entity_category: diagnostic
     device_class: problem
@@ -33,11 +33,11 @@ binary_sensor:
 # Battery Status Values
   # A15 | D3-D0 | 00H | Normal Voltage
   - platform: template
-    id: "battery_status_normal_voltage_binary_sensor"
+    id: "${scc_id}_battery_status_normal_voltage_binary_sensor"
     name: "${scc_name} Battery Status Normal Voltage"
     entity_category: diagnostic
     lambda: |-
-     if(id(battery_status_raw_value).state == 0) {
+     if(id({scc_id}_battery_status_raw_value).state == 0) {
       return true;
      } else {
       return false;
@@ -45,11 +45,11 @@ binary_sensor:
 
   # A15 | D3-D0 | 01H | Over Voltage
   - platform: template
-    id: "battery_status_over_voltage_binary_sensor"
+    id: "${scc_id}_battery_status_over_voltage_binary_sensor"
     name: "${scc_name} Battery Status Over Voltage"
     entity_category: diagnostic
     lambda: |-
-     if(id(battery_status_raw_value).state == 1) {
+     if(id({scc_id}_battery_status_raw_value).state == 1) {
       return true;
      } else {
       return false;
@@ -57,11 +57,11 @@ binary_sensor:
 
   # A15 | D3-D0 | 02H | Under Voltage
   - platform: template
-    id: "battery_status_under_voltage_binary_sensor"
+    id: "${scc_id}_battery_status_under_voltage_binary_sensor"
     name: "${scc_name} Battery Status Under Voltage"
     entity_category: diagnostic
     lambda: |-
-     if(id(battery_status_raw_value).state == 2) {
+     if(id({scc_id}_battery_status_raw_value).state == 2) {
       return true;
      } else {
       return false;
@@ -69,11 +69,11 @@ binary_sensor:
 
   # A15 | D3-D0 | 03H | Over Discharge
   - platform: template
-    id: "battery_status_over_discharge_binary_sensor"
+    id: "${scc_id}_battery_status_over_discharge_binary_sensor"
     name: "${scc_name} Battery Status Over Discharge"
     entity_category: diagnostic
     lambda: |-
-     if(id(battery_status_raw_value).state == 3) {
+     if(id({scc_id}_battery_status_raw_value).state == 3) {
       return true;
      } else {
       return false;
@@ -81,11 +81,11 @@ binary_sensor:
 
   # A15 | D3-D0 | 04H | Fault
   - platform: template
-    id: "battery_status_fault_binary_sensor"
+    id: "${scc_id}_battery_status_fault_binary_sensor"
     name: "${scc_name} Battery Status Fault"
     entity_category: diagnostic
     lambda: |-
-      if(id(battery_status_raw_value).state == 4) {
+      if(id({scc_id}_battery_status_raw_value).state == 4) {
         return true;
       } else {
         return false;
@@ -93,11 +93,11 @@ binary_sensor:
 
   # A15 | D7-D4 | 00H | Normal
   - platform: template
-    id: "battery_status_normal_temp_sensor"
+    id: "${scc_id}_battery_status_normal_temp_sensor"
     name: "${scc_name} Battery Temp. Status Normal"
     entity_category: diagnostic
     lambda: |-
-      uint16_t value = int(id(battery_status_raw_value).state) >> 4;
+      uint16_t value = int(id({scc_id}_battery_status_raw_value).state) >> 4;
       if(value == 0) {
         return true;
       } else {
@@ -106,11 +106,11 @@ binary_sensor:
 
   # A15 | D7-D4 | 01H | Over Temperature
   - platform: template
-    id: "battery_status_over_temp_sensor"
+    id: "${scc_id}_battery_status_over_temp_sensor"
     name: "${scc_name} Battery Temp. Status Too High"
     entity_category: diagnostic
     lambda: |-
-      uint16_t value = int(id(battery_status_raw_value).state) >> 4;
+      uint16_t value = int(id({scc_id}_battery_status_raw_value).state) >> 4;
       if(value == 1) {
         return true;
       } else {
@@ -119,11 +119,11 @@ binary_sensor:
 
   # A15 | D7-D4 | 02H | Low Temperature
   - platform: template
-    id: "battery_status_low_temp_sensor"
+    id: "${scc_id}_battery_status_low_temp_sensor"
     name: "${scc_name} Battery Temp. Status Too Low"
     entity_category: diagnostic
     lambda: |-
-      uint16_t value = int(id(battery_status_raw_value).state) >> 4;
+      uint16_t value = int(id({scc_id}_battery_status_raw_value).state) >> 4;
       if(value == 2) {
         return true;
       } else {
@@ -132,11 +132,11 @@ binary_sensor:
 
   # A15 | D8 | 00H | Battery inner resistance normal
   - platform: template
-    id: "battery_status_inner_resistance_normal"
+    id: "${scc_id}_battery_status_inner_resistance_normal"
     name: "${scc_name} Battery Inner Resistance Normal"
     entity_category: diagnostic
     lambda: |-
-      uint16_t value = int(id(battery_charging_equipment_status_raw_value).state) >> 7;
+      uint16_t value = int(id({scc_id}_battery_charging_equipment_status_raw_value).state) >> 7;
       if(value == 0) {
         return true; // Normal
       } else {
@@ -145,11 +145,11 @@ binary_sensor:
 
   # A15 | D8 | 01H | Battery inner resistance abnormal
   - platform: template
-    id: "battery_status_inner_resistance_abnormal"
+    id: "${scc_id}_battery_status_inner_resistance_abnormal"
     name: "${scc_name} Battery Inner Resistance Abnormal"
     entity_category: diagnostic
     lambda: |-
-      uint16_t value = int(id(battery_charging_equipment_status_raw_value).state) >> 7;
+      uint16_t value = int(id({scc_id}_battery_charging_equipment_status_raw_value).state) >> 7;
       if(value == 0) {
         return false; // Normal
       } else {
@@ -159,11 +159,11 @@ binary_sensor:
 # Charging Equipment Status Values
   # A16 | D0 | 00H | Standby
   - platform: template
-    id: "battery_charging_equipment_status_standby_binary_sensor"
+    id: "${scc_id}_battery_charging_equipment_status_standby_binary_sensor"
     name: "${scc_name} Charging Status Standby"
     entity_category: diagnostic
     lambda: |-
-      uint16_t value = id(battery_charging_equipment_status_raw_value).state;
+      uint16_t value = id({scc_id}_battery_charging_equipment_status_raw_value).state;
       if(value == 0) {
         return true;
       } else {
@@ -172,11 +172,11 @@ binary_sensor:
 
   # A16 | D0 | 01H | Running
   - platform: template
-    id: "battery_charging_equipment_status_running_binary_sensor"
+    id: "${scc_id}_battery_charging_equipment_status_running_binary_sensor"
     name: "${scc_name} Charging Status Running"
     entity_category: diagnostic
     lambda: |-
-      uint16_t value = id(battery_charging_equipment_status_raw_value).state;
+      uint16_t value = id({scc_id}_battery_charging_equipment_status_raw_value).state;
       if(value == 1) {
         return true;
       } else {
@@ -185,11 +185,11 @@ binary_sensor:
 
   # A16 | D1 | 00H | Normal
   - platform: template
-    id: "battery_charging_equipment_status_normal_binary_sensor"
+    id: "${scc_id}_battery_charging_equipment_status_normal_binary_sensor"
     name: "${scc_name} Charging Status Normal"
     entity_category: diagnostic
     lambda: |-
-      uint16_t value = int(id(battery_charging_equipment_status_raw_value).state) >> 1;
+      uint16_t value = int(id({scc_id}_battery_charging_equipment_status_raw_value).state) >> 1;
       if(value == 0) {
         return true;
       } else {
@@ -198,11 +198,11 @@ binary_sensor:
 
   # A16 | D1 | 01H | Fault
   - platform: template
-    id: "battery_charging_equipment_status_fault_binary_sensor"
+    id: "${scc_id}_battery_charging_equipment_status_fault_binary_sensor"
     name: "${scc_name} Charging Status Fault"
     entity_category: diagnostic
     lambda: |-
-      uint16_t value = int(id(battery_charging_equipment_status_raw_value).state) >> 1;
+      uint16_t value = int(id({scc_id}_battery_charging_equipment_status_raw_value).state) >> 1;
       if(value == 1) {
         return true;
       } else {
@@ -211,11 +211,11 @@ binary_sensor:
 
   # A16 | D3-D2 | 00H | No Charging
   - platform: template
-    id: "battery_charging_equipment_status_no_charging_binary_sensor"
+    id: "${scc_id}_battery_charging_equipment_status_no_charging_binary_sensor"
     name: "${scc_name} Charging Status No Charging"
     entity_category: diagnostic
     lambda: |-
-      uint16_t value = int(id(battery_charging_equipment_status_raw_value).state) >> 2;
+      uint16_t value = int(id({scc_id}_battery_charging_equipment_status_raw_value).state) >> 2;
       value = value & 0x0003;
       if(value == 0) {
         return true;
@@ -225,11 +225,11 @@ binary_sensor:
 
   # A16 | D3-D2 | 01H | Float
   - platform: template
-    id: "battery_charging_equipment_status_float_binary_sensor"
+    id: "${scc_id}_battery_charging_equipment_status_float_binary_sensor"
     name: "${scc_name} Charging Status Float"
     entity_category: diagnostic
     lambda: |-
-      uint16_t value = int(id(battery_charging_equipment_status_raw_value).state) >> 2;
+      uint16_t value = int(id({scc_id}_battery_charging_equipment_status_raw_value).state) >> 2;
       value = value & 0x0003;
       if(value == 1) {
         return true;
@@ -239,11 +239,11 @@ binary_sensor:
 
   # A16 | D3-D2 | 02H | Boost
   - platform: template
-    id: "battery_charging_equipment_status_boost_binary_sensor"
+    id: "${scc_id}_battery_charging_equipment_status_boost_binary_sensor"
     name: "${scc_name} Charging Status Boost"
     entity_category: diagnostic
     lambda: |-
-      uint16_t value = int(id(battery_charging_equipment_status_raw_value).state) >> 2;
+      uint16_t value = int(id({scc_id}_battery_charging_equipment_status_raw_value).state) >> 2;
       value = value & 0x0003;
       if(value == 2) {
         return true;
@@ -253,11 +253,11 @@ binary_sensor:
     
   # A16 | D3-D2 | 03H | Equalization
   - platform: template
-    id: "battery_charging_equipment_status_equalization_binary_sensor"
+    id: "${scc_id}_battery_charging_equipment_status_equalization_binary_sensor"
     name: "${scc_name} Charging Status Equalization"
     entity_category: diagnostic
     lambda: |-
-      uint16_t value = int(id(battery_charging_equipment_status_raw_value).state) >> 2;
+      uint16_t value = int(id({scc_id}_battery_charging_equipment_status_raw_value).state) >> 2;
       value = value & 0x0003;
       if(value == 3) {
         return true;
@@ -272,7 +272,7 @@ sensor:
   # PV parameters
   # A3
   - platform: modbus_controller
-    modbus_controller_id: ${scc_name}_modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
     name: "${scc_name} PV Input Voltage"
     address: 0x3100
     value_type: U_WORD
@@ -286,7 +286,7 @@ sensor:
     
   # A4
   - platform: modbus_controller
-    modbus_controller_id: ${scc_name}_modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
     name: "${scc_name} PV Input Current"
     address: 0x3101
     value_type: U_WORD
@@ -300,8 +300,8 @@ sensor:
   
   # A5 + A6
   - platform: modbus_controller
-    modbus_controller_id: ${scc_name}_modbus_controller
-    id: "pv_input_power"
+    modbus_controller_id: ${scc_id}_modbus_controller
+    id: "${scc_id}_pv_input_power"
     name: "${scc_name} PV Input Power"
     address: 0x3102
     value_type: U_DWORD_R
@@ -315,7 +315,7 @@ sensor:
 
   # A11
   - platform: modbus_controller
-    modbus_controller_id: ${scc_name}_modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
     name: "${scc_name} Battery Temperature"
     address: 0x3110
     value_type: S_WORD
@@ -330,7 +330,7 @@ sensor:
 
   # A12
   - platform: modbus_controller
-    modbus_controller_id: ${scc_name}_modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
     name: "${scc_name} Device Temperature"
     address: 0x3111
     value_type: S_WORD
@@ -345,7 +345,7 @@ sensor:
 
   # A13
   - platform: modbus_controller
-    modbus_controller_id: ${scc_name}_modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
     name: "${scc_name} Battery SoC"
     address: 0x311A
     value_type: U_WORD
@@ -358,7 +358,7 @@ sensor:
 
   # A14
   - platform: modbus_controller
-    modbus_controller_id: ${scc_name}_modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
     name: "${scc_name} Battery Rated System Voltage"
     address: 0x311D
     value_type: U_WORD
@@ -373,8 +373,8 @@ sensor:
 
   # A15
   - platform: modbus_controller
-    modbus_controller_id: ${scc_name}_modbus_controller
-    id: "battery_status_raw_value"
+    modbus_controller_id: ${scc_id}_modbus_controller
+    id: "${scc_id}_battery_status_raw_value"
     internal: true
     address: 0x3200
     value_type: U_WORD
@@ -383,8 +383,8 @@ sensor:
     
   # A16
   - platform: modbus_controller
-    modbus_controller_id: ${scc_name}_modbus_controller
-    id: "battery_charging_equipment_status_raw_value"
+    modbus_controller_id: ${scc_id}_modbus_controller
+    id: "${scc_id}_battery_charging_equipment_status_raw_value"
     internal: true
     address: 0x3201
     value_type: U_WORD
@@ -393,7 +393,7 @@ sensor:
 
   # A28 + A29
   - platform: modbus_controller
-    modbus_controller_id: ${scc_name}_modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
     name: "${scc_name} PV Generated Energy Day"
     force_new_range: true
     address: 0x330C
@@ -409,7 +409,7 @@ sensor:
 
   # A30 + A31
   - platform: modbus_controller
-    modbus_controller_id: ${scc_name}_modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
     name: "${scc_name} PV Generated Energy Month"
     address: 0x330E
     value_type: U_DWORD_R
@@ -424,7 +424,7 @@ sensor:
 
   # A32 + A33
   - platform: modbus_controller
-    modbus_controller_id: ${scc_name}_modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
     name: "${scc_name} PV Generated Energy Year"
     address: 0x3310
     value_type: U_DWORD_R
@@ -439,7 +439,7 @@ sensor:
 
   # A34 + A35
   - platform: modbus_controller
-    modbus_controller_id: ${scc_name}_modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
     name: "${scc_name} PV Generated Energy Total"
     address: 0x3312
     value_type: U_DWORD_R
@@ -455,8 +455,8 @@ sensor:
   # Battery parameters
   # A36
   - platform: modbus_controller
-    modbus_controller_id: ${scc_name}_modbus_controller
-    id: "battery_voltage_sensor"
+    modbus_controller_id: ${scc_id}_modbus_controller
+    id: "${scc_id}_battery_voltage_sensor"
     name: "${scc_name} Battery Voltage"
     address: 0x331A
     value_type: U_WORD
@@ -470,8 +470,8 @@ sensor:
 
   # A37 + A38
   - platform: modbus_controller
-    modbus_controller_id: ${scc_name}_modbus_controller
-    id: "battery_current_sensor"
+    modbus_controller_id: ${scc_id}_modbus_controller
+    id: "${scc_id}_battery_current_sensor"
     name: "${scc_name} Battery Current"
     address: 0x331B
     value_type: S_DWORD_R
@@ -484,7 +484,7 @@ sensor:
       - multiply: 0.01
 
   - platform: template
-    id: "battery_power_sensor"
+    id: "${scc_id}_battery_power_sensor"
     name: "${scc_name} Battery Power"
     update_interval: 2s
     device_class: "power"
@@ -492,7 +492,7 @@ sensor:
     unit_of_measurement: "W"
     accuracy_decimals: 2
     lambda: |-
-      return (id(battery_voltage_sensor).state) * (id(battery_current_sensor).state);
+      return (id({scc_id}_battery_voltage_sensor).state) * (id({scc_id}_battery_current_sensor).state);
   
   # Modbus Function Code 3 = Read Holding Registers
 
@@ -501,7 +501,7 @@ sensor:
   # 0x04 LFP 4S, 0x05 LFP 8S, 0x06 LFP 15S, 0x07 LFP 16S
   # 0x08 LNCM 3S, 0x09 LNCM 6S, 0x0A LNCM 7S, 0x0B LNCM 13S, 0x0C LNCM 14S
   - platform: modbus_controller
-    modbus_controller_id: ${scc_name}_modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
     name: "${scc_name} Battery Type"
     entity_category: diagnostic
     address: 0x9000
@@ -512,7 +512,7 @@ sensor:
 
   # B5
   - platform: modbus_controller
-    modbus_controller_id: ${scc_name}_modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
     name: "${scc_name} Battery Capacity"
     entity_category: diagnostic
     address: 0x9001
@@ -526,7 +526,7 @@ sensor:
 
   # B6
   - platform: modbus_controller
-    modbus_controller_id: ${scc_name}_modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
     name: "${scc_name} Temperature Compensation Coefficient"
     entity_category: diagnostic
     address: 0x9002
@@ -542,7 +542,7 @@ sensor:
   
   # B7
   - platform: modbus_controller
-    modbus_controller_id: ${scc_name}_modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
     name: "${scc_name} Overvoltage Disconnect Voltage"
     entity_category: diagnostic
     address: 0x9003
@@ -558,7 +558,7 @@ sensor:
   
   # B8
   - platform: modbus_controller
-    modbus_controller_id: ${scc_name}_modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
     name: "${scc_name} Charging Limit Voltage"
     entity_category: diagnostic
     address: 0x9004
@@ -574,7 +574,7 @@ sensor:
   
   # B9
   - platform: modbus_controller
-    modbus_controller_id: ${scc_name}_modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
     name: "${scc_name} Overvoltage Reconnect Voltage"
     entity_category: diagnostic
     address: 0x9005
@@ -590,7 +590,7 @@ sensor:
   
   # B11
   - platform: modbus_controller
-    modbus_controller_id: ${scc_name}_modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
     name: "${scc_name} Boost Charging Voltage"
     entity_category: diagnostic
     address: 0x9007
@@ -606,7 +606,7 @@ sensor:
   
   # B12
   - platform: modbus_controller
-    modbus_controller_id: ${scc_name}_modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
     name: "${scc_name} Float Charging Voltage"
     entity_category: diagnostic
     address: 0x9008
@@ -622,7 +622,7 @@ sensor:
   
   # B13
   - platform: modbus_controller
-    modbus_controller_id: ${scc_name}_modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
     name: "${scc_name} Boost Reconnect Charging Voltage"
     entity_category: diagnostic
     address: 0x9009
@@ -638,7 +638,7 @@ sensor:
   
   # B14
   - platform: modbus_controller
-    modbus_controller_id: ${scc_name}_modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
     name: "${scc_name} Low Voltage Reconnect Voltage"
     entity_category: diagnostic
     address: 0x900A
@@ -654,7 +654,7 @@ sensor:
   
   # B15
   - platform: modbus_controller
-    modbus_controller_id: ${scc_name}_modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
     name: "${scc_name} Undervoltage Alarm Recovery Voltage"
     entity_category: diagnostic
     address: 0x900B
@@ -670,7 +670,7 @@ sensor:
   
   # B16
   - platform: modbus_controller
-    modbus_controller_id: ${scc_name}_modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
     name: "${scc_name} Undervoltage Alarm Voltage"
     entity_category: diagnostic
     address: 0x900C
@@ -686,7 +686,7 @@ sensor:
   
   # B17
   - platform: modbus_controller
-    modbus_controller_id: ${scc_name}_modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
     name: "${scc_name} Low Voltage Disconnect Voltage"
     entity_category: diagnostic
     address: 0x900D
@@ -702,7 +702,7 @@ sensor:
   
   # B18
   - platform: modbus_controller
-    modbus_controller_id: ${scc_name}_modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
     name: "${scc_name} Discharging Limit Voltage"
     entity_category: diagnostic
     address: 0x900E
@@ -719,7 +719,7 @@ sensor:
   # B19
   # 0-auto recognize, 1-12V, 2-24V, 3-36V，4-48V，5-60V，6-110V
   - platform: modbus_controller
-    modbus_controller_id: ${scc_name}_modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
     name: "${scc_name} Battery Rated Voltage Level"
     entity_category: diagnostic
     address: 0x9067
@@ -736,9 +736,9 @@ text_sensor:
     name: "${scc_name} Charging Phase"
     entity_category: diagnostic
     lambda: |-
-      if (id(battery_charging_equipment_status_no_charging_binary_sensor).state) return { "No charging" };
-      else if (id(battery_charging_equipment_status_float_binary_sensor).state) return { "Float" };
-      else if (id(battery_charging_equipment_status_boost_binary_sensor).state) return { "Boost" };
+      if (id({scc_id}_battery_charging_equipment_status_no_charging_binary_sensor).state) return { "No charging" };
+      else if (id({scc_id}_battery_charging_equipment_status_float_binary_sensor).state) return { "Float" };
+      else if (id({scc_id}_battery_charging_equipment_status_boost_binary_sensor).state) return { "Boost" };
       else return { "Unknown" };
 
   - platform: template
@@ -746,11 +746,11 @@ text_sensor:
     update_interval: 60s
     entity_category: diagnostic
     lambda: |-
-      if (id(battery_status_normal_voltage_binary_sensor).state) return { "Normal" };
-      else if (id(battery_status_over_voltage_binary_sensor).state) return { "Over Voltage" };
-      else if (id(battery_status_under_voltage_binary_sensor).state) return { "Under Voltage" };
-      else if (id(battery_status_over_discharge_binary_sensor).state) return { "Over Discharge" }; 
-      else if (id(battery_status_fault_binary_sensor).state) return { "Fault" };
+      if (id({scc_id}_battery_status_normal_voltage_binary_sensor).state) return { "Normal" };
+      else if (id({scc_id}_battery_status_over_voltage_binary_sensor).state) return { "Over Voltage" };
+      else if (id({scc_id}_battery_status_under_voltage_binary_sensor).state) return { "Under Voltage" };
+      else if (id({scc_id}_battery_status_over_discharge_binary_sensor).state) return { "Over Discharge" }; 
+      else if (id({scc_id}_battery_status_fault_binary_sensor).state) return { "Fault" };
       else return { "Unknown" };
 
   - platform: template
@@ -758,9 +758,9 @@ text_sensor:
     update_interval: 60s
     entity_category: diagnostic
     lambda: |-
-      if (id(battery_status_normal_temp_sensor).state) return { "Normal" };
-      else if (id(battery_status_over_temp_sensor).state) return { "Over Temperature" };
-      else if (id(battery_status_low_temp_sensor).state) return { "Low Temperature" };
+      if (id({scc_id}_battery_status_normal_temp_sensor).state) return { "Normal" };
+      else if (id({scc_id}_battery_status_over_temp_sensor).state) return { "Over Temperature" };
+      else if (id({scc_id}_battery_status_low_temp_sensor).state) return { "Low Temperature" };
       else return { "Unknown" };
 
   - platform: template
@@ -768,6 +768,6 @@ text_sensor:
     update_interval: 60s
     entity_category: diagnostic
     lambda: |-
-      if (id(battery_status_inner_resistance_abnormal).state) return  { "Abnormal" };
-      else if (id(battery_status_inner_resistance_normal).state) return  { "Normal" };
+      if (id({scc_id}_battery_status_inner_resistance_abnormal).state) return  { "Abnormal" };
+      else if (id({scc_id}_battery_status_inner_resistance_normal).state) return  { "Normal" };
       else return { "Unknown" };
