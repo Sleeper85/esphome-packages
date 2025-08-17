@@ -1,5 +1,5 @@
-# Updated : 2025.08.03
-# Version : 1.1.3
+# Updated : 2025.08.12
+# Version : 1.1.2
 # GitHub  : https://github.com/Sleeper85/esphome-yambms
 
 # YamBMS ( Yet another multi-BMS Merging Solution )
@@ -17,16 +17,21 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/gpl.html>.
 
-# The settings below can be changed via `vars` when importing the package
-# or by declaring new `substitutions` in the main YAML
-substitutions:
-  esp32_canbus_id: '1'
-  esp32_canbus_bitrate: '500kbps'
+wifi:
+  id: my_network
+  reboot_timeout: 0s
+  ap:
+    ssid: !secret wifi_ap_ssid
+    password: !secret wifi_ap_password
 
-canbus:
-  - platform: esp32_can
-    id: ${canbus_node_id}
-    tx_pin: ${tx_pin_4}
-    rx_pin: ${rx_pin_4}
-    can_id: ${esp32_canbus_id}
-    bit_rate: ${esp32_canbus_bitrate}
+button:
+  # WiFi AP mode
+  - platform: template
+    name: "ESP32 WiFi AP mode"
+    on_press:
+      - lambda: |-
+          id(my_network).set_ap_timeout(1);
+          id(my_network).disable();
+          id(my_network).clear_sta();
+          id(my_network).enable();
+    entity_category: config
