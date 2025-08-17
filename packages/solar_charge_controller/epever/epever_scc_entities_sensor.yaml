@@ -1,5 +1,5 @@
-# Updated : 2025.06.03
-# Version : 1.1.3
+# Updated : 2025.08.17
+# Version : 1.1.4
 # GitHub  : https://github.com/Sleeper85/esphome-packages
 
 # This YAML is free software: you can redistribute it and/or
@@ -186,7 +186,7 @@ binary_sensor:
   # A16 | D1 | 00H | Normal
   - platform: template
     id: "battery_charging_equipment_status_normal_binary_sensor"
-    name: "${scc_name} Charging Status Running"
+    name: "${scc_name} Charging Status Normal"
     entity_category: diagnostic
     lambda: |-
       uint16_t value = int(id(battery_charging_equipment_status_raw_value).state) >> 1;
@@ -199,7 +199,7 @@ binary_sensor:
   # A16 | D1 | 01H | Fault
   - platform: template
     id: "battery_charging_equipment_status_fault_binary_sensor"
-    name: "${scc_name} Charging Status Running"
+    name: "${scc_name} Charging Status Fault"
     entity_category: diagnostic
     lambda: |-
       uint16_t value = int(id(battery_charging_equipment_status_raw_value).state) >> 1;
