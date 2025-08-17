@@ -37,7 +37,7 @@ binary_sensor:
     name: "${scc_name} Battery Status Normal Voltage"
     entity_category: diagnostic
     lambda: |-
-     if(id({scc_id}_battery_status_raw_value).state == 0) {
+     if(id(${scc_id}_battery_status_raw_value).state == 0) {
       return true;
      } else {
       return false;
@@ -49,7 +49,7 @@ binary_sensor:
     name: "${scc_name} Battery Status Over Voltage"
     entity_category: diagnostic
     lambda: |-
-     if(id({scc_id}_battery_status_raw_value).state == 1) {
+     if(id(${scc_id}_battery_status_raw_value).state == 1) {
       return true;
      } else {
       return false;
@@ -61,7 +61,7 @@ binary_sensor:
     name: "${scc_name} Battery Status Under Voltage"
     entity_category: diagnostic
     lambda: |-
-     if(id({scc_id}_battery_status_raw_value).state == 2) {
+     if(id(${scc_id}_battery_status_raw_value).state == 2) {
       return true;
      } else {
       return false;
@@ -73,7 +73,7 @@ binary_sensor:
     name: "${scc_name} Battery Status Over Discharge"
     entity_category: diagnostic
     lambda: |-
-     if(id({scc_id}_battery_status_raw_value).state == 3) {
+     if(id(${scc_id}_battery_status_raw_value).state == 3) {
       return true;
      } else {
       return false;
@@ -85,7 +85,7 @@ binary_sensor:
     name: "${scc_name} Battery Status Fault"
     entity_category: diagnostic
     lambda: |-
-      if(id({scc_id}_battery_status_raw_value).state == 4) {
+      if(id(${scc_id}_battery_status_raw_value).state == 4) {
         return true;
       } else {
         return false;
@@ -97,7 +97,7 @@ binary_sensor:
     name: "${scc_name} Battery Temp. Status Normal"
     entity_category: diagnostic
     lambda: |-
-      uint16_t value = int(id({scc_id}_battery_status_raw_value).state) >> 4;
+      uint16_t value = int(id(${scc_id}_battery_status_raw_value).state) >> 4;
       if(value == 0) {
         return true;
       } else {
@@ -110,7 +110,7 @@ binary_sensor:
     name: "${scc_name} Battery Temp. Status Too High"
     entity_category: diagnostic
     lambda: |-
-      uint16_t value = int(id({scc_id}_battery_status_raw_value).state) >> 4;
+      uint16_t value = int(id(${scc_id}_battery_status_raw_value).state) >> 4;
       if(value == 1) {
         return true;
       } else {
@@ -123,7 +123,7 @@ binary_sensor:
     name: "${scc_name} Battery Temp. Status Too Low"
     entity_category: diagnostic
     lambda: |-
-      uint16_t value = int(id({scc_id}_battery_status_raw_value).state) >> 4;
+      uint16_t value = int(id(${scc_id}_battery_status_raw_value).state) >> 4;
       if(value == 2) {
         return true;
       } else {
@@ -136,7 +136,7 @@ binary_sensor:
     name: "${scc_name} Battery Inner Resistance Normal"
     entity_category: diagnostic
     lambda: |-
-      uint16_t value = int(id({scc_id}_battery_charging_equipment_status_raw_value).state) >> 7;
+      uint16_t value = int(id(${scc_id}_battery_charging_equipment_status_raw_value).state) >> 7;
       if(value == 0) {
         return true; // Normal
       } else {
@@ -149,7 +149,7 @@ binary_sensor:
     name: "${scc_name} Battery Inner Resistance Abnormal"
     entity_category: diagnostic
     lambda: |-
-      uint16_t value = int(id({scc_id}_battery_charging_equipment_status_raw_value).state) >> 7;
+      uint16_t value = int(id(${scc_id}_battery_charging_equipment_status_raw_value).state) >> 7;
       if(value == 0) {
         return false; // Normal
       } else {
@@ -163,7 +163,7 @@ binary_sensor:
     name: "${scc_name} Charging Status Standby"
     entity_category: diagnostic
     lambda: |-
-      uint16_t value = id({scc_id}_battery_charging_equipment_status_raw_value).state;
+      uint16_t value = id(${scc_id}_battery_charging_equipment_status_raw_value).state;
       if(value == 0) {
         return true;
       } else {
@@ -176,7 +176,7 @@ binary_sensor:
     name: "${scc_name} Charging Status Running"
     entity_category: diagnostic
     lambda: |-
-      uint16_t value = id({scc_id}_battery_charging_equipment_status_raw_value).state;
+      uint16_t value = id(${scc_id}_battery_charging_equipment_status_raw_value).state;
       if(value == 1) {
         return true;
       } else {
@@ -189,7 +189,7 @@ binary_sensor:
     name: "${scc_name} Charging Status Normal"
     entity_category: diagnostic
     lambda: |-
-      uint16_t value = int(id({scc_id}_battery_charging_equipment_status_raw_value).state) >> 1;
+      uint16_t value = int(id(${scc_id}_battery_charging_equipment_status_raw_value).state) >> 1;
       if(value == 0) {
         return true;
       } else {
@@ -202,7 +202,7 @@ binary_sensor:
     name: "${scc_name} Charging Status Fault"
     entity_category: diagnostic
     lambda: |-
-      uint16_t value = int(id({scc_id}_battery_charging_equipment_status_raw_value).state) >> 1;
+      uint16_t value = int(id(${scc_id}_battery_charging_equipment_status_raw_value).state) >> 1;
       if(value == 1) {
         return true;
       } else {
@@ -215,7 +215,7 @@ binary_sensor:
     name: "${scc_name} Charging Status No Charging"
     entity_category: diagnostic
     lambda: |-
-      uint16_t value = int(id({scc_id}_battery_charging_equipment_status_raw_value).state) >> 2;
+      uint16_t value = int(id(${scc_id}_battery_charging_equipment_status_raw_value).state) >> 2;
       value = value & 0x0003;
       if(value == 0) {
         return true;
@@ -229,7 +229,7 @@ binary_sensor:
     name: "${scc_name} Charging Status Float"
     entity_category: diagnostic
     lambda: |-
-      uint16_t value = int(id({scc_id}_battery_charging_equipment_status_raw_value).state) >> 2;
+      uint16_t value = int(id(${scc_id}_battery_charging_equipment_status_raw_value).state) >> 2;
       value = value & 0x0003;
       if(value == 1) {
         return true;
@@ -243,7 +243,7 @@ binary_sensor:
     name: "${scc_name} Charging Status Boost"
     entity_category: diagnostic
     lambda: |-
-      uint16_t value = int(id({scc_id}_battery_charging_equipment_status_raw_value).state) >> 2;
+      uint16_t value = int(id(${scc_id}_battery_charging_equipment_status_raw_value).state) >> 2;
       value = value & 0x0003;
       if(value == 2) {
         return true;
@@ -257,7 +257,7 @@ binary_sensor:
     name: "${scc_name} Charging Status Equalization"
     entity_category: diagnostic
     lambda: |-
-      uint16_t value = int(id({scc_id}_battery_charging_equipment_status_raw_value).state) >> 2;
+      uint16_t value = int(id(${scc_id}_battery_charging_equipment_status_raw_value).state) >> 2;
       value = value & 0x0003;
       if(value == 3) {
         return true;
@@ -492,7 +492,7 @@ sensor:
     unit_of_measurement: "W"
     accuracy_decimals: 2
     lambda: |-
-      return (id({scc_id}_battery_voltage_sensor).state) * (id({scc_id}_battery_current_sensor).state);
+      return (id(${scc_id}_battery_voltage_sensor).state) * (id(${scc_id}_battery_current_sensor).state);
   
   # Modbus Function Code 3 = Read Holding Registers
 
@@ -736,9 +736,9 @@ text_sensor:
     name: "${scc_name} Charging Phase"
     entity_category: diagnostic
     lambda: |-
-      if (id({scc_id}_battery_charging_equipment_status_no_charging_binary_sensor).state) return { "No charging" };
-      else if (id({scc_id}_battery_charging_equipment_status_float_binary_sensor).state) return { "Float" };
-      else if (id({scc_id}_battery_charging_equipment_status_boost_binary_sensor).state) return { "Boost" };
+      if (id(${scc_id}_battery_charging_equipment_status_no_charging_binary_sensor).state) return { "No charging" };
+      else if (id(${scc_id}_battery_charging_equipment_status_float_binary_sensor).state) return { "Float" };
+      else if (id(${scc_id}_battery_charging_equipment_status_boost_binary_sensor).state) return { "Boost" };
       else return { "Unknown" };
 
   - platform: template
@@ -746,11 +746,11 @@ text_sensor:
     update_interval: 60s
     entity_category: diagnostic
     lambda: |-
-      if (id({scc_id}_battery_status_normal_voltage_binary_sensor).state) return { "Normal" };
-      else if (id({scc_id}_battery_status_over_voltage_binary_sensor).state) return { "Over Voltage" };
-      else if (id({scc_id}_battery_status_under_voltage_binary_sensor).state) return { "Under Voltage" };
-      else if (id({scc_id}_battery_status_over_discharge_binary_sensor).state) return { "Over Discharge" }; 
-      else if (id({scc_id}_battery_status_fault_binary_sensor).state) return { "Fault" };
+      if (id(${scc_id}_battery_status_normal_voltage_binary_sensor).state) return { "Normal" };
+      else if (id(${scc_id}_battery_status_over_voltage_binary_sensor).state) return { "Over Voltage" };
+      else if (id(${scc_id}_battery_status_under_voltage_binary_sensor).state) return { "Under Voltage" };
+      else if (id(${scc_id}_battery_status_over_discharge_binary_sensor).state) return { "Over Discharge" }; 
+      else if (id(${scc_id}_battery_status_fault_binary_sensor).state) return { "Fault" };
       else return { "Unknown" };
 
   - platform: template
@@ -758,9 +758,9 @@ text_sensor:
     update_interval: 60s
     entity_category: diagnostic
     lambda: |-
-      if (id({scc_id}_battery_status_normal_temp_sensor).state) return { "Normal" };
-      else if (id({scc_id}_battery_status_over_temp_sensor).state) return { "Over Temperature" };
-      else if (id({scc_id}_battery_status_low_temp_sensor).state) return { "Low Temperature" };
+      if (id(${scc_id}_battery_status_normal_temp_sensor).state) return { "Normal" };
+      else if (id(${scc_id}_battery_status_over_temp_sensor).state) return { "Over Temperature" };
+      else if (id(${scc_id}_battery_status_low_temp_sensor).state) return { "Low Temperature" };
       else return { "Unknown" };
 
   - platform: template
@@ -768,6 +768,6 @@ text_sensor:
     update_interval: 60s
     entity_category: diagnostic
     lambda: |-
-      if (id({scc_id}_battery_status_inner_resistance_abnormal).state) return  { "Abnormal" };
-      else if (id({scc_id}_battery_status_inner_resistance_normal).state) return  { "Normal" };
+      if (id(${scc_id}_battery_status_inner_resistance_abnormal).state) return  { "Abnormal" };
+      else if (id(${scc_id}_battery_status_inner_resistance_normal).state) return  { "Normal" };
       else return { "Unknown" };

@@ -24,20 +24,20 @@ script:
   - id: ${scc_id}_write_0x9003_to_0x900E_registers
     then:
       - lambda: |-
-          esphome::modbus_controller::ModbusController *controller = id({scc_id}_modbus_controller);
+          esphome::modbus_controller::ModbusController *controller = id(${scc_id}_modbus_controller);
           std::vector<uint16_t> battery_settings(12);
-          battery_settings[0]  = uint16_t((id({scc_id}_overvoltage_disconnect_voltage_number).state)*100);
-          battery_settings[1]  = uint16_t((id({scc_id}_charging_limit_voltage_number).state)*100);
-          battery_settings[2]  = uint16_t((id({scc_id}_overvoltage_reconnect_voltage_number).state)*100);
-          battery_settings[3]  = uint16_t((id({scc_id}_equalization_charging_voltage_number).state)*100);
-          battery_settings[4]  = uint16_t((id({scc_id}_boost_charging_voltage_number).state)*100);
-          battery_settings[5]  = uint16_t((id({scc_id}_float_charging_voltage_number).state)*100);
-          battery_settings[6]  = uint16_t((id({scc_id}_boost_reconnect_charging_voltage_number).state)*100);
-          battery_settings[7]  = uint16_t((id({scc_id}_low_voltage_reconnect_voltage_number).state)*100);
-          battery_settings[8]  = uint16_t((id({scc_id}_undervoltage_alarm_recovery_voltage_number).state)*100);
-          battery_settings[9]  = uint16_t((id({scc_id}_undervoltage_alarm_voltage_number).state)*100);
-          battery_settings[10] = uint16_t(id({scc_id}_low_voltage_disconnect_voltage_number).state*100);
-          battery_settings[11] = uint16_t(id({scc_id}_discharging_limit_voltage_number).state*100);
+          battery_settings[0]  = uint16_t((id(${scc_id}_overvoltage_disconnect_voltage_number).state)*100);
+          battery_settings[1]  = uint16_t((id(${scc_id}_charging_limit_voltage_number).state)*100);
+          battery_settings[2]  = uint16_t((id(${scc_id}_overvoltage_reconnect_voltage_number).state)*100);
+          battery_settings[3]  = uint16_t((id(${scc_id}_equalization_charging_voltage_number).state)*100);
+          battery_settings[4]  = uint16_t((id(${scc_id}_boost_charging_voltage_number).state)*100);
+          battery_settings[5]  = uint16_t((id(${scc_id}_float_charging_voltage_number).state)*100);
+          battery_settings[6]  = uint16_t((id(${scc_id}_boost_reconnect_charging_voltage_number).state)*100);
+          battery_settings[7]  = uint16_t((id(${scc_id}_low_voltage_reconnect_voltage_number).state)*100);
+          battery_settings[8]  = uint16_t((id(${scc_id}_undervoltage_alarm_recovery_voltage_number).state)*100);
+          battery_settings[9]  = uint16_t((id(${scc_id}_undervoltage_alarm_voltage_number).state)*100);
+          battery_settings[10] = uint16_t(id(${scc_id}_low_voltage_disconnect_voltage_number).state*100);
+          battery_settings[11] = uint16_t(id(${scc_id}_discharging_limit_voltage_number).state*100);
           esphome::modbus_controller::ModbusCommandItem battery_command = esphome::modbus_controller::ModbusCommandItem::create_write_multiple_command(controller, 0x9003, battery_settings.size(), battery_settings);
           delay(200);
           controller->queue_command(battery_command);
