@@ -1,5 +1,5 @@
-# Updated : 2025.05.22
-# Version : 1.1.1
+# Updated : 2025.12.30
+# Version : 1.1.2
 # GitHub  : https://github.com/Sleeper85/esphome-packages
 
 # This YAML is free software: you can redistribute it and/or
@@ -32,3 +32,4 @@ packages:
   deye_switch: !include deye_inverter_entities_switch.yaml         # Deye settings
   deye_number: !include deye_inverter_entities_number.yaml         # Deye settings
   deye_select: !include deye_inverter_entities_select.yaml         # Deye settings
+  deye_advanced: !include deye_inverter_entities_advanced.yaml     # Deye advanced settings
