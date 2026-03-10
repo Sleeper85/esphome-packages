@@ -1,5 +1,5 @@
-# Updated : 2025.12.30
-# Version : 1.1.1
+# Updated : 2026.03.10
+# Version : 1.1.2
 # GitHub  : https://github.com/Sleeper85/esphome-packages
 
 # This YAML is free software: you can redistribute it and/or
@@ -614,6 +614,21 @@ select:
       "Grid off, Gen on, GM off, BU off, CH on": 14
       "Grid on, Gen on, GM off, BU off, CH on": 15      
 
+  # REG 248 — TOU week days
+  - platform: modbus_controller
+    use_write_multiple: true
+    modbus_controller_id: ${inverter_name}_modbus_controller
+    name: ${name} ${inverter_name} TOU week days
+    id: ${inverter_name}_tou_week_days
+    address: 248
+    value_type: U_WORD
+    entity_category: config
+    icon: "mdi:calendar-clock"
+    optionsmap:
+      "❌ Disabled": 0
+      "✅ All days": 255
+      "Mon – Fri": 63
+      "Sat – Sun": 193
 
 switch:
 
@@ -1095,6 +1110,90 @@ number:
     step: 5
     value_type: U_WORD
 
+  ##### TOU - Set TimeZone Start Times #####
+  # REG 250-255 — Writing start times (HHMM)
+  - platform: modbus_controller
+    use_write_multiple: true
+    modbus_controller_id: ${inverter_name}_modbus_controller
+    name: "${name}_${inverter_name}_set_timezone1"
+    id: ${inverter_name}_set_timezone1
+    address: 250
+    value_type: U_WORD
+    min_value: 0
+    max_value: 2359
+    step: 1
+    mode: box
+    icon: "mdi:clock-edit"
+
+  - platform: modbus_controller
+    use_write_multiple: true
+    modbus_controller_id: ${inverter_name}_modbus_controller
+    name: "${name}_${inverter_name}_set_timezone2"
+    id: ${inverter_name}_set_timezone2
+    address: 251
+    value_type: U_WORD
+    min_value: 0
+    max_value: 2359
+    step: 1
+    mode: box
+    icon: "mdi:clock-edit"
+
+  - platform: modbus_controller
+    use_write_multiple: true
+    modbus_controller_id: ${inverter_name}_modbus_controller
+    name: "${name}_${inverter_name}_set_timezone3"
+    id: ${inverter_name}_set_timezone3
+    address: 252
+    value_type: U_WORD
+    min_value: 0
+    max_value: 2359
+    step: 1
+    mode: box
+    icon: "mdi:clock-edit"
+
+  - platform: modbus_controller
+    use_write_multiple: true
+    modbus_controller_id: ${inverter_name}_modbus_controller
+    name: "${name}_${inverter_name}_set_timezone4"
+    id: ${inverter_name}_set_timezone4
+    address: 253
+    value_type: U_WORD
+    min_value: 0
+    max_value: 2359
+    step: 1
+    mode: box
+    icon: "mdi:clock-edit"
+
+  - platform: modbus_controller
+    use_write_multiple: true
+    modbus_controller_id: ${inverter_name}_modbus_controller
+    name: "${name}_${inverter_name}_set_timezone5"
+    id: ${inverter_name}_set_timezone5
+    address: 254
+    value_type: U_WORD
+    min_value: 0
+    max_value: 2359
+    step: 1
+    mode: box
+    icon: "mdi:clock-edit"
+
+  - platform: modbus_controller
+    use_write_multiple: true
+    modbus_controller_id: ${inverter_name}_modbus_controller
+    name: "${name}_${inverter_name}_set_timezone6"
+    id: ${inverter_name}_set_timezone6
+    address: 255
+    value_type: U_WORD
+    min_value: 0
+    max_value: 2359
+    step: 1
+    mode: box
+    icon: "mdi:clock-edit"
+
+
+
+
+
 text_sensor:
 
   - platform: template
@@ -1198,21 +1297,3 @@ text_sensor:
         char formatted_time[6];
         snprintf(formatted_time, sizeof(formatted_time), "%02u:%02u", hours, minutes);
         return esphome::optional<std::string>(formatted_time);    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
