@@ -1,5 +1,5 @@
-# Updated : 2025.06.02
-# Version : 1.1.3
+# Updated : 2026.07.09
+# Version : 1.1.4
 # GitHub  : https://github.com/Sleeper85/esphome-packages
 
 # This YAML is free software: you can redistribute it and/or
@@ -142,7 +142,7 @@ packages:
     ref: main
     refresh: 0s
     files:
-      - path: 'packages/inverter/deye/deye_inverter_standard.yaml'
+      - path: 'packages/inverter/deye/deye_inverter_full.yaml' # standard / full
         vars:
           inverter_name: 'Inverter_1' # Name without space
           inverter_modbus_id: 'deye_modbus'
