@@ -1,5 +1,5 @@
-# Updated : 2025.05.22
-# Version : 1.1.1
+# Updated : 2026.07.11
+# Version : 1.1.2
 # GitHub  : https://github.com/Sleeper85/esphome-packages
 
 # This YAML is free software: you can redistribute it and/or
@@ -16,12 +16,13 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/gpl.html>.
 
 modbus_controller:
- - id: ${inverter_name}_modbus_controller
-   modbus_id: ${inverter_modbus_id}
-   address: ${inverter_modbus_address}
-   command_throttle: ${inverter_modbus_throttle}
-   update_interval: ${inverter_update_interval}
-   setup_priority: -10
+  - id: ${inverter_name}_modbus_controller
+    modbus_id: ${inverter_modbus_id}
+    address: ${inverter_modbus_address}
+    update_interval: ${inverter_update_interval}
+    max_cmd_retries: 3
+    offline_skip_updates: 5 # Fixed with PR #11781
+    setup_priority: -10
 
 # +--------------------------------------+
 # |             Packages                 |

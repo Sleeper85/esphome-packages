@@ -1,5 +1,5 @@
-# Updated : 2025.08.17
-# Version : 1.1.4
+# Updated : 2026.07.11
+# Version : 1.1.5
 # GitHub  : https://github.com/Sleeper85/esphome-packages
 
 # This YAML is free software: you can redistribute it and/or
@@ -67,15 +67,15 @@ substitutions:
 # | Packages                             |
 # +--------------------------------------+
 packages:
-
-  ############### >>> UNCOMMENT YOUR BOARD <<< ###############
-  ############### >>>   ONLY ONE BOARD !   <<< ###############
-
-  board:
+  remote_packages:
     url: https://github.com/Sleeper85/esphome-packages
     ref: main
     refresh: 0s
     files:
+
+  ############### >>> UNCOMMENT YOUR BOARD <<< ###############
+  ############### >>>   ONLY ONE BOARD !   <<< ###############
+
       - path: 'packages/board/board_ESP32_Generic.yaml'
       # - path: 'packages/board/board_ESP32_DevKit-V1.yaml'
       # - path: 'packages/board/board_ESP32_LilyGo-T-CAN485.yaml'
@@ -100,11 +100,6 @@ packages:
 
   ########### >>> UNCOMMENT YOUR BOARD OPTIONS <<< ###########
 
-  board_options:
-    url: https://github.com/Sleeper85/esphome-packages
-    ref: main
-    refresh: 0s
-    files:
       # UART 1
       - path: 'packages/board/board_options_itf_uart_esp_1.yaml'
       # UART 2
@@ -124,31 +119,22 @@ packages:
 
   ############################################################
 
-  modbus:
-    url: https://github.com/Sleeper85/esphome-packages
-    ref: main
-    refresh: 0s
-    files:
+      # Modbus
       - path: 'packages/base/device_modbus.yaml'
         vars:
           modbus_id: 'epever_modbus'
           modbus_role: 'client' # client / server
           modbus_uart_id: 'uart_esp_1' # RS485 board
           modbus_baud_rate: '115200' # 9600 / 19200 / 11520
-          modbus_send_wait_time: '250ms' # time in milliseconds before the next ModBUS command is sent if an answer from a previous command is pending
+          # modbus_send_wait_time: '2000ms'
 
-  epever_scc:
-    url: https://github.com/Sleeper85/esphome-packages
-    ref: main
-    refresh: 0s
-    files:
+      # Epever SCC MPPT
       - path: 'packages/solar_charge_controller/epever/epever_scc_full.yaml'
         vars:
           scc_id: 'scc_1'                                           # ID
           scc_name: 'SCC 1'                                         # Name
           scc_modbus_id: 'epever_modbus'
           scc_modbus_address: '1'
-          scc_modbus_throttle: '0ms'
           scc_update_interval: '5s'
           scc_input_number_mode: 'box'                              # box / slider
           scc_skip_updates_1: "30"                                  # 30s
@@ -174,16 +160,13 @@ packages:
           scc_low_voltage_disconnect_voltage: '24.0'                # 3.0V/cell
           scc_discharging_limit_voltage: '22.4'                     # 2.8V/cell
 
-  # +--------------------------------------+
-  # | DEBUG ( logger level must be DEBUG ) |
-  # +--------------------------------------+
+  ########### >>> DEBUG <<< ###########
 
-  debug:
-    url: https://github.com/Sleeper85/esphome-packages
-    ref: main
-    refresh: 0s
-    files:
-      - path: 'packages/base/device_debug_ESP32.yaml'
+      - path: packages/base/device_debug_ESP32.yaml
+      # - path: packages/base/device_debug_ESP32_PSRAM.yaml
         vars:
           debug_name: 'Debug'
           debug_update_interval: '5s'
+          # Size of your PSRAM in bits
+          # 8Mb='8388608' | 6Mb='6291456' | 4Mb='4194304' | 2Mb='2097152' | NoPSRAM='0'
+          debug_psram_size: '8388608'
