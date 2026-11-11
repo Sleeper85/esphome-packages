@@ -1,5 +1,5 @@
-# Updated : 2026.07.11
-# Version : 1.1.3
+# Updated : 2026.11.11
+# Version : 1.1.4
 # GitHub  : https://github.com/Sleeper85/esphome-packages
 
 # This YAML is free software: you can redistribute it and/or
@@ -27,7 +27,7 @@
 #     dns2: 8.8.4.4
 
 logger:
-  level: DEBUG # VERBOSE / DEBUG / INFO / WARN
+  level: INFO # VERBOSE / DEBUG / INFO / WARN
 
 ota:
   platform: esphome
@@ -59,9 +59,8 @@ api:
 # +--------------------------------------+
 substitutions:
   # Name
-  name: '' # Name that can be added as a second prefix after the friendly name, you can leave it blank.
   hostname: 'epever-node' # This is the name of the ESP32 node. It should always be unique in your ESPHome network.
-  friendly_name : 'Epever' # Prefix added in front of all entity names and also to classify them.
+  friendly_name : 'Epever' # Name of the ESP32 node in Home Assistant. Each package adds its own sub-device under it.
 
 # +--------------------------------------+
 # | Packages                             |
@@ -73,71 +72,83 @@ packages:
     refresh: 0s
     files:
 
-  ############### >>> UNCOMMENT YOUR BOARD <<< ###############
-  ############### >>>   ONLY ONE BOARD !   <<< ###############
+  # +------------------------------------------------------------------------------+
+  # | >>> UNCOMMENT YOUR BOARD
+  # | >>> ONLY ONE BOARD !
+  # +------------------------------------------------------------------------------+
 
       - path: 'packages/board/board_ESP32_Generic.yaml'
-      # - path: 'packages/board/board_ESP32_DevKit-V1.yaml'
-      # - path: 'packages/board/board_ESP32_LilyGo-T-CAN485.yaml'
-      # - path: 'packages/board/board_ESP32_EVB.yaml'
       # - path: 'packages/board/board_ESP32_Atom-Lite.yaml'
+      # - path: 'packages/board/board_ESP32_DevKit-V1.yaml'
+      # - path: 'packages/board/board_ESP32_EVB.yaml'
+      # - path: 'packages/board/board_ESP32_iBMS_CAN_RS485_V3.3.yaml'
+      # - path: 'packages/board/board_ESP32_LilyGo-T-CAN485.yaml'
       # - path: 'packages/board/board_ESP32-C3_DevKitM-1.yaml'
       # - path: 'packages/board/board_ESP32-C3_ETH01-EVO.yaml'
+      # - path: 'packages/board/board_ESP32-C3_FlipC3.yaml'
+      # - path: 'packages/board/board_ESP32-S3_Generic.yaml'
+      # - path: 'packages/board/board_ESP32-S3_AtomS3-Lite.yaml'
+      # - path: 'packages/board/board_ESP32-S3_AtomS3.yaml'
+      # - path: 'packages/board/board_ESP32-S3_AtomS3R.yaml'
       # - path: 'packages/board/board_ESP32-S3_DevKitC-1_LED-38.yaml'
       # - path: 'packages/board/board_ESP32-S3_DevKitC-1_LED-48.yaml'
       # - path: 'packages/board/board_ESP32-S3_LilyGo-T-Connect.yaml'
-      # - path: 'packages/board/board_ESP32-S3_AtomS3-Lite.yaml'
+      # - path: 'packages/board/board_ESP32-S3_LilyGo-T-Connect-Pro.yaml'
+      # - path: 'packages/board/board_ESP32-S3_WS-ETH.yaml'
+      # - path: 'packages/board/board_ESP32-S3_WS-RS485-CAN.yaml'
+      # - path: 'packages/board/board_ESP32-S3_WS-Touch-LCD-4.3.yaml'
+      # - path: 'packages/board/board_ESP32-S3_WS-Touch-LCD-7.yaml'
+      # - path: 'packages/board/board_ESP32-S3_XIAO.yaml'
+      # - path: 'packages/board/board_ESP32-S3_YBoard.yaml'
 
-      # - path: 'packages/board/board_ESP32-S3_AtomS3.yaml'
-      #   vars:
-      #     display_auto_next_page_interval: '5s'
-      #     display_rotation: '0' # 0/90/180/270 rotation angle in degrees
 
-      # - path: 'packages/board/board_ESP32-S3_AtomS3R.yaml'
-      #   vars:
-      #     display_auto_next_page_interval: '5s'
-      #     display_rotation: '0' # 0/90/180/270 rotation angle in degrees
 
-  ########### >>> UNCOMMENT YOUR BOARD OPTIONS <<< ###########
+  # +------------------------------------------------------------------------------+
+  # | >>> Board Options
+  # | >>> Uncomment your interfaces and options
+  # +------------------------------------------------------------------------------+
 
-      # UART 1
-      - path: 'packages/board/board_options_itf_uart_esp_1.yaml'
-      # UART 2
-      # - path: 'packages/board/board_options_itf_uart_esp_2.yaml'
-      # UART 3
-      # - path: 'packages/board/board_options_itf_uart_esp_3.yaml'
+      # PSRAM octal 80Mhz
+      # - path: 'packages/board/board_options_PSRAM_octal_80Mhz.yaml'
 
-      # ESP32_CAN (TJA105x, SN65HVD230, M5Stack CAN base/unit)
-      # - path: 'packages/board/board_options_itf_canbus_esp32_can.yaml'
-      #   vars:
-      #     canbus_node_id: 'canbus_node_1'
-      
-      # MCP2515
-      # - path: 'packages/board/board_options_itf_canbus_mcp2515.yaml'
-      #   vars:
-      #     canbus_node_id: 'canbus_node_2'
+      # WiFi AP @ 192.168.4.1
+      # - path: 'packages/board/board_options_wifi_ap.yaml'
 
-  ############################################################
+      # Captive Portal @ 192.168.4.1
+      # - path: 'packages/board/board_options_captive_portal.yaml'
 
-      # Modbus
-      - path: 'packages/base/device_modbus.yaml'
+
+
+  # +------------------------------------------------------------------------------+
+  # | >>> Devices packages
+  # +------------------------------------------------------------------------------+
+
+      # Modbus : the UART named by `modbus_uart_id` is declared by this package
+      - path: 'packages/board/board_options_itf_modbus.yaml'
         vars:
-          modbus_id: 'epever_modbus'
+          modbus_id: 'epever' # full id = modbus_client_epever
           modbus_role: 'client' # client / server
-          modbus_uart_id: 'uart_esp_1' # RS485 board
-          modbus_baud_rate: '115200' # 9600 / 19200 / 11520
-          # modbus_send_wait_time: '2000ms'
+          modbus_uart_id: 'uart_esp_1' # uart_esp_1 / uart_esp_2 / uart_esp_3
+          modbus_baud_rate: '115200' # 9600 / 19200 / 115200
+          modbus_send_wait_time: '500ms' # max time to wait for the first byte of a response
+          modbus_turnaround_time: '50ms' # pause after a response before the next command
+          # uart_flow_control_pin: ${talk_pin} # only if your RS485 transceiver needs a flow control pin
 
       # Epever Inverter
       - path: 'packages/inverter/epever/epever_inverter_full.yaml'
         vars:
-          inverter_name: 'Inverter_1' # Name without space
-          inverter_modbus_id: 'epever_modbus'
+          inverter_id: 'inverter_1' # ID (no space), prefix of all IDs of this package
+          inverter_name: 'Inverter 1' # Name of the sub-device in Home Assistant
+          inverter_modbus_id: 'modbus_client_epever'
           inverter_modbus_address: '3' # Epever SHI 3000
           inverter_update_interval: '5s'
           inverter_input_number_mode: 'box' # box / slider
 
-  ########### >>> DEBUG <<< ###########
+
+
+  # +------------------------------------------------------------------------------+
+  # | >>> DEBUG
+  # +------------------------------------------------------------------------------+
 
       - path: packages/base/device_debug_ESP32.yaml
       # - path: packages/base/device_debug_ESP32_PSRAM.yaml
