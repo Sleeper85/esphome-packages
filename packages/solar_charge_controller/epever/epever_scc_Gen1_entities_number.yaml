@@ -1,5 +1,5 @@
-# Updated : 2025.08.17
-# Version : 1.1.4
+# Updated : 2026.11.11
+# Version : 1.1.5
 # GitHub  : https://github.com/Sleeper85/esphome-packages
 
 # This YAML is free software: you can redistribute it and/or
@@ -22,26 +22,46 @@
 
 script:
   - id: ${scc_id}_write_0x9003_to_0x900E_registers
+    mode: restart
     then:
-      - lambda: |-
-          esphome::modbus_controller::ModbusController *controller = id(${scc_id}_modbus_controller);
-          std::vector<uint16_t> battery_settings(12);
-          battery_settings[0]  = uint16_t((id(${scc_id}_overvoltage_disconnect_voltage_number).state)*100);
-          battery_settings[1]  = uint16_t((id(${scc_id}_charging_limit_voltage_number).state)*100);
-          battery_settings[2]  = uint16_t((id(${scc_id}_overvoltage_reconnect_voltage_number).state)*100);
-          battery_settings[3]  = uint16_t((id(${scc_id}_equalization_charging_voltage_number).state)*100);
-          battery_settings[4]  = uint16_t((id(${scc_id}_boost_charging_voltage_number).state)*100);
-          battery_settings[5]  = uint16_t((id(${scc_id}_float_charging_voltage_number).state)*100);
-          battery_settings[6]  = uint16_t((id(${scc_id}_boost_reconnect_charging_voltage_number).state)*100);
-          battery_settings[7]  = uint16_t((id(${scc_id}_low_voltage_reconnect_voltage_number).state)*100);
-          battery_settings[8]  = uint16_t((id(${scc_id}_undervoltage_alarm_recovery_voltage_number).state)*100);
-          battery_settings[9]  = uint16_t((id(${scc_id}_undervoltage_alarm_voltage_number).state)*100);
-          battery_settings[10] = uint16_t(id(${scc_id}_low_voltage_disconnect_voltage_number).state*100);
-          battery_settings[11] = uint16_t(id(${scc_id}_discharging_limit_voltage_number).state*100);
-          esphome::modbus_controller::ModbusCommandItem battery_command = esphome::modbus_controller::ModbusCommandItem::create_write_multiple_command(controller, 0x9003, battery_settings.size(), battery_settings);
-          delay(200);
-          controller->queue_command(battery_command);
-          delay(200);
+      # Debounce: the 12 values restored at boot, or several changes in a row, give one single write
+      - delay: 2s
+      # Never write while one of the 12 values is unknown (NaN would be written as garbage)
+      - if:
+          condition:
+            lambda: |-
+              return !std::isnan(id(${scc_id}_overvoltage_disconnect_voltage_number).state) &&
+                     !std::isnan(id(${scc_id}_charging_limit_voltage_number).state) &&
+                     !std::isnan(id(${scc_id}_overvoltage_reconnect_voltage_number).state) &&
+                     !std::isnan(id(${scc_id}_equalization_charging_voltage_number).state) &&
+                     !std::isnan(id(${scc_id}_boost_charging_voltage_number).state) &&
+                     !std::isnan(id(${scc_id}_float_charging_voltage_number).state) &&
+                     !std::isnan(id(${scc_id}_boost_reconnect_charging_voltage_number).state) &&
+                     !std::isnan(id(${scc_id}_low_voltage_reconnect_voltage_number).state) &&
+                     !std::isnan(id(${scc_id}_undervoltage_alarm_recovery_voltage_number).state) &&
+                     !std::isnan(id(${scc_id}_undervoltage_alarm_voltage_number).state) &&
+                     !std::isnan(id(${scc_id}_low_voltage_disconnect_voltage_number).state) &&
+                     !std::isnan(id(${scc_id}_discharging_limit_voltage_number).state);
+          then:
+            - modbus_client.write_multiple_registers:
+                modbus_id: ${scc_modbus_id}
+                address: ${scc_modbus_address}
+                start_address: 0x9003
+                values: !lambda |-
+                  std::vector<uint16_t> battery_settings(12);
+                  battery_settings[0]  = uint16_t(roundf(id(${scc_id}_overvoltage_disconnect_voltage_number).state * 100));  // 0x9003
+                  battery_settings[1]  = uint16_t(roundf(id(${scc_id}_charging_limit_voltage_number).state * 100));  // 0x9004
+                  battery_settings[2]  = uint16_t(roundf(id(${scc_id}_overvoltage_reconnect_voltage_number).state * 100));  // 0x9005
+                  battery_settings[3]  = uint16_t(roundf(id(${scc_id}_equalization_charging_voltage_number).state * 100));  // 0x9006
+                  battery_settings[4]  = uint16_t(roundf(id(${scc_id}_boost_charging_voltage_number).state * 100));  // 0x9007
+                  battery_settings[5]  = uint16_t(roundf(id(${scc_id}_float_charging_voltage_number).state * 100));  // 0x9008
+                  battery_settings[6]  = uint16_t(roundf(id(${scc_id}_boost_reconnect_charging_voltage_number).state * 100));  // 0x9009
+                  battery_settings[7]  = uint16_t(roundf(id(${scc_id}_low_voltage_reconnect_voltage_number).state * 100));  // 0x900A
+                  battery_settings[8]  = uint16_t(roundf(id(${scc_id}_undervoltage_alarm_recovery_voltage_number).state * 100));  // 0x900B
+                  battery_settings[9]  = uint16_t(roundf(id(${scc_id}_undervoltage_alarm_voltage_number).state * 100));  // 0x900C
+                  battery_settings[10] = uint16_t(roundf(id(${scc_id}_low_voltage_disconnect_voltage_number).state * 100));  // 0x900D
+                  battery_settings[11] = uint16_t(roundf(id(${scc_id}_discharging_limit_voltage_number).state * 100));  // 0x900E
+                  return battery_settings;
 
 # +--------------------------------------+
 # |              Number                  |
@@ -52,9 +72,11 @@ number:
   - platform: modbus_controller
     modbus_controller_id: ${scc_id}_modbus_controller
     id: ${scc_id}_battery_capacity_number
-    name: ${scc_name} Battery Capacity Number
+    name: Battery Capacity Number
+    device_id: ${scc_id}
     address: 0x9001
     value_type: U_WORD
+    use_write_multiple: true
     unit_of_measurement: 'Ah'
     icon: mdi:car-battery
     entity_category: config
@@ -67,9 +89,11 @@ number:
   - platform: modbus_controller
     modbus_controller_id: ${scc_id}_modbus_controller
     id: ${scc_id}_temperature_compensation_coefficient_number
-    name: ${scc_name} Temperature Compensation Coefficient Number
+    name: Temperature Compensation Coefficient Number
+    device_id: ${scc_id}
     address: 0x9002
     value_type: U_WORD
+    use_write_multiple: true
     unit_of_measurement: "mV/°C/2V"
     icon: mdi:thermometer
     entity_category: config
@@ -83,9 +107,11 @@ number:
   - platform: modbus_controller
     modbus_controller_id: ${scc_id}_modbus_controller
     id: ${scc_id}_equalization_duration_number
-    name: ${scc_name} Equalization Charging Time Number
+    name: Equalization Charging Time Number
+    device_id: ${scc_id}
     address: 0x906B
     value_type: U_WORD
+    use_write_multiple: true
     unit_of_measurement: 'min'
     icon: mdi:timer-sand
     entity_category: config
@@ -98,9 +124,11 @@ number:
   - platform: modbus_controller
     modbus_controller_id: ${scc_id}_modbus_controller
     id: ${scc_id}_boost_duration_number
-    name: ${scc_name} Boost Charging Time Number
+    name: Boost Charging Time Number
+    device_id: ${scc_id}
     address: 0x906C
     value_type: U_WORD
+    use_write_multiple: true
     unit_of_measurement: 'min'
     icon: mdi:timer-sand
     entity_category: config
@@ -116,7 +144,8 @@ number:
   # B7 0x9003
   - platform: template
     id: ${scc_id}_overvoltage_disconnect_voltage_number
-    name: ${scc_name} Overvoltage Disconnect Voltage Number
+    name: Overvoltage Disconnect Voltage Number
+    device_id: ${scc_id}
     unit_of_measurement: "V"
     icon: mdi:sine-wave
     entity_category: config
@@ -134,7 +163,8 @@ number:
   # B8 0x9004
   - platform: template
     id: ${scc_id}_charging_limit_voltage_number
-    name: ${scc_name} Charging Limit Voltage Number
+    name: Charging Limit Voltage Number
+    device_id: ${scc_id}
     unit_of_measurement: "V"
     icon: mdi:sine-wave
     entity_category: config
@@ -152,7 +182,8 @@ number:
   # B9 0x9005
   - platform: template
     id: ${scc_id}_overvoltage_reconnect_voltage_number
-    name: ${scc_name} Overvoltage Reconnect Voltage Number
+    name: Overvoltage Reconnect Voltage Number
+    device_id: ${scc_id}
     unit_of_measurement: "V"
     icon: mdi:sine-wave
     entity_category: config
@@ -170,7 +201,8 @@ number:
   # B10 0x9006
   - platform: template
     id: ${scc_id}_equalization_charging_voltage_number
-    name: ${scc_name} Equalization Charging Voltage Number
+    name: Equalization Charging Voltage Number
+    device_id: ${scc_id}
     unit_of_measurement: "V"
     icon: mdi:sine-wave
     entity_category: config
@@ -188,7 +220,8 @@ number:
   # B11 0x9007
   - platform: template
     id: ${scc_id}_boost_charging_voltage_number
-    name: ${scc_name} Boost Charging Voltage Number
+    name: Boost Charging Voltage Number
+    device_id: ${scc_id}
     unit_of_measurement: 'V'
     optimistic: true
     icon: mdi:sine-wave
@@ -206,7 +239,8 @@ number:
   # B12 0x9008
   - platform: template
     id: ${scc_id}_float_charging_voltage_number
-    name: ${scc_name} Float Charging Voltage Number
+    name: Float Charging Voltage Number
+    device_id: ${scc_id}
     unit_of_measurement: 'V'
     optimistic: true
     icon: mdi:sine-wave
@@ -224,7 +258,8 @@ number:
   # B13 0x9009
   - platform: template
     id: ${scc_id}_boost_reconnect_charging_voltage_number
-    name: ${scc_name} Boost Reconnect Charging Voltage Number
+    name: Boost Reconnect Charging Voltage Number
+    device_id: ${scc_id}
     unit_of_measurement: 'V'
     optimistic: true
     icon: mdi:sine-wave
@@ -242,7 +277,8 @@ number:
   # B14 0x900A
   - platform: template
     id: ${scc_id}_low_voltage_reconnect_voltage_number
-    name: ${scc_name} Low voltage Reconnect Voltage Number
+    name: Low voltage Reconnect Voltage Number
+    device_id: ${scc_id}
     unit_of_measurement: 'V'
     optimistic: true
     icon: mdi:sine-wave
@@ -260,7 +296,8 @@ number:
   # B15 0x900B
   - platform: template
     id: ${scc_id}_undervoltage_alarm_recovery_voltage_number
-    name: ${scc_name} Undervoltage Alarm Recovery Voltage Number
+    name: Undervoltage Alarm Recovery Voltage Number
+    device_id: ${scc_id}
     unit_of_measurement: 'V'
     optimistic: true
     icon: mdi:sine-wave
@@ -278,7 +315,8 @@ number:
   # B16 0x900C
   - platform: template
     id: ${scc_id}_undervoltage_alarm_voltage_number
-    name: ${scc_name} Undervoltage Alarm Voltage
+    name: Undervoltage Alarm Voltage
+    device_id: ${scc_id}
     unit_of_measurement: 'V'
     optimistic: true
     icon: mdi:sine-wave
@@ -296,7 +334,8 @@ number:
   # B17 0x900D
   - platform: template
     id: ${scc_id}_low_voltage_disconnect_voltage_number
-    name: ${scc_name} Low Voltage Disconnect Voltage Number
+    name: Low Voltage Disconnect Voltage Number
+    device_id: ${scc_id}
     unit_of_measurement: 'V'
     optimistic: true
     icon: mdi:sine-wave
@@ -314,7 +353,8 @@ number:
   # B18 0x900E
   - platform: template
     id: ${scc_id}_discharging_limit_voltage_number
-    name: ${scc_name} Discharging Limit Voltage Number
+    name: Discharging Limit Voltage Number
+    device_id: ${scc_id}
     unit_of_measurement: 'V'
     optimistic: true
     icon: mdi:sine-wave

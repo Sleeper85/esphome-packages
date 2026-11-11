@@ -1,5 +1,5 @@
-# Updated : 2025.08.17
-# Version : 1.1.5
+# Updated : 2026.11.11
+# Version : 1.1.6
 # GitHub  : https://github.com/Sleeper85/esphome-packages
 
 # This YAML is free software: you can redistribute it and/or
@@ -22,19 +22,20 @@ binary_sensor:
   # A1 | Over temperature inside the device
   - platform: modbus_controller
     modbus_controller_id: ${scc_id}_modbus_controller
-    name: "${scc_name} Over Temperature Device"
+    name: "Over Temperature Device"
+    device_id: ${scc_id}
     entity_category: diagnostic
     device_class: problem
     address: 0x2000
     register_type: discrete_input
     bitmask: 0x01
-    skip_updates: ${scc_skip_updates_1}
 
 # Battery Status Values
   # A15 | D3-D0 | 00H | Normal Voltage
   - platform: template
     id: "${scc_id}_battery_status_normal_voltage_binary_sensor"
-    name: "${scc_name} Battery Status Normal Voltage"
+    name: "Battery Status Normal Voltage"
+    device_id: ${scc_id}
     entity_category: diagnostic
     lambda: |-
      if(id(${scc_id}_battery_status_raw_value).state == 0) {
@@ -46,7 +47,8 @@ binary_sensor:
   # A15 | D3-D0 | 01H | Over Voltage
   - platform: template
     id: "${scc_id}_battery_status_over_voltage_binary_sensor"
-    name: "${scc_name} Battery Status Over Voltage"
+    name: "Battery Status Over Voltage"
+    device_id: ${scc_id}
     entity_category: diagnostic
     lambda: |-
      if(id(${scc_id}_battery_status_raw_value).state == 1) {
@@ -58,7 +60,8 @@ binary_sensor:
   # A15 | D3-D0 | 02H | Under Voltage
   - platform: template
     id: "${scc_id}_battery_status_under_voltage_binary_sensor"
-    name: "${scc_name} Battery Status Under Voltage"
+    name: "Battery Status Under Voltage"
+    device_id: ${scc_id}
     entity_category: diagnostic
     lambda: |-
      if(id(${scc_id}_battery_status_raw_value).state == 2) {
@@ -70,7 +73,8 @@ binary_sensor:
   # A15 | D3-D0 | 03H | Over Discharge
   - platform: template
     id: "${scc_id}_battery_status_over_discharge_binary_sensor"
-    name: "${scc_name} Battery Status Over Discharge"
+    name: "Battery Status Over Discharge"
+    device_id: ${scc_id}
     entity_category: diagnostic
     lambda: |-
      if(id(${scc_id}_battery_status_raw_value).state == 3) {
@@ -82,7 +86,8 @@ binary_sensor:
   # A15 | D3-D0 | 04H | Fault
   - platform: template
     id: "${scc_id}_battery_status_fault_binary_sensor"
-    name: "${scc_name} Battery Status Fault"
+    name: "Battery Status Fault"
+    device_id: ${scc_id}
     entity_category: diagnostic
     lambda: |-
       if(id(${scc_id}_battery_status_raw_value).state == 4) {
@@ -94,7 +99,8 @@ binary_sensor:
   # A15 | D7-D4 | 00H | Normal
   - platform: template
     id: "${scc_id}_battery_status_normal_temp_sensor"
-    name: "${scc_name} Battery Temp. Status Normal"
+    name: "Battery Temp. Status Normal"
+    device_id: ${scc_id}
     entity_category: diagnostic
     lambda: |-
       uint16_t value = int(id(${scc_id}_battery_status_raw_value).state) >> 4;
@@ -107,7 +113,8 @@ binary_sensor:
   # A15 | D7-D4 | 01H | Over Temperature
   - platform: template
     id: "${scc_id}_battery_status_over_temp_sensor"
-    name: "${scc_name} Battery Temp. Status Too High"
+    name: "Battery Temp. Status Too High"
+    device_id: ${scc_id}
     entity_category: diagnostic
     lambda: |-
       uint16_t value = int(id(${scc_id}_battery_status_raw_value).state) >> 4;
@@ -120,7 +127,8 @@ binary_sensor:
   # A15 | D7-D4 | 02H | Low Temperature
   - platform: template
     id: "${scc_id}_battery_status_low_temp_sensor"
-    name: "${scc_name} Battery Temp. Status Too Low"
+    name: "Battery Temp. Status Too Low"
+    device_id: ${scc_id}
     entity_category: diagnostic
     lambda: |-
       uint16_t value = int(id(${scc_id}_battery_status_raw_value).state) >> 4;
@@ -133,7 +141,8 @@ binary_sensor:
   # A15 | D8 | 00H | Battery inner resistance normal
   - platform: template
     id: "${scc_id}_battery_status_inner_resistance_normal"
-    name: "${scc_name} Battery Inner Resistance Normal"
+    name: "Battery Inner Resistance Normal"
+    device_id: ${scc_id}
     entity_category: diagnostic
     lambda: |-
       uint16_t value = int(id(${scc_id}_battery_charging_equipment_status_raw_value).state) >> 7;
@@ -146,7 +155,8 @@ binary_sensor:
   # A15 | D8 | 01H | Battery inner resistance abnormal
   - platform: template
     id: "${scc_id}_battery_status_inner_resistance_abnormal"
-    name: "${scc_name} Battery Inner Resistance Abnormal"
+    name: "Battery Inner Resistance Abnormal"
+    device_id: ${scc_id}
     entity_category: diagnostic
     lambda: |-
       uint16_t value = int(id(${scc_id}_battery_charging_equipment_status_raw_value).state) >> 7;
@@ -160,7 +170,8 @@ binary_sensor:
   # A16 | D0 | 00H | Standby
   - platform: template
     id: "${scc_id}_battery_charging_equipment_status_standby_binary_sensor"
-    name: "${scc_name} Charging Status Standby"
+    name: "Charging Status Standby"
+    device_id: ${scc_id}
     entity_category: diagnostic
     lambda: |-
       uint16_t value = id(${scc_id}_battery_charging_equipment_status_raw_value).state;
@@ -173,7 +184,8 @@ binary_sensor:
   # A16 | D0 | 01H | Running
   - platform: template
     id: "${scc_id}_battery_charging_equipment_status_running_binary_sensor"
-    name: "${scc_name} Charging Status Running"
+    name: "Charging Status Running"
+    device_id: ${scc_id}
     entity_category: diagnostic
     lambda: |-
       uint16_t value = id(${scc_id}_battery_charging_equipment_status_raw_value).state;
@@ -186,7 +198,8 @@ binary_sensor:
   # A16 | D1 | 00H | Normal
   - platform: template
     id: "${scc_id}_battery_charging_equipment_status_normal_binary_sensor"
-    name: "${scc_name} Charging Status Normal"
+    name: "Charging Status Normal"
+    device_id: ${scc_id}
     entity_category: diagnostic
     lambda: |-
       uint16_t value = int(id(${scc_id}_battery_charging_equipment_status_raw_value).state) >> 1;
@@ -199,7 +212,8 @@ binary_sensor:
   # A16 | D1 | 01H | Fault
   - platform: template
     id: "${scc_id}_battery_charging_equipment_status_fault_binary_sensor"
-    name: "${scc_name} Charging Status Fault"
+    name: "Charging Status Fault"
+    device_id: ${scc_id}
     entity_category: diagnostic
     lambda: |-
       uint16_t value = int(id(${scc_id}_battery_charging_equipment_status_raw_value).state) >> 1;
@@ -212,7 +226,8 @@ binary_sensor:
   # A16 | D3-D2 | 00H | No Charging
   - platform: template
     id: "${scc_id}_battery_charging_equipment_status_no_charging_binary_sensor"
-    name: "${scc_name} Charging Status No Charging"
+    name: "Charging Status No Charging"
+    device_id: ${scc_id}
     entity_category: diagnostic
     lambda: |-
       uint16_t value = int(id(${scc_id}_battery_charging_equipment_status_raw_value).state) >> 2;
@@ -226,7 +241,8 @@ binary_sensor:
   # A16 | D3-D2 | 01H | Float
   - platform: template
     id: "${scc_id}_battery_charging_equipment_status_float_binary_sensor"
-    name: "${scc_name} Charging Status Float"
+    name: "Charging Status Float"
+    device_id: ${scc_id}
     entity_category: diagnostic
     lambda: |-
       uint16_t value = int(id(${scc_id}_battery_charging_equipment_status_raw_value).state) >> 2;
@@ -240,7 +256,8 @@ binary_sensor:
   # A16 | D3-D2 | 02H | Boost
   - platform: template
     id: "${scc_id}_battery_charging_equipment_status_boost_binary_sensor"
-    name: "${scc_name} Charging Status Boost"
+    name: "Charging Status Boost"
+    device_id: ${scc_id}
     entity_category: diagnostic
     lambda: |-
       uint16_t value = int(id(${scc_id}_battery_charging_equipment_status_raw_value).state) >> 2;
@@ -254,7 +271,8 @@ binary_sensor:
   # A16 | D3-D2 | 03H | Equalization
   - platform: template
     id: "${scc_id}_battery_charging_equipment_status_equalization_binary_sensor"
-    name: "${scc_name} Charging Status Equalization"
+    name: "Charging Status Equalization"
+    device_id: ${scc_id}
     entity_category: diagnostic
     lambda: |-
       uint16_t value = int(id(${scc_id}_battery_charging_equipment_status_raw_value).state) >> 2;
@@ -273,7 +291,8 @@ sensor:
   # A3
   - platform: modbus_controller
     modbus_controller_id: ${scc_id}_modbus_controller
-    name: "${scc_name} PV Input Voltage"
+    name: "PV Input Voltage"
+    device_id: ${scc_id}
     address: 0x3100
     value_type: U_WORD
     register_type: read
@@ -287,7 +306,8 @@ sensor:
   # A4
   - platform: modbus_controller
     modbus_controller_id: ${scc_id}_modbus_controller
-    name: "${scc_name} PV Input Current"
+    name: "PV Input Current"
+    device_id: ${scc_id}
     address: 0x3101
     value_type: U_WORD
     register_type: read
@@ -302,7 +322,8 @@ sensor:
   - platform: modbus_controller
     modbus_controller_id: ${scc_id}_modbus_controller
     id: "${scc_id}_pv_input_power"
-    name: "${scc_name} PV Input Power"
+    name: "PV Input Power"
+    device_id: ${scc_id}
     address: 0x3102
     value_type: U_DWORD_R
     register_type: read
@@ -316,11 +337,11 @@ sensor:
   # A11
   - platform: modbus_controller
     modbus_controller_id: ${scc_id}_modbus_controller
-    name: "${scc_name} Battery Temperature"
+    name: "Battery Temperature"
+    device_id: ${scc_id}
     address: 0x3110
     value_type: S_WORD
     register_type: read
-    skip_updates: ${scc_skip_updates_1}
     device_class: "temperature"
     state_class: "measurement"
     unit_of_measurement: "°C"
@@ -331,11 +352,11 @@ sensor:
   # A12
   - platform: modbus_controller
     modbus_controller_id: ${scc_id}_modbus_controller
-    name: "${scc_name} Device Temperature"
+    name: "Device Temperature"
+    device_id: ${scc_id}
     address: 0x3111
     value_type: S_WORD
     register_type: read
-    skip_updates: ${scc_skip_updates_1}
     device_class: "temperature"
     state_class: "measurement"
     unit_of_measurement: "°C"
@@ -346,11 +367,11 @@ sensor:
   # A13
   - platform: modbus_controller
     modbus_controller_id: ${scc_id}_modbus_controller
-    name: "${scc_name} Battery SoC"
+    name: "Battery SoC"
+    device_id: ${scc_id}
     address: 0x311A
     value_type: U_WORD
     register_type: read
-    skip_updates: ${scc_skip_updates_1}
     device_class: "battery"
     state_class: "measurement"
     unit_of_measurement: "%"
@@ -359,11 +380,11 @@ sensor:
   # A14
   - platform: modbus_controller
     modbus_controller_id: ${scc_id}_modbus_controller
-    name: "${scc_name} Battery Rated System Voltage"
+    name: "Battery Rated System Voltage"
+    device_id: ${scc_id}
     address: 0x311D
     value_type: U_WORD
     register_type: read
-    skip_updates: ${scc_skip_updates_1}
     device_class: "voltage"
     state_class: "measurement"
     unit_of_measurement: "V"
@@ -379,7 +400,6 @@ sensor:
     address: 0x3200
     value_type: U_WORD
     register_type: read
-    skip_updates: ${scc_skip_updates_1}
     
   # A16
   - platform: modbus_controller
@@ -389,17 +409,15 @@ sensor:
     address: 0x3201
     value_type: U_WORD
     register_type: read
-    skip_updates: ${scc_skip_updates_1}
 
   # A28 + A29
   - platform: modbus_controller
     modbus_controller_id: ${scc_id}_modbus_controller
-    name: "${scc_name} PV Generated Energy Day"
-    force_new_range: true
+    name: "PV Generated Energy Day"
+    device_id: ${scc_id}
     address: 0x330C
     value_type: U_DWORD_R
     register_type: read
-    skip_updates: ${scc_skip_updates_2}
     device_class: "energy"
     state_class: "total_increasing"
     unit_of_measurement: "kWh"
@@ -410,12 +428,12 @@ sensor:
   # A30 + A31
   - platform: modbus_controller
     modbus_controller_id: ${scc_id}_modbus_controller
-    name: "${scc_name} PV Generated Energy Month"
+    name: "PV Generated Energy Month"
+    device_id: ${scc_id}
     address: 0x330E
     value_type: U_DWORD_R
     register_type: read
     device_class: "energy"
-    skip_updates: ${scc_skip_updates_2}
     state_class: "total_increasing"
     unit_of_measurement: "kWh"
     accuracy_decimals: 2
@@ -425,11 +443,11 @@ sensor:
   # A32 + A33
   - platform: modbus_controller
     modbus_controller_id: ${scc_id}_modbus_controller
-    name: "${scc_name} PV Generated Energy Year"
+    name: "PV Generated Energy Year"
+    device_id: ${scc_id}
     address: 0x3310
     value_type: U_DWORD_R
     register_type: read
-    skip_updates: ${scc_skip_updates_2}
     device_class: "energy"
     state_class: "total_increasing"
     unit_of_measurement: "kWh"
@@ -440,11 +458,11 @@ sensor:
   # A34 + A35
   - platform: modbus_controller
     modbus_controller_id: ${scc_id}_modbus_controller
-    name: "${scc_name} PV Generated Energy Total"
+    name: "PV Generated Energy Total"
+    device_id: ${scc_id}
     address: 0x3312
     value_type: U_DWORD_R
     register_type: read
-    skip_updates: ${scc_skip_updates_2}
     device_class: "energy"
     state_class: "total_increasing"
     unit_of_measurement: "kWh"
@@ -457,7 +475,8 @@ sensor:
   - platform: modbus_controller
     modbus_controller_id: ${scc_id}_modbus_controller
     id: "${scc_id}_battery_voltage_sensor"
-    name: "${scc_name} Battery Voltage"
+    name: "Battery Voltage"
+    device_id: ${scc_id}
     address: 0x331A
     value_type: U_WORD
     register_type: read
@@ -472,7 +491,8 @@ sensor:
   - platform: modbus_controller
     modbus_controller_id: ${scc_id}_modbus_controller
     id: "${scc_id}_battery_current_sensor"
-    name: "${scc_name} Battery Current"
+    name: "Battery Current"
+    device_id: ${scc_id}
     address: 0x331B
     value_type: S_DWORD_R
     register_type: read
@@ -485,7 +505,8 @@ sensor:
 
   - platform: template
     id: "${scc_id}_battery_power_sensor"
-    name: "${scc_name} Battery Power"
+    name: "Battery Power"
+    device_id: ${scc_id}
     update_interval: 2s
     device_class: "power"
     state_class: "measurement"
@@ -502,23 +523,23 @@ sensor:
   # 0x08 LNCM 3S, 0x09 LNCM 6S, 0x0A LNCM 7S, 0x0B LNCM 13S, 0x0C LNCM 14S
   - platform: modbus_controller
     modbus_controller_id: ${scc_id}_modbus_controller
-    name: "${scc_name} Battery Type"
+    name: "Battery Type"
+    device_id: ${scc_id}
     entity_category: diagnostic
     address: 0x9000
     value_type: U_WORD
     register_type: holding
-    skip_updates: ${scc_skip_updates_2}
     accuracy_decimals: 0
 
   # B5
   - platform: modbus_controller
     modbus_controller_id: ${scc_id}_modbus_controller
-    name: "${scc_name} Battery Capacity"
+    name: "Battery Capacity"
+    device_id: ${scc_id}
     entity_category: diagnostic
     address: 0x9001
     value_type: U_WORD
     register_type: holding
-    skip_updates: ${scc_skip_updates_2}
     state_class: "measurement"
     unit_of_measurement: 'Ah'
     icon: mdi:car-battery
@@ -527,12 +548,12 @@ sensor:
   # B6
   - platform: modbus_controller
     modbus_controller_id: ${scc_id}_modbus_controller
-    name: "${scc_name} Temperature Compensation Coefficient"
+    name: "Temperature Compensation Coefficient"
+    device_id: ${scc_id}
     entity_category: diagnostic
     address: 0x9002
     value_type: U_WORD
     register_type: holding
-    skip_updates: ${scc_skip_updates_2}
     device_class: "voltage"
     state_class: "measurement"
     unit_of_measurement: "mV"
@@ -543,12 +564,12 @@ sensor:
   # B7
   - platform: modbus_controller
     modbus_controller_id: ${scc_id}_modbus_controller
-    name: "${scc_name} Overvoltage Disconnect Voltage"
+    name: "Overvoltage Disconnect Voltage"
+    device_id: ${scc_id}
     entity_category: diagnostic
     address: 0x9003
     value_type: U_WORD
     register_type: holding
-    skip_updates: ${scc_skip_updates_2}
     device_class: "voltage"
     state_class: "measurement"
     unit_of_measurement: "V"
@@ -559,12 +580,12 @@ sensor:
   # B8
   - platform: modbus_controller
     modbus_controller_id: ${scc_id}_modbus_controller
-    name: "${scc_name} Charging Limit Voltage"
+    name: "Charging Limit Voltage"
+    device_id: ${scc_id}
     entity_category: diagnostic
     address: 0x9004
     value_type: U_WORD
     register_type: holding
-    skip_updates: ${scc_skip_updates_2}
     device_class: "voltage"
     state_class: "measurement"
     unit_of_measurement: "V"
@@ -575,12 +596,12 @@ sensor:
   # B9
   - platform: modbus_controller
     modbus_controller_id: ${scc_id}_modbus_controller
-    name: "${scc_name} Overvoltage Reconnect Voltage"
+    name: "Overvoltage Reconnect Voltage"
+    device_id: ${scc_id}
     entity_category: diagnostic
     address: 0x9005
     value_type: U_WORD
     register_type: holding
-    skip_updates: ${scc_skip_updates_2}
     device_class: "voltage"
     state_class: "measurement"
     unit_of_measurement: "V"
@@ -591,12 +612,12 @@ sensor:
   # B11
   - platform: modbus_controller
     modbus_controller_id: ${scc_id}_modbus_controller
-    name: "${scc_name} Boost Charging Voltage"
+    name: "Boost Charging Voltage"
+    device_id: ${scc_id}
     entity_category: diagnostic
     address: 0x9007
     value_type: U_WORD
     register_type: holding
-    skip_updates: ${scc_skip_updates_2}
     device_class: "voltage"
     state_class: "measurement"
     unit_of_measurement: "V"
@@ -607,12 +628,12 @@ sensor:
   # B12
   - platform: modbus_controller
     modbus_controller_id: ${scc_id}_modbus_controller
-    name: "${scc_name} Float Charging Voltage"
+    name: "Float Charging Voltage"
+    device_id: ${scc_id}
     entity_category: diagnostic
     address: 0x9008
     value_type: U_WORD
     register_type: holding
-    skip_updates: ${scc_skip_updates_2}
     device_class: "voltage"
     state_class: "measurement"
     unit_of_measurement: "V"
@@ -623,11 +644,11 @@ sensor:
   # B13
   - platform: modbus_controller
     modbus_controller_id: ${scc_id}_modbus_controller
-    name: "${scc_name} Boost Reconnect Charging Voltage"
+    name: "Boost Reconnect Charging Voltage"
+    device_id: ${scc_id}
     entity_category: diagnostic
     address: 0x9009
     value_type: U_WORD
-    skip_updates: ${scc_skip_updates_2}
     register_type: holding
     device_class: "voltage"
     state_class: "measurement"
@@ -639,11 +660,11 @@ sensor:
   # B14
   - platform: modbus_controller
     modbus_controller_id: ${scc_id}_modbus_controller
-    name: "${scc_name} Low Voltage Reconnect Voltage"
+    name: "Low Voltage Reconnect Voltage"
+    device_id: ${scc_id}
     entity_category: diagnostic
     address: 0x900A
     value_type: U_WORD
-    skip_updates: ${scc_skip_updates_2}
     register_type: holding
     device_class: "voltage"
     state_class: "measurement"
@@ -655,12 +676,12 @@ sensor:
   # B15
   - platform: modbus_controller
     modbus_controller_id: ${scc_id}_modbus_controller
-    name: "${scc_name} Undervoltage Alarm Recovery Voltage"
+    name: "Undervoltage Alarm Recovery Voltage"
+    device_id: ${scc_id}
     entity_category: diagnostic
     address: 0x900B
     value_type: U_WORD
     register_type: holding
-    skip_updates: ${scc_skip_updates_2}
     device_class: "voltage"
     state_class: "measurement"
     unit_of_measurement: "V"
@@ -671,12 +692,12 @@ sensor:
   # B16
   - platform: modbus_controller
     modbus_controller_id: ${scc_id}_modbus_controller
-    name: "${scc_name} Undervoltage Alarm Voltage"
+    name: "Undervoltage Alarm Voltage"
+    device_id: ${scc_id}
     entity_category: diagnostic
     address: 0x900C
     value_type: U_WORD
     register_type: holding
-    skip_updates: ${scc_skip_updates_2}
     device_class: "voltage"
     state_class: "measurement"
     unit_of_measurement: "V"
@@ -687,12 +708,12 @@ sensor:
   # B17
   - platform: modbus_controller
     modbus_controller_id: ${scc_id}_modbus_controller
-    name: "${scc_name} Low Voltage Disconnect Voltage"
+    name: "Low Voltage Disconnect Voltage"
+    device_id: ${scc_id}
     entity_category: diagnostic
     address: 0x900D
     value_type: U_WORD
     register_type: holding
-    skip_updates: ${scc_skip_updates_2}
     device_class: "voltage"
     state_class: "measurement"
     unit_of_measurement: "V"
@@ -703,12 +724,12 @@ sensor:
   # B18
   - platform: modbus_controller
     modbus_controller_id: ${scc_id}_modbus_controller
-    name: "${scc_name} Discharging Limit Voltage"
+    name: "Discharging Limit Voltage"
+    device_id: ${scc_id}
     entity_category: diagnostic
     address: 0x900E
     value_type: U_WORD
     register_type: holding
-    skip_updates: ${scc_skip_updates_2}
     device_class: "voltage"
     state_class: "measurement"
     unit_of_measurement: "V"
@@ -720,12 +741,12 @@ sensor:
   # 0-auto recognize, 1-12V, 2-24V, 3-36V，4-48V，5-60V，6-110V
   - platform: modbus_controller
     modbus_controller_id: ${scc_id}_modbus_controller
-    name: "${scc_name} Battery Rated Voltage Level"
+    name: "Battery Rated Voltage Level"
+    device_id: ${scc_id}
     entity_category: diagnostic
     address: 0x9067
     value_type: U_WORD
     register_type: holding
-    skip_updates: ${scc_skip_updates_2}
     accuracy_decimals: 0
 
 # +--------------------------------------+
@@ -733,7 +754,8 @@ sensor:
 # +--------------------------------------+
 text_sensor:
   - platform: template
-    name: "${scc_name} Charging Phase"
+    name: "Charging Phase"
+    device_id: ${scc_id}
     entity_category: diagnostic
     lambda: |-
       if (id(${scc_id}_battery_charging_equipment_status_no_charging_binary_sensor).state) return { "No charging" };
@@ -742,7 +764,8 @@ text_sensor:
       else return { "Unknown" };
 
   - platform: template
-    name: "${scc_name} Battery Status Voltage"
+    name: "Battery Status Voltage"
+    device_id: ${scc_id}
     update_interval: 60s
     entity_category: diagnostic
     lambda: |-
@@ -754,7 +777,8 @@ text_sensor:
       else return { "Unknown" };
 
   - platform: template
-    name: "${scc_name} Battery Status Temperatur"
+    name: "Battery Status Temperatur"
+    device_id: ${scc_id}
     update_interval: 60s
     entity_category: diagnostic
     lambda: |-
@@ -764,7 +788,8 @@ text_sensor:
       else return { "Unknown" };
 
   - platform: template
-    name: "${scc_name} Battery Inner Resistance"
+    name: "Battery Inner Resistance"
+    device_id: ${scc_id}
     update_interval: 60s
     entity_category: diagnostic
     lambda: |-

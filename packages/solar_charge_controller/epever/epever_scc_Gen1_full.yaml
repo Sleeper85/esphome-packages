@@ -1,5 +1,5 @@
-# Updated : 2026.07.11
-# Version : 1.1.3
+# Updated : 2026.11.11
+# Version : 1.1.4
 # GitHub  : https://github.com/Sleeper85/esphome-packages
 
 # This YAML is free software: you can redistribute it and/or
@@ -15,6 +15,16 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/gpl.html>.
 
+# +--------------------------------------+
+# | Sub-device                           |
+# +--------------------------------------+
+# All entities of this package are attached to this sub-device in Home Assistant.
+esphome:
+  devices:
+    - id: ${scc_id}
+      name: "${scc_name}"
+      relation: via
+
 modbus_controller:
   - id: ${scc_id}_modbus_controller
     modbus_id: ${scc_modbus_id}
@@ -28,5 +38,5 @@ modbus_controller:
 # |             Packages                 |
 # +--------------------------------------+
 packages:
-  epever_sensor: !include epever_scc_entities_sensor.yaml         # epever informations
-  epever_number: !include epever_scc_entities_number.yaml         # epever settings
+  epever_sensor: !include epever_scc_Gen1_entities_sensor.yaml         # epever informations
+  epever_number: !include epever_scc_Gen1_entities_number.yaml         # epever settings
