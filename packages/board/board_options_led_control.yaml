@@ -1,0 +1,25 @@
+# Updated : 2026.08.26
+# Version : 1.1.4
+# GitHub  : https://github.com/Sleeper85/esphome-yambms
+
+# YamBMS ( Yet another multi-BMS Merging Solution )
+
+# This YAML is free software: you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation, either version 3
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/gpl.html>.
+
+# esphome-packages : intentionally empty.
+# The YamBMS version of this file drives the status LEDs from the YamBMS fault registry
+# (`device_base_fault_registry.yaml`), which this repository does not include.
+# Keep this file empty when resyncing the `board` folder from esphome-yambms.
+
+{}

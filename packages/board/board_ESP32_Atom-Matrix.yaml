@@ -1,5 +1,5 @@
-# Updated : 2025.12.17
-# Version : 1.3.0
+# Updated : 2026.08.26
+# Version : 1.3.6
 # GitHub  : https://github.com/Sleeper85/esphome-yambms
 
 # YamBMS ( Yet another multi-BMS Merging Solution )
@@ -24,16 +24,16 @@ substitutions:
   board_chip: "ESP32"
   board_name: "Atom Matrix"
   # Interfaces GPIOs
-  # uart_esp_1 (Grove port)
+  # uart_esp_1           Grove port : CAN / RS485 unit
   tx_pin_1: '26'
   rx_pin_1: '32'
   # uart_esp_2
   tx_pin_2: '23'
   rx_pin_2: '33'
-  # uart_esp_3
-  tx_pin_3: '21'
-  rx_pin_3: '25'
-  # canbus_esp32_can (Atomic CAN base)
+  # uart_esp_3           Atomic RS485 base
+  tx_pin_3: '19'
+  rx_pin_3: '22'
+  # canbus_esp32_can     Atomic CAN base
   tx_pin_4: '22'
   rx_pin_4: '19'
   # canbus_mcp2515
@@ -43,17 +43,21 @@ substitutions:
   mcp2515_cs_pin: '25'
   # talk_pin
   talk_pin: '33'
+  # LOOP_TASK_STACK
+  loop_task_stack_size: "8192" # see LOOP_TASK_STACK.md before changing
 
 packages:
   device_base: !include ../base/device_base.yaml
   device_base_wifi: !include ../base/device_base_wifi.yaml
-  board_rgb_led: !include board_options_rgb_led_status.yaml
+  led_control: !include board_options_led_control.yaml
 
 esp32:
-  board: m5stack-atom
+  variant: esp32
   cpu_frequency: 240MHz
   framework:
     type: esp-idf
+    advanced:
+      loop_task_stack_size: ${loop_task_stack_size}
 
 esphome:
   platformio_options:
@@ -64,6 +68,7 @@ wifi:
   ssid: !secret wifi_ssid
   password: !secret wifi_password
   domain: !secret domain
+  reboot_timeout: 0s
 
 logger:
   baud_rate: 0 # frees the 3rd UART and avoids some bugs like "WK2168 with canbus" or "BLE client with RS485 modbus"
@@ -74,7 +79,7 @@ light:
   # Internal : only specifying an id without a name will implicitly set this to true.
   - platform: esp32_rmt_led_strip
     id: esp_light
-    rgb_order: GRB
+    channel_colors: GRB
     pin: 27
     num_leds: 1
     # rmt_channel: 0

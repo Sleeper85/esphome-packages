@@ -1,5 +1,5 @@
-# Updated : 2025.12.17
-# Version : 1.3.2
+# Updated : 2026.08.26
+# Version : 1.3.8
 # GitHub  : https://github.com/Sleeper85/esphome-yambms
 
 # YamBMS ( Yet another multi-BMS Merging Solution )
@@ -43,18 +43,21 @@ substitutions:
   mcp2515_cs_pin: '39'
   # talk_pin
   talk_pin: '8'
+  # LOOP_TASK_STACK
+  loop_task_stack_size: "8192" # see LOOP_TASK_STACK.md before changing
 
 packages:
   device_base: !include ../base/device_base.yaml
   device_base_wifi: !include ../base/device_base_wifi.yaml
-  board_rgb_led: !include board_options_rgb_led_status.yaml
+  led_control: !include board_options_led_control.yaml
 
 esp32:
-  board: m5stack-atoms3
   variant: esp32s3
   cpu_frequency: 240MHz
   framework:
     type: esp-idf
+    advanced:
+      loop_task_stack_size: ${loop_task_stack_size}
 
 esphome:
   platformio_options:
@@ -65,6 +68,7 @@ wifi:
   ssid: !secret wifi_ssid
   password: !secret wifi_password
   domain: !secret domain
+  reboot_timeout: 0s
 
 logger:
   baud_rate: 0 # frees the 3rd UART and avoids some bugs like "WK2168 with canbus" or "BLE client with RS485 modbus"
@@ -76,7 +80,7 @@ light:
   # Internal : only specifying an id without a name will implicitly set this to true.
   - platform: esp32_rmt_led_strip
     id: esp_light
-    rgb_order: GRB
+    channel_colors: GRB
     pin: 35
     num_leds: 1
     # rmt_channel: 0

@@ -1,4 +1,4 @@
-# Updated : 2025.07.28
+# Updated : 2026.11.05
 # Version : 1.1.1
 # GitHub  : https://github.com/Sleeper85/esphome-yambms
 
@@ -18,49 +18,20 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/gpl.html>.
 
 substitutions:
-  uart_hub_bus: 'i2c'
+  wk2168_i2c_id: 'wk2168_i2c_bus'
 
 i2c:
-  - id: i2c1_bus
-    sda: 41 
-    scl: 40
+  - id: ${wk2168_i2c_id}
+    sda: ${wk2168_i2c_sda}
+    scl: ${wk2168_i2c_scl}
     frequency: 800kHz
 
 wk2168_i2c:
   - address: 0x10
     id: uart_bridge0
-    i2c_id: i2c1_bus
+    i2c_id: ${wk2168_i2c_id}
     uart:
-      - id: uart_i2c_0
-        channel: 0
-        baud_rate: ${uart0_baudrate}
-        # parity: even
-      - id: uart_i2c_1
-        channel: 1
-        baud_rate: ${uart1_baudrate}   
-      - id: uart_i2c_2
-        channel: 2
-        baud_rate: ${uart2_baudrate}
-        # parity: even
-      - id: uart_i2c_3
-        channel: 3
-        baud_rate: ${uart3_baudrate}
-
   - address: 0x70
     id: uart_bridge1
-    i2c_id: i2c1_bus
+    i2c_id: ${wk2168_i2c_id}
     uart:
-      - id: uart_i2c_4
-        channel: 0
-        baud_rate: ${uart4_baudrate}
-        # parity: even
-      - id: uart_i2c_5
-        channel: 1
-        baud_rate: ${uart5_baudrate}
-      - id: uart_i2c_6
-        channel: 2
-        baud_rate: ${uart6_baudrate}
-        # parity: even
-      - id: uart_i2c_7
-        channel: 3
-        baud_rate: ${uart7_baudrate}
