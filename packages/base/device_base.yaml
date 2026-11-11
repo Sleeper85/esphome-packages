@@ -1,5 +1,5 @@
 # Updated : 2026.11.11
-# Version : 1.1.4
+# Version : 1.1.5
 # GitHub  : https://github.com/Sleeper85/esphome-packages
 
 # This YAML is free software: you can redistribute it and/or
@@ -19,7 +19,7 @@ packages:
   sub_device: !include device_base_sub_device.yaml
 
 substitutions:
-  version: "1.1.2"
+  version: "1.2.0"
 
 esphome:
   name: ${hostname}
