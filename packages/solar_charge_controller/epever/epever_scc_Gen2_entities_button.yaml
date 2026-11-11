@@ -1,0 +1,94 @@
+# Updated : 2026.11.11
+# Version : 1.0.0
+# GitHub  : https://github.com/Sleeper85/esphome-packages
+
+# This YAML is free software: you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation, either version 3
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/gpl.html>.
+
+# EPEVER solar charge controller - Gen2 (ET-NC, IT-NC, TES, TIS series)
+# Actions common to the 4 series. The factory reset (coil 0x0007) is not exposed on purpose.
+# Register map: documents/Epever_Modbus_ET-NC_IT-NC_TES_TIS_Series_Solar_Charge_Controller_Protocol_V1.00.md
+
+# +--------------------------------------+
+# | Button                               |
+# +--------------------------------------+
+# There is no Modbus button platform: the buttons send their write with the modbus_client actions.
+button:
+
+  # Coil 0x0009 | Clear the device faults
+  - platform: template
+    name: "Fault Reset"
+    device_id: ${scc_id}
+    entity_category: config
+    icon: mdi:alert-remove-outline
+    on_press:
+      - modbus_client.write_single_coil:
+          modbus_id: ${scc_modbus_id}
+          address: ${scc_modbus_address}
+          start_address: 0x0009
+          value: true
+
+  # Coil 0x0008 | Clear the energy statistics (generated and consumed energy)
+  - platform: template
+    name: "Clear Accumulated Energy"
+    device_id: ${scc_id}
+    entity_category: config
+    icon: mdi:counter
+    on_press:
+      - modbus_client.write_single_coil:
+          modbus_id: ${scc_modbus_id}
+          address: ${scc_modbus_address}
+          start_address: 0x0008
+          value: true
+
+  # 0x904B | Manual equalize charging: 1 triggers one equalize charge
+  - platform: template
+    name: "Manual Equalize Charging"
+    device_id: ${scc_id}
+    entity_category: config
+    icon: mdi:battery-sync-outline
+    on_press:
+      - modbus_client.write_multiple_registers:
+          modbus_id: ${scc_modbus_id}
+          address: ${scc_modbus_address}
+          start_address: 0x904B
+          values: !lambda |-
+            return std::vector<uint16_t>{1};
+
+  # 0x9019 - 0x901B | Set the real-time clock of the controller to the time of the ESP32 (`my_time`)
+  # 0x9019: D15-D8 minute, D7-D0 second. 0x901A: D15-D8 day, D7-D0 hour. 0x901B: D15-D8 year (2 digits), D7-D0 month
+  - platform: template
+    name: "Sync Device Time"
+    device_id: ${scc_id}
+    entity_category: config
+    icon: mdi:clock-check-outline
+    on_press:
+      - if:
+          condition:
+            lambda: return id(my_time).now().is_valid();
+          then:
+            - modbus_client.write_multiple_registers:
+                modbus_id: ${scc_modbus_id}
+                address: ${scc_modbus_address}
+                start_address: 0x9019
+                values: !lambda |-
+                  const auto t = id(my_time).now();
+                  return std::vector<uint16_t>{
+                    uint16_t((t.minute << 8) | t.second),
+                    uint16_t((t.day_of_month << 8) | t.hour),
+                    uint16_t(((t.year % 100) << 8) | t.month),
+                  };
+          else:
+            - logger.log:
+                level: WARN
+                format: "Sync Device Time: the time of the ESP32 is not valid yet"

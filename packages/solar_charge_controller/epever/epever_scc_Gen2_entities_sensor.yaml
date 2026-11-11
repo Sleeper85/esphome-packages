@@ -777,6 +777,47 @@ sensor:
                 default: return "Unknown";
               }
 
+  # 0x9019 - 0x901B | Real-time clock of the controller, published as "Device Time" when 0x901B is read
+  # (the 3 registers are read in the same request, in address order)
+  # 0x9019 | D15-D8 minute, D7-D0 second
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    id: ${scc_id}_rtc_minute_second_raw
+    internal: true
+    register_type: holding
+    address: 0x9019
+    value_type: U_WORD
+
+  # 0x901A | D15-D8 day, D7-D0 hour
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    id: ${scc_id}_rtc_day_hour_raw
+    internal: true
+    register_type: holding
+    address: 0x901A
+    value_type: U_WORD
+
+  # 0x901B | D15-D8 year (2 digits), D7-D0 month
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    id: ${scc_id}_rtc_year_month_raw
+    internal: true
+    register_type: holding
+    address: 0x901B
+    value_type: U_WORD
+    on_value:
+      then:
+        - text_sensor.template.publish:
+            id: ${scc_id}_device_time
+            state: !lambda |-
+              const uint16_t ms = uint16_t(id(${scc_id}_rtc_minute_second_raw).state);
+              const uint16_t dh = uint16_t(id(${scc_id}_rtc_day_hour_raw).state);
+              const uint16_t ym = uint16_t(x);
+              char buf[32];  // 26 bytes max if a register holds an out of range value (up to 255)
+              snprintf(buf, sizeof(buf), "20%02u-%02u-%02u %02u:%02u:%02u",
+                       ym >> 8, ym & 0xFF, dh >> 8, dh & 0xFF, ms >> 8, ms & 0xFF);
+              return std::string(buf);
+
   # 0x9007 | Overvoltage disconnect voltage
   - platform: modbus_controller
     modbus_controller_id: ${scc_id}_modbus_controller
@@ -986,3 +1027,10 @@ text_sensor:
     name: "Rated Voltage Level"
     device_id: ${scc_id}
     entity_category: diagnostic
+
+  - platform: template
+    id: ${scc_id}_device_time
+    name: "Device Time"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    icon: mdi:clock-outline

@@ -1,5 +1,5 @@
 # Updated : 2026.11.11
-# Version : 1.0.0
+# Version : 1.0.1
 # GitHub  : https://github.com/Sleeper85/esphome-packages
 
 # This YAML is free software: you can redistribute it and/or
@@ -164,6 +164,353 @@ number:
     min_value: 0
     max_value: 120
     step: 10
+    mode: ${scc_input_number_mode}
+
+  # +--------------------------------------+
+  # | Temperature limits                   |
+  # +--------------------------------------+
+
+  # 0x9017 | Low temperature charging limit (lithium battery protection). Range -2500 to 1000 (/100)
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    id: ${scc_id}_low_temperature_charging_limit_number
+    name: "Low Temperature Charging Limit"
+    device_id: ${scc_id}
+    entity_category: config
+    register_type: holding
+    address: 0x9017
+    value_type: S_WORD
+    use_write_multiple: true
+    device_class: temperature
+    unit_of_measurement: "°C"
+    icon: mdi:thermometer
+    min_value: -45
+    max_value: 10
+    step: 1
+    multiply: 100
+    mode: ${scc_input_number_mode}
+
+  # 0x9018 | Low temperature discharging limit (lithium battery protection). Range -2500 to 1000 (/100)
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    id: ${scc_id}_low_temperature_discharging_limit_number
+    name: "Low Temperature Discharging Limit"
+    device_id: ${scc_id}
+    entity_category: config
+    register_type: holding
+    address: 0x9018
+    value_type: S_WORD
+    use_write_multiple: true
+    device_class: temperature
+    unit_of_measurement: "°C"
+    icon: mdi:thermometer
+    min_value: -45
+    max_value: 10
+    step: 1
+    multiply: 100
+    mode: ${scc_input_number_mode}
+
+  # 0x901C | Battery maximum temperature limit. Range 4000 to 10000 (/100)
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    id: ${scc_id}_battery_max_temperature_limit_number
+    name: "Battery Max Temperature Limit"
+    device_id: ${scc_id}
+    entity_category: config
+    register_type: holding
+    address: 0x901C
+    value_type: U_WORD
+    use_write_multiple: true
+    device_class: temperature
+    unit_of_measurement: "°C"
+    icon: mdi:thermometer
+    min_value: 40
+    max_value: 100
+    step: 1
+    multiply: 100
+    mode: ${scc_input_number_mode}
+
+  # 0x901D | Battery minimum temperature limit. Range -6000 to 0 (/100)
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    id: ${scc_id}_battery_min_temperature_limit_number
+    name: "Battery Min Temperature Limit"
+    device_id: ${scc_id}
+    entity_category: config
+    register_type: holding
+    address: 0x901D
+    value_type: S_WORD
+    use_write_multiple: true
+    device_class: temperature
+    unit_of_measurement: "°C"
+    icon: mdi:thermometer
+    min_value: -60
+    max_value: 0
+    step: 1
+    multiply: 100
+    mode: ${scc_input_number_mode}
+
+  # 0x901E | Device temperature upper limit. Range 6500 to 10000 (/100)
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    id: ${scc_id}_device_temperature_upper_limit_number
+    name: "Device Temperature Upper Limit"
+    device_id: ${scc_id}
+    entity_category: config
+    register_type: holding
+    address: 0x901E
+    value_type: U_WORD
+    use_write_multiple: true
+    device_class: temperature
+    unit_of_measurement: "°C"
+    icon: mdi:thermometer
+    min_value: 65
+    max_value: 100
+    step: 1
+    multiply: 100
+    mode: ${scc_input_number_mode}
+
+  # 0x901F | Device over temperature recovery. Range 5500 to 10000 (/100)
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    id: ${scc_id}_device_over_temperature_recovery_number
+    name: "Device Over Temperature Recovery"
+    device_id: ${scc_id}
+    entity_category: config
+    register_type: holding
+    address: 0x901F
+    value_type: U_WORD
+    use_write_multiple: true
+    device_class: temperature
+    unit_of_measurement: "°C"
+    icon: mdi:thermometer
+    min_value: 55
+    max_value: 100
+    step: 1
+    multiply: 100
+    mode: ${scc_input_number_mode}
+
+  # +--------------------------------------+
+  # | SOC thresholds and BMS               |
+  # +--------------------------------------+
+
+  # 0x9039 | Full charge protection SOC. Default 99. Range 1 to 100
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    id: ${scc_id}_full_charge_protection_soc_number
+    name: "Full Charge Protection SOC"
+    device_id: ${scc_id}
+    entity_category: config
+    register_type: holding
+    address: 0x9039
+    value_type: U_WORD
+    use_write_multiple: true
+    unit_of_measurement: "%"
+    icon: mdi:battery-high
+    min_value: 1
+    max_value: 100
+    step: 1
+    mode: ${scc_input_number_mode}
+
+  # 0x903A | Full charge protection recovery SOC. Default 95. Range 1 to 100
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    id: ${scc_id}_full_charge_protection_recovery_soc_number
+    name: "Full Charge Protection Recovery SOC"
+    device_id: ${scc_id}
+    entity_category: config
+    register_type: holding
+    address: 0x903A
+    value_type: U_WORD
+    use_write_multiple: true
+    unit_of_measurement: "%"
+    icon: mdi:battery-high
+    min_value: 1
+    max_value: 100
+    step: 1
+    mode: ${scc_input_number_mode}
+
+  # 0x903B | Discharging protection recovery SOC. Default 10. Range 1 to 100
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    id: ${scc_id}_discharging_protection_recovery_soc_number
+    name: "Discharging Protection Recovery SOC"
+    device_id: ${scc_id}
+    entity_category: config
+    register_type: holding
+    address: 0x903B
+    value_type: U_WORD
+    use_write_multiple: true
+    unit_of_measurement: "%"
+    icon: mdi:battery-low
+    min_value: 1
+    max_value: 100
+    step: 1
+    mode: ${scc_input_number_mode}
+
+  # 0x903C | Low battery alarm recovery SOC. Default 10. Range 1 to 100
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    id: ${scc_id}_low_battery_alarm_recovery_soc_number
+    name: "Low Battery Alarm Recovery SOC"
+    device_id: ${scc_id}
+    entity_category: config
+    register_type: holding
+    address: 0x903C
+    value_type: U_WORD
+    use_write_multiple: true
+    unit_of_measurement: "%"
+    icon: mdi:battery-alert-variant-outline
+    min_value: 1
+    max_value: 100
+    step: 1
+    mode: ${scc_input_number_mode}
+
+  # 0x903D | Low battery alarm SOC. Default 8. Range 1 to 100
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    id: ${scc_id}_low_battery_alarm_soc_number
+    name: "Low Battery Alarm SOC"
+    device_id: ${scc_id}
+    entity_category: config
+    register_type: holding
+    address: 0x903D
+    value_type: U_WORD
+    use_write_multiple: true
+    unit_of_measurement: "%"
+    icon: mdi:battery-alert-variant-outline
+    min_value: 1
+    max_value: 100
+    step: 1
+    mode: ${scc_input_number_mode}
+
+  # 0x903E | Discharging protection SOC. Default 5. Range 1 to 100
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    id: ${scc_id}_discharging_protection_soc_number
+    name: "Discharging Protection SOC"
+    device_id: ${scc_id}
+    entity_category: config
+    register_type: holding
+    address: 0x903E
+    value_type: U_WORD
+    use_write_multiple: true
+    unit_of_measurement: "%"
+    icon: mdi:battery-low
+    min_value: 1
+    max_value: 100
+    step: 1
+    mode: ${scc_input_number_mode}
+
+  # 0x9040 | BMS protocol number of the lithium battery manufacturer (32 = no BMS, remote temperature sensor). Range 1 to 230
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    id: ${scc_id}_bms_protocol_number
+    name: "BMS Protocol"
+    device_id: ${scc_id}
+    entity_category: config
+    register_type: holding
+    address: 0x9040
+    value_type: U_WORD
+    use_write_multiple: true
+    icon: mdi:battery-sync
+    min_value: 1
+    max_value: 230
+    step: 1
+    mode: ${scc_input_number_mode}
+
+  # +--------------------------------------+
+  # | Device                               |
+  # +--------------------------------------+
+
+  # 0x9004 | Screen backlight time: 0 always OFF, 100 always ON. Range 0 to 100
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    id: ${scc_id}_screen_backlight_time_number
+    name: "Screen Backlight Time"
+    device_id: ${scc_id}
+    entity_category: config
+    register_type: holding
+    address: 0x9004
+    value_type: U_WORD
+    use_write_multiple: true
+    unit_of_measurement: "s"
+    icon: mdi:brightness-6
+    min_value: 0
+    max_value: 100
+    step: 1
+    mode: ${scc_input_number_mode}
+
+  # 0x9005 | Screen cycle time: 0 fixed display. Range 0 to 100
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    id: ${scc_id}_screen_cycle_time_number
+    name: "Screen Cycle Time"
+    device_id: ${scc_id}
+    entity_category: config
+    register_type: holding
+    address: 0x9005
+    value_type: U_WORD
+    use_write_multiple: true
+    unit_of_measurement: "s"
+    icon: mdi:monitor
+    min_value: 0
+    max_value: 100
+    step: 1
+    mode: ${scc_input_number_mode}
+
+  # 0x903F | Data record period. Range 10 to 120
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    id: ${scc_id}_data_record_period_number
+    name: "Data Record Period"
+    device_id: ${scc_id}
+    entity_category: config
+    register_type: holding
+    address: 0x903F
+    value_type: U_WORD
+    use_write_multiple: true
+    unit_of_measurement: "min"
+    icon: mdi:database-clock
+    min_value: 10
+    max_value: 120
+    step: 1
+    mode: ${scc_input_number_mode}
+
+  # 0x9047 | Parallel battery maximum charging current. Range 100 to 1200
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    id: ${scc_id}_parallel_max_charging_current_number
+    name: "Parallel Max Charging Current"
+    device_id: ${scc_id}
+    entity_category: config
+    register_type: holding
+    address: 0x9047
+    value_type: U_WORD
+    use_write_multiple: true
+    unit_of_measurement: "A"
+    icon: mdi:current-dc
+    min_value: 100
+    max_value: 1200
+    step: 10
+    mode: ${scc_input_number_mode}
+
+  # 0x9049 | PV restart charging period. Range 0 to 60
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    id: ${scc_id}_pv_restart_charging_period_number
+    name: "PV Restart Charging Period"
+    device_id: ${scc_id}
+    entity_category: config
+    register_type: holding
+    address: 0x9049
+    value_type: U_WORD
+    use_write_multiple: true
+    unit_of_measurement: "min"
+    icon: mdi:timer-refresh-outline
+    min_value: 0
+    max_value: 60
+    step: 1
     mode: ${scc_input_number_mode}
 
   # +--------------------------------------+

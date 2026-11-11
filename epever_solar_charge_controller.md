@@ -70,9 +70,11 @@ The TIS series follows the same rule without the `NC G3` suffix (`TIS 6 4 15`).
 | Package | Content | ET-NC | IT-NC | TES | TIS |
 |---|---|:---:|:---:|:---:|:---:|
 | `epever_scc_Gen2_full.yaml` | Sub-device, Modbus controller, common entities, PV inputs | ✅ | ✅ | ✅ | ✅ |
-| `epever_scc_Gen2_entities_sensor.yaml` | Rated data, battery, PV totals, statuses, BMS flags, parallel status, energy statistics, battery settings (read) | ✅ | ✅ | ✅ | ✅ |
-| `epever_scc_Gen2_entities_number.yaml` | Battery settings (write) | ✅ | ✅ | ✅ | ✅ |
+| `epever_scc_Gen2_entities_sensor.yaml` | Rated data, battery, PV totals, statuses, BMS flags, parallel status, energy statistics, device time, battery settings (read) | ✅ | ✅ | ✅ | ✅ |
+| `epever_scc_Gen2_entities_number.yaml` | Battery voltages, capacity, charging current and times, temperature limits, SOC thresholds, BMS protocol, screen, data record period, parallel and PV restart settings | ✅ | ✅ | ✅ | ✅ |
 | `epever_scc_Gen2_entities_switch.yaml` | Charging ON/OFF | ✅ | ✅ | ✅ | ✅ |
+| `epever_scc_Gen2_entities_select.yaml` | Charging / discharging mode (Voltage / SOC), Use BMS Settings, PV Connection Mode, Simulate BMS Mode | ✅ | ✅ | ✅ | ✅ |
+| `epever_scc_Gen2_entities_button.yaml` | Fault Reset, Clear Accumulated Energy, Manual Equalize Charging, Sync Device Time | ✅ | ✅ | ✅ | ✅ |
 | `epever_scc_Gen2_pv_1.yaml` | PV1 input, charging stage, day / night | ✅ | ✅ | ✅ | ✅ |
 | `epever_scc_Gen2_pv_2.yaml` | PV1 + PV2 inputs, PV2 and relay statuses | `scc_pv_input: '2'` | `scc_pv_input: '2'` | `scc_pv_input: '2'` | `scc_pv_input: '2'` |
 | `epever_scc_Gen2_load.yaml` | Load output: values, status, consumed energy, ON/OFF, control mode, light control, timers | ❌ | ✅ | ❌ | ✅ |
@@ -132,6 +134,13 @@ required by both protocol documents.
 Night Time and Working Durations are shown in minutes: the controller stores them as hours and
 minutes in one register, the conversion is done by the package.
 
+### Device time (Gen2)
+
+The controller has its own real-time clock, used for the load timers and the data records. It is
+shown by **Device Time**. **Sync Device Time** sets it to the time of the ESP32 (`my_time`, see
+`packages/base/device_base.yaml`): press it after the first installation, and after each change
+of daylight saving time.
+
 ## RS485 connection
 
 RJ45 pinout of the RS485 COM port (same on Gen1 and Gen2):
@@ -152,7 +161,8 @@ Default communication settings: 115200 bps, 8N1, Modbus address 1.
 - **Partially tested on a real controller**: the packages are written from the protocol documents,
   then corrected and checked on a **TIS8425** (ARM firmware 1.08, DSP firmware 1.06) against the
   EPEVER Solar Guardian app: battery SOC, battery voltage parameters, load control mode, load
-  ON/OFF, night / day thresholds and delays, load timers.
+  ON/OFF, night / day thresholds and delays, load timers, temperature limits, SOC thresholds,
+  BMS protocol, charging / discharging mode, device time and its synchronisation.
 - **Load timers**: the seconds of the ON/OFF times (`0x902C`, `0x902F`, `0x9032`, `0x9035`) are
   not exposed.
 - **Not exposed on purpose**:

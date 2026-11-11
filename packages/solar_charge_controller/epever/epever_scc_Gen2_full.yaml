@@ -1,5 +1,5 @@
 # Updated : 2026.11.11
-# Version : 1.0.0
+# Version : 1.0.1
 # GitHub  : https://github.com/Sleeper85/esphome-packages
 
 # This YAML is free software: you can redistribute it and/or
@@ -45,6 +45,8 @@ packages:
   epever_gen2_sensor: !include epever_scc_Gen2_entities_sensor.yaml    # battery, statistics, status
   epever_gen2_number: !include epever_scc_Gen2_entities_number.yaml    # battery settings
   epever_gen2_switch: !include epever_scc_Gen2_entities_switch.yaml    # charging ON/OFF
+  epever_gen2_select: !include epever_scc_Gen2_entities_select.yaml    # settings with a list of values
+  epever_gen2_button: !include epever_scc_Gen2_entities_button.yaml    # fault reset, clear energy, equalize, time sync
   # PV inputs: `scc_pv_input` = 1 (PV1 only) or 2 (PV1 + PV2)
   # The PV2 registers are only read when the model has two PV inputs.
   epever_gen2_pv: !include epever_scc_Gen2_pv_${scc_pv_input}.yaml
