@@ -1,0 +1,165 @@
+# Updated : 2026.11.11
+# Version : 1.0.0
+# GitHub  : https://github.com/Sleeper85/esphome-packages
+
+# This YAML is free software: you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation, either version 3
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/gpl.html>.
+
+################################################################################
+
+# If needed, configure a static IP here
+# wifi:
+#   manual_ip:
+#     static_ip: 192.168.0.85
+#     gateway: 192.168.0.1
+#     subnet: 255.255.255.0
+#     dns1: 8.8.8.8
+#     dns2: 8.8.4.4
+
+logger:
+  level: INFO # VERBOSE / DEBUG / INFO / WARN
+
+ota:
+  platform: esphome
+  
+# Please use the native `api` component instead of the `mqtt` section.
+# If you use Home Assistant, the native API is more lightweight.
+# If there is no HA server connected to this API, the ESP32 reboots every 15 minutes to try to resolve the problem.
+# The "reboot_timeout: 0s" option will keep your ESP32 up and running even if you lose connection to your HA server.
+api:
+  reboot_timeout: 0s
+
+# If you don't want to use ESPHome's native API you can use MQTT instead.
+# In this case don't forget to remove the 'api:' section.
+# mqtt:
+#   broker: !secret mqtt_host
+#   username: !secret mqtt_username
+#   password: !secret mqtt_password
+#   id: mqtt_client
+
+# Please note that enabling this component will take up a lot of memory and may decrease
+# stability and be the cause of reboot depending on the capabilities of the board used.
+# web_server:
+#   port: 80
+#   log: false
+#   ota: false
+
+# +--------------------------------------+
+# | Global Settings                      |
+# +--------------------------------------+
+substitutions:
+  # Name
+  hostname: 'srne-node' # This is the name of the ESP32 node. It should always be unique in your ESPHome network.
+  friendly_name : 'SRNE' # Name of the ESP32 node in Home Assistant. Each package adds its own sub-device under it.
+
+# +--------------------------------------+
+# | Packages                             |
+# +--------------------------------------+
+packages:
+  remote_packages:
+    url: https://github.com/Sleeper85/esphome-packages
+    ref: main
+    refresh: 0s
+    files:
+
+  # +------------------------------------------------------------------------------+
+  # | >>> UNCOMMENT YOUR BOARD
+  # | >>> ONLY ONE BOARD !
+  # +------------------------------------------------------------------------------+
+
+      - path: 'packages/board/board_ESP32_Generic.yaml'
+      # - path: 'packages/board/board_ESP32_Atom-Lite.yaml'
+      # - path: 'packages/board/board_ESP32_DevKit-V1.yaml'
+      # - path: 'packages/board/board_ESP32_EVB.yaml'
+      # - path: 'packages/board/board_ESP32_iBMS_CAN_RS485_V3.3.yaml'
+      # - path: 'packages/board/board_ESP32_LilyGo-T-CAN485.yaml'
+      # - path: 'packages/board/board_ESP32-C3_DevKitM-1.yaml'
+      # - path: 'packages/board/board_ESP32-C3_ETH01-EVO.yaml'
+      # - path: 'packages/board/board_ESP32-C3_FlipC3.yaml'
+      # - path: 'packages/board/board_ESP32-S3_Generic.yaml'
+      # - path: 'packages/board/board_ESP32-S3_AtomS3-Lite.yaml'
+      # - path: 'packages/board/board_ESP32-S3_AtomS3.yaml'
+      # - path: 'packages/board/board_ESP32-S3_AtomS3R.yaml'
+      # - path: 'packages/board/board_ESP32-S3_DevKitC-1_LED-38.yaml'
+      # - path: 'packages/board/board_ESP32-S3_DevKitC-1_LED-48.yaml'
+      # - path: 'packages/board/board_ESP32-S3_LilyGo-T-Connect.yaml'
+      # - path: 'packages/board/board_ESP32-S3_LilyGo-T-Connect-Pro.yaml'
+      # - path: 'packages/board/board_ESP32-S3_WS-ETH.yaml'
+      # - path: 'packages/board/board_ESP32-S3_WS-RS485-CAN.yaml'
+      # - path: 'packages/board/board_ESP32-S3_WS-Touch-LCD-4.3.yaml'
+      # - path: 'packages/board/board_ESP32-S3_WS-Touch-LCD-7.yaml'
+      # - path: 'packages/board/board_ESP32-S3_XIAO.yaml'
+      # - path: 'packages/board/board_ESP32-S3_YBoard.yaml'
+
+
+
+  # +------------------------------------------------------------------------------+
+  # | >>> Board Options
+  # | >>> Uncomment your interfaces and options
+  # +------------------------------------------------------------------------------+
+
+      # PSRAM octal 80Mhz
+      # - path: 'packages/board/board_options_PSRAM_octal_80Mhz.yaml'
+
+      # WiFi AP @ 192.168.4.1
+      # - path: 'packages/board/board_options_wifi_ap.yaml'
+
+      # Captive Portal @ 192.168.4.1
+      # - path: 'packages/board/board_options_captive_portal.yaml'
+
+
+
+  # +------------------------------------------------------------------------------+
+  # | >>> Devices packages
+  # +------------------------------------------------------------------------------+
+
+      # Modbus : the UART named by `modbus_uart_id` is declared by this package
+      - path: 'packages/board/board_options_itf_modbus.yaml'
+        vars:
+          modbus_id: 'srne' # full id = modbus_client_srne
+          modbus_role: 'client' # client / server
+          modbus_uart_id: 'uart_esp_1' # uart_esp_1 / uart_esp_2 / uart_esp_3
+          modbus_baud_rate: '9600' # 9600 / 19200 / 115200
+          modbus_send_wait_time: '500ms' # max time to wait for the first byte of a response
+          modbus_turnaround_time: '50ms' # pause after a response before the next command
+          # uart_flow_control_pin: ${talk_pin} # only if your RS485 transceiver needs a flow control pin
+
+      # SRNE SCC MPPT
+      - path: 'packages/solar_charge_controller/srne/srne_scc_full.yaml'
+        vars:
+          scc_id: 'scc_1'                                           # ID (no space), prefix of all IDs of this package
+          scc_name: 'SCC 1'                                         # Name of the sub-device in Home Assistant
+          scc_modbus_id: 'modbus_client_srne'
+          scc_modbus_address: '1'
+          scc_update_interval: '5s'                                 # Modbus polling interval
+          scc_template_update: '5s'                                 # Update interval of the computed (template) sensors
+          scc_text_update: '5s'                                     # Update interval of the charger status text
+          # Time of day at which today's PV / battery energy is saved as "yesterday" (before midnight)
+          my_hours: '23'
+          my_minute: '59'
+          my_second: '59'
+
+
+
+  # +------------------------------------------------------------------------------+
+  # | >>> DEBUG
+  # +------------------------------------------------------------------------------+
+
+      - path: packages/base/device_debug_ESP32.yaml
+      # - path: packages/base/device_debug_ESP32_PSRAM.yaml
+        vars:
+          debug_name: 'Debug'
+          debug_update_interval: '5s'
+          # Size of your PSRAM in bits
+          # 8Mb='8388608' | 6Mb='6291456' | 4Mb='4194304' | 2Mb='2097152' | NoPSRAM='0'
+          debug_psram_size: '8388608'
