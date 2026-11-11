@@ -1,5 +1,5 @@
-# Updated : 2025.05.22
-# Version : 1.1.1
+# Updated : 2026.11.11
+# Version : 1.1.2
 # GitHub  : https://github.com/Sleeper85/esphome-packages
 
 # This YAML is free software: you can redistribute it and/or
@@ -16,16 +16,16 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/gpl.html>.
 
 globals:
-  - id: ${inverter_name}_pv_energy_total_yesterday_global
+  - id: ${inverter_id}_pv_energy_total_yesterday_global
     type: float
     restore_value: yes
-  - id: ${inverter_name}_ac_output_energy_yesterday_global
+  - id: ${inverter_id}_ac_output_energy_yesterday_global
     type: float
     restore_value: yes
-  - id: ${inverter_name}_battery_charging_energy_yesterday_global
+  - id: ${inverter_id}_battery_charging_energy_yesterday_global
     type: float
     restore_value: yes
-  - id: ${inverter_name}_battery_discharging_energy_yesterday_global
+  - id: ${inverter_id}_battery_discharging_energy_yesterday_global
     type: float
     restore_value: yes
 
@@ -38,23 +38,24 @@ time:
         hours: 23
         then:
           - globals.set:
-              id: ${inverter_name}_pv_energy_total_yesterday_global
-              value: !lambda return ( id(${inverter_name}_pv_energy_total_yesterday_global) =  float( id(${inverter_name}_pv_energy_total_today).state) );
+              id: ${inverter_id}_pv_energy_total_yesterday_global
+              value: !lambda return ( id(${inverter_id}_pv_energy_total_yesterday_global) =  float( id(${inverter_id}_pv_energy_total_today).state) );
           - globals.set:
-              id: ${inverter_name}_ac_output_energy_yesterday_global
-              value: !lambda return ( id(${inverter_name}_ac_output_energy_yesterday_global) =  float( id(${inverter_name}_ac_output_energy_today).state) );
+              id: ${inverter_id}_ac_output_energy_yesterday_global
+              value: !lambda return ( id(${inverter_id}_ac_output_energy_yesterday_global) =  float( id(${inverter_id}_ac_output_energy_today).state) );
           - globals.set:
-              id: ${inverter_name}_battery_charging_energy_yesterday_global
-              value: !lambda return ( id(${inverter_name}_battery_charging_energy_yesterday_global) =  float( id(${inverter_name}_battery_charging_energy_today).state) );
+              id: ${inverter_id}_battery_charging_energy_yesterday_global
+              value: !lambda return ( id(${inverter_id}_battery_charging_energy_yesterday_global) =  float( id(${inverter_id}_battery_charging_energy_today).state) );
           - globals.set:
-              id: ${inverter_name}_battery_discharging_energy_yesterday_global
-              value: !lambda return ( id(${inverter_name}_battery_discharging_energy_yesterday_global) =  float( id(${inverter_name}_battery_discharging_energy_today).state) );
+              id: ${inverter_id}_battery_discharging_energy_yesterday_global
+              value: !lambda return ( id(${inverter_id}_battery_discharging_energy_yesterday_global) =  float( id(${inverter_id}_battery_discharging_energy_today).state) );
 
 sensor:
 
   - platform: template
-    name: ${name} ${inverter_name} battery charging current
-    id: ${inverter_name}_battery_charging_current
+    name: battery charging current
+    device_id: ${inverter_id}
+    id: ${inverter_id}_battery_charging_current
     unit_of_measurement: 'A'
     accuracy_decimals: 2
     icon: mdi:current-dc
@@ -62,14 +63,15 @@ sensor:
     state_class: measurement
     update_interval: ${inverter_update_interval}
     lambda: |-
-      if (id(${inverter_name}_battery_current).state >= 0)
-        return (id(${inverter_name}_battery_current).state);
+      if (id(${inverter_id}_battery_current).state >= 0)
+        return (id(${inverter_id}_battery_current).state);
       else
         return 0.0;
 
   - platform: template
-    name: ${name} ${inverter_name} battery discharging current
-    id: ${inverter_name}_battery_discharging_current
+    name: battery discharging current
+    device_id: ${inverter_id}
+    id: ${inverter_id}_battery_discharging_current
     unit_of_measurement: 'A'
     accuracy_decimals: 2
     icon: mdi:current-dc
@@ -77,110 +79,120 @@ sensor:
     state_class: measurement
     update_interval: ${inverter_update_interval}
     lambda: |-
-      if (id(${inverter_name}_battery_current).state < 0)
-        return ( - id(${inverter_name}_battery_current).state );
+      if (id(${inverter_id}_battery_current).state < 0)
+        return ( - id(${inverter_id}_battery_current).state );
       else
         return 0.0;
 
   - platform: template
-    name: ${name} ${inverter_name} battery charging power
-    id: ${inverter_name}_battery_charging_power
+    name: battery charging power
+    device_id: ${inverter_id}
+    id: ${inverter_id}_battery_charging_power
     unit_of_measurement: 'W'
     accuracy_decimals: 2
     device_class: power
     state_class: measurement
     update_interval: ${inverter_update_interval}
-    lambda: return ( (id(${inverter_name}_battery_voltage).state) * (id(${inverter_name}_battery_charging_current).state) );
+    lambda: return ( (id(${inverter_id}_battery_voltage).state) * (id(${inverter_id}_battery_charging_current).state) );
 
   - platform: template
-    name: ${name} ${inverter_name} battery discharging power
-    id: ${inverter_name}_battery_discharging_power
+    name: battery discharging power
+    device_id: ${inverter_id}
+    id: ${inverter_id}_battery_discharging_power
     unit_of_measurement: 'W'
     accuracy_decimals: 2
     device_class: power
     state_class: measurement
     update_interval: ${inverter_update_interval}
-    lambda: return ( (id(${inverter_name}_battery_voltage).state) * (id(${inverter_name}_battery_discharging_current).state) );
+    lambda: return ( (id(${inverter_id}_battery_voltage).state) * (id(${inverter_id}_battery_discharging_current).state) );
 
   # Sum of PV1 and PV2 to get total PV Power
   - platform: template
-    name: ${name} ${inverter_name} pv power total
-    id: ${inverter_name}_pv_power_total
+    name: pv power total
+    device_id: ${inverter_id}
+    id: ${inverter_id}_pv_power_total
     unit_of_measurement: 'W'
     accuracy_decimals: 2
     device_class: power
     state_class: measurement
     update_interval: ${inverter_update_interval}
-    lambda: return (id(${inverter_name}_pv1_power).state + id(${inverter_name}_pv2_power).state);
+    lambda: return (id(${inverter_id}_pv1_power).state + id(${inverter_id}_pv2_power).state);
 
   # +--------------------------------------+
   # |           Yesterday Power            |
   # +--------------------------------------+
   - platform: template
-    name: ${name} ${inverter_name} battery charging energy yesterday
-    id: ${inverter_name}_battery_charging_energy_yesterday
+    name: battery charging energy yesterday
+    device_id: ${inverter_id}
+    id: ${inverter_id}_battery_charging_energy_yesterday
     unit_of_measurement: 'kWh'
     accuracy_decimals: 1
     device_class: energy
     state_class: measurement
-    lambda: return id(${inverter_name}_battery_charging_energy_yesterday_global);
+    lambda: return id(${inverter_id}_battery_charging_energy_yesterday_global);
 
   - platform: template
-    name: ${name} ${inverter_name} battery discharging energy yesterday
-    id: ${inverter_name}_battery_discharging_energy_yesterday
+    name: battery discharging energy yesterday
+    device_id: ${inverter_id}
+    id: ${inverter_id}_battery_discharging_energy_yesterday
     unit_of_measurement: 'kWh'
     accuracy_decimals: 1
     device_class: energy
     state_class: measurement
-    lambda: return id(${inverter_name}_battery_discharging_energy_yesterday_global);
+    lambda: return id(${inverter_id}_battery_discharging_energy_yesterday_global);
 
   - platform: template
-    name: ${name} ${inverter_name} pv energy total yesterday
-    id: ${inverter_name}_pv_energy_total_yesterday
+    name: pv energy total yesterday
+    device_id: ${inverter_id}
+    id: ${inverter_id}_pv_energy_total_yesterday
     unit_of_measurement: 'kWh'
     accuracy_decimals: 1
     device_class: energy
     state_class: measurement
-    lambda: return id(${inverter_name}_pv_energy_total_yesterday_global);
+    lambda: return id(${inverter_id}_pv_energy_total_yesterday_global);
 
   - platform: template
-    name: ${name} ${inverter_name} ac output energy yesterday
-    id: ${inverter_name}_ac_output_energy_yesterday
+    name: ac output energy yesterday
+    device_id: ${inverter_id}
+    id: ${inverter_id}_ac_output_energy_yesterday
     unit_of_measurement: 'kWh'
     accuracy_decimals: 1
     device_class: energy
     state_class: measurement
     update_interval: ${inverter_update_interval}
-    lambda: return id(${inverter_name}_ac_output_energy_yesterday_global);
+    lambda: return id(${inverter_id}_ac_output_energy_yesterday_global);
 
   # +---------------------------------------+
   # |    Essential & Non-essential Power    |
   # +---------------------------------------+
   - platform: template           # Essential Power based on register 175 + 167(LD) - 166
-    name: ${name} ${inverter_name} essential power
+    name: essential power
+    device_id: ${inverter_id}
     unit_of_measurement: 'W'
     accuracy_decimals: 2
     device_class: power
     state_class: measurement
     update_interval: ${inverter_update_interval}
-    lambda: return (id(${inverter_name}_ac_output_power).state + id(${inverter_name}_grid_power_limiter_1).state - id(${inverter_name}_aux_output_power).state);
+    lambda: return (id(${inverter_id}_ac_output_power).state + id(${inverter_id}_grid_power_limiter_1).state - id(${inverter_id}_aux_output_power).state);
 
   - platform: template           # Non-essential Power 172 - 167(LD)
-    name: ${name} ${inverter_name} non-essential power
+    name: non-essential power
+    device_id: ${inverter_id}
     unit_of_measurement: 'W'
     accuracy_decimals: 2
     device_class: power
     state_class: measurement
     update_interval: ${inverter_update_interval}
-    lambda: return (id(${inverter_name}_grid_external_power_total).state - id(${inverter_name}_grid_power_limiter_1).state);
+    lambda: return (id(${inverter_id}_grid_external_power_total).state - id(${inverter_id}_grid_power_limiter_1).state);
 
   # +--------------------------------------+
   # |         Total Daily Energy           |
   # +--------------------------------------+
   - platform: total_daily_energy
-    name: ${name} ${inverter_name} pv energy total today
-    id: ${inverter_name}_pv_energy_total_today
-    power_id: ${inverter_name}_pv_power_total
+    name: pv energy total today
+    device_id: ${inverter_id}
+    id: ${inverter_id}_pv_energy_total_today
+    power_id: ${inverter_id}_pv_power_total
     unit_of_measurement: 'kWh'
     accuracy_decimals: 1
     device_class: energy
@@ -191,9 +203,10 @@ sensor:
        - multiply: 0.001
 
   - platform: total_daily_energy
-    name: ${name} ${inverter_name} ac output energy today
-    id: ${inverter_name}_ac_output_energy_today
-    power_id: ${inverter_name}_ac_output_power
+    name: ac output energy today
+    device_id: ${inverter_id}
+    id: ${inverter_id}_ac_output_energy_today
+    power_id: ${inverter_id}_ac_output_power
     unit_of_measurement: 'kWh'
     accuracy_decimals: 1
     device_class: energy

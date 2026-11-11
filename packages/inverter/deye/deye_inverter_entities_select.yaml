@@ -1,5 +1,5 @@
-# Updated : 2025.05.22
-# Version : 1.1.1
+# Updated : 2026.11.11
+# Version : 1.1.2
 # GitHub  : https://github.com/Sleeper85/esphome-packages
 
 # This YAML is free software: you can redistribute it and/or
@@ -21,8 +21,8 @@
 sensor:
 
   - platform: modbus_controller            # 280 Grid Peak Shaving raw register value
-    modbus_controller_id: ${inverter_name}_modbus_controller
-    id: ${inverter_name}_grid_peak_shaving_raw
+    modbus_controller_id: ${inverter_id}_modbus_controller
+    id: ${inverter_id}_grid_peak_shaving_raw
     register_type: holding
     address: 280
     value_type: U_WORD
@@ -34,9 +34,10 @@ select:
 
   - platform: modbus_controller            # Switch ON/OFF
     use_write_multiple: true
-    modbus_controller_id: ${inverter_name}_modbus_controller
-    name: ${name} ${inverter_name} switch on off
-    id: ${inverter_name}_switch_on_off_select
+    modbus_controller_id: ${inverter_id}_modbus_controller
+    name: switch on off
+    device_id: ${inverter_id}
+    id: ${inverter_id}_switch_on_off_select
     address: 43
     value_type: U_WORD
     optionsmap:
@@ -45,22 +46,26 @@ select:
 
   - platform: modbus_controller            # 200 Battery Control Mode
     use_write_multiple: true
-    modbus_controller_id: ${inverter_name}_modbus_controller
-    name: ${name} ${inverter_name} battery control mode
-    id: ${inverter_name}_battery_control_mode
+    modbus_controller_id: ${inverter_id}_modbus_controller
+    name: battery control mode
+    device_id: ${inverter_id}
+    id: ${inverter_id}_battery_control_mode
     address: 200
     value_type: U_WORD
+    reuse_previous_range: true # spans unused 195-199
     optionsmap:
       "Four-stage charging method": 0
       "Lithium BMS": 1
 
   - platform: modbus_controller            # 213 Battery Mode
     use_write_multiple: true
-    modbus_controller_id: ${inverter_name}_modbus_controller
-    name: ${name} ${inverter_name} battery mode
-    id: ${inverter_name}_battery_mode
+    modbus_controller_id: ${inverter_id}_modbus_controller
+    name: battery mode
+    device_id: ${inverter_id}
+    id: ${inverter_id}_battery_mode
     address: 213
     value_type: U_WORD
+    reuse_previous_range: true # spans unused 212
     optionsmap:
       "Use Batt V": 0
       "Use Batt %": 1
@@ -68,9 +73,10 @@ select:
 
   - platform: modbus_controller            # 243 Energy Patern
     use_write_multiple: true
-    modbus_controller_id: ${inverter_name}_modbus_controller
-    name: ${name} ${inverter_name} energy pattern
-    id: ${inverter_name}_energy_pattern
+    modbus_controller_id: ${inverter_id}_modbus_controller
+    name: energy pattern
+    device_id: ${inverter_id}
+    id: ${inverter_id}_energy_pattern
     address: 243
     value_type: U_WORD
     optionsmap:
@@ -79,9 +85,10 @@ select:
 
   - platform: modbus_controller            # 244 Work Mode
     use_write_multiple: true
-    modbus_controller_id: ${inverter_name}_modbus_controller
-    name: ${name} ${inverter_name} work mode
-    id: ${inverter_name}_work_mode
+    modbus_controller_id: ${inverter_id}_modbus_controller
+    name: work mode
+    device_id: ${inverter_id}
+    id: ${inverter_id}_work_mode
     address: 244
     value_type: U_WORD
     optionsmap:
@@ -91,9 +98,10 @@ select:
 
   - platform: modbus_controller            # 280 Grid Peak Shaving
     use_write_multiple: true
-    modbus_controller_id: ${inverter_name}_modbus_controller
-    name: ${name} ${inverter_name} grid peak shaving
-    id: ${inverter_name}_grid_peak_shaving_select
+    modbus_controller_id: ${inverter_id}_modbus_controller
+    name: grid peak shaving
+    device_id: ${inverter_id}
+    id: ${inverter_id}_grid_peak_shaving_select
     address: 280
     value_type: U_WORD
     optionsmap:
@@ -110,7 +118,7 @@ select:
       return {};
     write_lambda: |-
       // ESP_LOGE("main","Modbus write gets = %d",value);
-      uint16_t unmodified =  id(${inverter_name}_grid_peak_shaving_raw).state;
+      uint16_t unmodified =  id(${inverter_id}_grid_peak_shaving_raw).state;
       // ESP_LOGE("main","Modbus write unmodified = %d", unmodified);
       // optionsmap should only return 2 values... 0 , 256 so bitmask with complement 0x0100 to ensure we keep the original values in register. Then appply OR with the value that was chosen
       uint16_t modified = ((unmodified & ~0x0100) | value);
