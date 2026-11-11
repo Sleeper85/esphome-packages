@@ -100,7 +100,7 @@ Examples: `3202.01` is bit D1 of register `0x3202`; `3202.02-03` are bits D2 and
 | `0x3116` | Battery total discharging current | A | uint16 | ÷100 | ✅ | ✅ | ✅ | ✅ | |
 | `0x3117` | Battery total current | A | uint16 ¹ | ÷100 | ✅ | ✅ | ✅ | ✅ | Net battery current |
 | `0x3118` | Remote battery temperature | °C | int16 | ÷100 | ✅ | ✅ | ✅ | ✅ | |
-| `0x3119` | Battery SOC | % | uint16 | ÷100 ² | ✅ | ✅ | ✅ | ✅ | |
+| `0x3119` | Battery SOC | % | uint16 | 1 ² | ✅ | ✅ | ✅ | ✅ | |
 | `0x311A` | Device temperature | °C | int16 | ÷100 | ✅ | ✅ | ✅ | ✅ | |
 | `0x311D` | Current system voltage | V | uint16 | ÷100 | ✅ | ✅ | ✅ | ✅ | |
 | `0x311E` | Highest PV voltage of the two inputs | V | uint16 | ÷100 | ✅ | ✅ | ✅ | ✅ | |
@@ -109,7 +109,7 @@ Examples: `3202.01` is bit D1 of register `0x3202`; `3202.02-03` are bits D2 and
 | `0x3121` | PV total charging power H | W | | | ✅ | ✅ | ✅ | ✅ | |
 
 ¹ Probably signed (`int16`): see [Errata](#errata-in-the-original-documents).
-² Both documents give a coefficient of 100 for the SOC. This must be checked on a real device: the SOC of the BMS (`0x3406`) uses a coefficient of 1.
+² Both documents give a coefficient of 100 for the SOC, but a real controller returns the SOC in % without decimals (coefficient 1), like the SOC of the BMS (`0x3406`): see [Errata](#errata-in-the-original-documents).
 
 ## 3. Status registers (FC `0x04`, read only)
 
@@ -377,11 +377,11 @@ Lithium battery:
 | Address | Name | Unit | Type | Scale | ET-NC | IT-NC | TES | TIS | Description |
 |---|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|---|
 | `0x9022` | Load control mode | | uint16 | 1 | ❌ | ✅ | ❌ | ✅ | `0` Manual (default), `1` Light ON/OFF (dusk to dawn), `2` Light ON + Timer, `3` Timer, `6` Always ON, `7` ON at sunrise |
-| `0x9023` | Manual mode default state | | uint16 | 1 | ❌ | ✅ | ❌ | ✅ | `0` OFF, `1` ON |
+| `0x9023` | Manual mode default state | | uint16 | 1 | ❌ | ✅ | ❌ | ✅ | MMDS: load state at controller startup in manual mode. `0` OFF, `1` ON (default). Applied at the next restart of the controller |
 | `0x9024` | Night threshold voltage (turn-on voltage) | V | uint16 | ÷100 | ❌ | ✅ | ❌ | ✅ | Below this PV voltage, the controller considers that night is coming. Range 500 to 5000 |
-| `0x9025` | Night delay (turn-on delay) | min | uint16 | 1 | ❌ | ✅ | ❌ | ✅ | Night is detected when the PV voltage stays below the night threshold for this time. Range 0 to 9900 (as documented) |
+| `0x9025` | Night delay (turn-on delay) | min | uint16 | ÷100 | ❌ | ✅ | ❌ | ✅ | TOND. Night is detected when the PV voltage stays below the night threshold for this time. Range 0 to 9900 (0 to 99 min), default 1000 (10 min): see [Errata](#errata-in-the-original-documents) |
 | `0x9026` | Day threshold voltage (turn-off voltage) | V | uint16 | ÷100 ⁵ | ❌ | ✅ | ❌ | ✅ | Above this PV voltage, the controller considers that day is coming. Range 60 to 8000. Default 600 |
-| `0x9027` | Day delay (turn-off delay) | min | uint16 | 1 | ❌ | ✅ | ❌ | ✅ | Day is detected when the PV voltage stays above the day threshold for this time. Range 0 to 9900 (as documented) |
+| `0x9027` | Day delay (turn-off delay) | min | uint16 | ÷100 | ❌ | ✅ | ❌ | ✅ | TOFD. Day is detected when the PV voltage stays above the day threshold for this time. Range 0 to 9900 (0 to 99 min), default 1000 (10 min): see [Errata](#errata-in-the-original-documents) |
 | `0x9028` | Night time | | uint16 | 1 | ❌ | ✅ | ❌ | ✅ | Length of the whole night, detected automatically or set by default. D15-D8: Hour, D7-D0: Minute. Range 3 to 24 h |
 | `0x9029` | Timer period selection | | uint16 | 1 | ❌ | ✅ | ❌ | ✅ | `0` One period, `1` Two periods. Default 0 |
 | `0x902A` | Working duration 1 | | uint16 | 1 | ❌ | ✅ | ❌ | ✅ | First load output duration (Light ON + Timer). D15-D8: Hour, D7-D0: Minute. Range 0 to 24 h. Default 1 h |
@@ -405,7 +405,7 @@ Lithium battery:
 
 | Address | Name | Unit | Type | Scale | ET-NC | IT-NC | TES | TIS | Description |
 |---|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|---|
-| `0x9038` | Charging and discharging mode | | uint16 | 1 | ✅ | ✅ | ✅ | ✅ | Range 0 to 1. Default 0. Meaning not documented (probably `0` voltage, `1` SOC) |
+| `0x9038` | Charging and discharging mode | | uint16 | 1 | ✅ | ✅ | ✅ | ✅ | `0` Voltage (shown as "Voltage" by the EPEVER Solar Guardian app), `1` probably SOC. Default 0 |
 | `0x9039` | Full charge protection SOC | % | uint16 | 1 | ✅ | ✅ | ✅ | ✅ | Range 1 to 100. Default 99 |
 | `0x903A` | Full charge protection recovery SOC | % | uint16 | 1 | ✅ | ✅ | ✅ | ✅ | Range 1 to 100. Default 95 |
 | `0x903B` | Discharging protection recovery SOC | % | uint16 | 1 | ✅ | ✅ | ✅ | ✅ | Range 1 to 100. Default 10 |
@@ -421,7 +421,7 @@ Lithium battery:
 | `0x9046` | Baud rate | bps | uint16 | ×100 | ✅ | ✅ | ✅ | ✅ | `1152` 115200, `96` 9600, `24` 2400. Default 1152. Applied after a restart |
 | `0x9047` | Parallel battery maximum charging current | A | uint16 | 1 | ✅ | ✅ | ✅ | ✅ | Range 100 to 1200 |
 | `0x9049` | PV charging restart period | min | uint16 | 1 | ✅ | ✅ | ✅ | ✅ | Range 0 to 60. Default 10 |
-| `0x904A` | Communication port enable | | uint16 | 1 | ✅ | ✅ | ✅ | ✅ | `1` Normal, `0` OFF: communication is turned off when the device is neither charging nor discharging. Default 1 |
+| `0x904A` | Communication port enable | | uint16 | 1 | ✅ | ✅ | ✅ | ✅ | CPE. `1` Normal, `0` OFF: the communication and the +5 V of the RS485 port are turned off when there is no PV input and no charging, and turned on again when charging. Default 1. On IT-NC G3, CPE also enables the "Remote ON/OFF" (charge enable) terminal |
 | `0x904B` | Manual equalize charging | | uint16 | 1 | ✅ | ✅ | ✅ | ✅ | `0` Normal, `1` Trigger one equalize charge. Default 0 |
 
 > [!NOTE]
@@ -556,3 +556,5 @@ Example: battery total current `0x3117` reads `0xFFF9` → 65529 − 65536 = −
 | 11 | ET-NC (PDF metadata) | Title "B-Series MODBUS Specification" | Not related to the A/B (B-Series) protocol |
 | 12 | TIS | Rows numbered 53 and 58 for `0x3303`/`0x3304` | Numbering only |
 | 13 | TIS | `0x3206` (parallel charging status) is missing, while the 4 series support parallel operation of up to 6 controllers (IT-NC G3 and TIS manuals, EPEVER product descriptions) | Assumed present on the 4 series |
+| 14 | ET-NC, TIS | `0x3119` (battery SOC) coefficient `100` | Coefficient `1`: a real controller returns 76 for 76 % (checked on a TIS8425) |
+| 15 | TIS | `0x9025` / `0x9027` (night / day delays): unit `M`, coefficient `1`, range 0 to 9900, default 1000 | Minutes × 100: the IT-NC G3 manual gives 0 to 99 min with a default of 10 min (TOND / TOFD). Checked on a TIS8425: raw value 100 = 1 min in the Solar Guardian app |

@@ -1,5 +1,5 @@
 # Updated : 2026.11.11
-# Version : 1.0.0
+# Version : 1.0.1
 # GitHub  : https://github.com/Sleeper85/esphome-packages
 
 # This YAML is free software: you can redistribute it and/or
@@ -248,7 +248,8 @@ select:
       "Always ON": 6
       "ON at Sunrise": 7
 
-  # 0x9023 | Load state in manual mode at startup: 0 OFF, 1 ON
+  # 0x9023 | Load state in manual mode at startup (MMDS): 0 OFF, 1 ON (default)
+  # Taken into account at the next restart of the controller (IT-NC G3 manual).
   - platform: modbus_controller
     modbus_controller_id: ${scc_id}_modbus_controller
     name: "Load Manual Mode Default State"
@@ -299,7 +300,8 @@ number:
     multiply: 100
     mode: ${scc_input_number_mode}
 
-  # 0x9025 | Night delay (turn-on delay): range 0 to 9900 as documented
+  # 0x9025 | Night delay (turn-on delay): raw value = minutes x 100. Range 0 to 9900 = 0 to 99 min,
+  # default 1000 = 10 min (IT-NC G3 manual, TOND / TOFD). Checked on a TIS8425.
   - platform: modbus_controller
     modbus_controller_id: ${scc_id}_modbus_controller
     name: "Load Night Delay"
@@ -312,8 +314,9 @@ number:
     unit_of_measurement: "min"
     icon: mdi:timer-sand
     min_value: 0
-    max_value: 9900
+    max_value: 99
     step: 1
+    multiply: 100
     mode: ${scc_input_number_mode}
 
   # 0x9026 | Day threshold voltage (turn-off voltage): above this PV voltage, day is coming. Range 60 to 8000 (/100, see Errata)
@@ -334,7 +337,8 @@ number:
     multiply: 100
     mode: ${scc_input_number_mode}
 
-  # 0x9027 | Day delay (turn-off delay): range 0 to 9900 as documented
+  # 0x9027 | Day delay (turn-off delay): raw value = minutes x 100. Range 0 to 9900 = 0 to 99 min,
+  # default 1000 = 10 min (IT-NC G3 manual, TOND / TOFD). Checked on a TIS8425.
   - platform: modbus_controller
     modbus_controller_id: ${scc_id}_modbus_controller
     name: "Load Day Delay"
@@ -347,8 +351,9 @@ number:
     unit_of_measurement: "min"
     icon: mdi:timer-sand
     min_value: 0
-    max_value: 9900
+    max_value: 99
     step: 1
+    multiply: 100
     mode: ${scc_input_number_mode}
 
   # 0x9028 | Night time: length of the whole night, 3 to 24 h

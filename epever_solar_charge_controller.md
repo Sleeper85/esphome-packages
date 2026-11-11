@@ -126,7 +126,8 @@ required by both protocol documents.
 | Load Night Time | Length of the whole night |
 | Load Working Duration 1 / 2 | Load output durations of the Light ON + Timer mode |
 | Load Timer Periods, Load Timer 1 / 2 ON / OFF Hour and Minute | ON/OFF times of the Timer mode (one or two periods) |
-| Load Manual Mode Default State, Load (switch) | Manual mode: state at startup, ON/OFF |
+| Load Manual Mode Default State | Manual mode: load state when the controller starts (default ON), applied at the next restart of the controller |
+| Load (switch) | Manual mode: load ON/OFF |
 
 Night Time and Working Durations are shown in minutes: the controller stores them as hours and
 minutes in one register, the conversion is done by the package.
@@ -148,18 +149,16 @@ Default communication settings: 115200 bps, 8N1, Modbus address 1.
 
 ### Gen2
 
-- **Not yet tested on a real controller**: the packages are written from the protocol documents
-  only, and validated with `esphome config`.
-- **Battery SOC (`0x3119`)**: both documents give a coefficient of 100. If the SOC shows
-  `0.99 %` instead of `99 %`, the coefficient is wrong.
-- **Load night / day delays (`0x9025`, `0x9027`)**: documented in minutes with a range of 0 to
-  9900 and a default value of 1000, which is unusual for a delay. The unit is to be checked on a
-  real controller.
+- **Partially tested on a real controller**: the packages are written from the protocol documents,
+  then corrected and checked on a **TIS8425** (ARM firmware 1.08, DSP firmware 1.06) against the
+  EPEVER Solar Guardian app: battery SOC, battery voltage parameters, load control mode, load
+  ON/OFF, night / day thresholds and delays, load timers.
 - **Load timers**: the seconds of the ON/OFF times (`0x902C`, `0x902F`, `0x9032`, `0x9035`) are
   not exposed.
 - **Not exposed on purpose**:
-  - *Communication port enable* (`0x904A`): setting it OFF cuts the RS485 port, and the
-    controller can then only be reached again from its LCD.
+  - *Communication port enable* (CPE, `0x904A`): when set OFF, the RS485 port (communication and
+    +5 V) is turned off whenever there is no PV input and no charging, typically every night. The
+    ESP32 then loses the controller, and switches off if it is powered by the RJ45 port.
   - *Factory reset* (coil `0x0007`).
 - The charging status 2 register (`0x3203`: relays, MPPT status, dry contact, PV mode alarms) is
   only read with `scc_pv_input: '2'`, as it may not exist on single PV input models.

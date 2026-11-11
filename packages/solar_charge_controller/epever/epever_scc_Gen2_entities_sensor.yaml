@@ -1,5 +1,5 @@
 # Updated : 2026.11.11
-# Version : 1.0.0
+# Version : 1.0.1
 # GitHub  : https://github.com/Sleeper85/esphome-packages
 
 # This YAML is free software: you can redistribute it and/or
@@ -457,7 +457,7 @@ sensor:
       - multiply: 0.01
 
   # 0x3119 | Battery SOC
-  # Coefficient 100 according to both documents: to be checked on a real device
+  # Coefficient 1 (not 100 as documented): checked on a real controller, see Errata
   - platform: modbus_controller
     modbus_controller_id: ${scc_id}_modbus_controller
     name: "Battery SOC"
@@ -469,8 +469,6 @@ sensor:
     state_class: measurement
     unit_of_measurement: "%"
     accuracy_decimals: 0
-    filters:
-      - multiply: 0.01
 
   # 0x311A | Device temperature
   - platform: modbus_controller
