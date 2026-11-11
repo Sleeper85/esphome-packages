@@ -1,0 +1,50 @@
+# Updated : 2026.11.11
+# Version : 1.0.0
+# GitHub  : https://github.com/Sleeper85/esphome-packages
+
+# This YAML is free software: you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation, either version 3
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/gpl.html>.
+
+# EPEVER solar charge controller - Gen2 (ET-NC, IT-NC, TES, TIS series)
+# Common part of the 4 series. See epever_solar_charge_controller.md.
+# Register map: documents/Epever_Modbus_ET-NC_IT-NC_TES_TIS_Series_Solar_Charge_Controller_Protocol_V1.00.md
+
+# +--------------------------------------+
+# | Sub-device                           |
+# +--------------------------------------+
+# All entities of this package are attached to this sub-device in Home Assistant.
+esphome:
+  devices:
+    - id: ${scc_id}
+      name: "${scc_name}"
+      relation: via
+
+modbus_controller:
+  - id: ${scc_id}_modbus_controller
+    modbus_id: ${scc_modbus_id}
+    address: ${scc_modbus_address}
+    update_interval: ${scc_update_interval}
+    max_cmd_retries: 3
+    offline_skip_updates: 5
+    setup_priority: -10
+
+# +--------------------------------------+
+# | Packages                             |
+# +--------------------------------------+
+packages:
+  epever_gen2_sensor: !include epever_scc_Gen2_entities_sensor.yaml    # battery, statistics, status
+  epever_gen2_number: !include epever_scc_Gen2_entities_number.yaml    # battery settings
+  epever_gen2_switch: !include epever_scc_Gen2_entities_switch.yaml    # charging ON/OFF
+  # PV inputs: `scc_pv_input` = 1 (PV1 only) or 2 (PV1 + PV2)
+  # The PV2 registers are only read when the model has two PV inputs.
+  epever_gen2_pv: !include epever_scc_Gen2_pv_${scc_pv_input}.yaml

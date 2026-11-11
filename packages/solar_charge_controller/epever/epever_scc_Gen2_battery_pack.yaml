@@ -1,0 +1,709 @@
+# Updated : 2026.11.11
+# Version : 1.0.0
+# GitHub  : https://github.com/Sleeper85/esphome-packages
+
+# This YAML is free software: you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation, either version 3
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/gpl.html>.
+
+# EPEVER solar charge controller - Gen2 (ET-NC, IT-NC, TES, TIS series)
+# Lithium battery data received by the controller from the BMS (0x3400 to 0x3423).
+# Optional: only useful when a BMS is connected to the BMS port of the controller.
+# Register map: documents/Epever_Modbus_ET-NC_IT-NC_TES_TIS_Series_Solar_Charge_Controller_Protocol_V1.00.md
+
+# +--------------------------------------+
+# | Binary Sensor                        |
+# +--------------------------------------+
+binary_sensor:
+
+  # 0x340E | D0 | Balancing: 0 OFF, 1 ON
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "BMS Cell Balancing"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    device_class: running
+    register_type: read
+    address: 0x340E
+    bitmask: 0x0001
+
+  # 0x3411 | D0 | 1 charging MOSFET ON
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "BMS Charging MOSFET"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    register_type: read
+    address: 0x3411
+    bitmask: 0x0001
+
+  # 0x3411 | D1 | 1 discharging MOSFET ON
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "BMS Discharging MOSFET"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    register_type: read
+    address: 0x3411
+    bitmask: 0x0002
+
+  # 0x3418 | D0 | BMS Pack Charging Protection
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "BMS Pack Charging Protection"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    device_class: problem
+    register_type: read
+    address: 0x3418
+    bitmask: 0x0001
+
+  # 0x3418 | D1 | BMS Pack Discharging Protection
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "BMS Pack Discharging Protection"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    device_class: problem
+    register_type: read
+    address: 0x3418
+    bitmask: 0x0002
+
+  # 0x3418 | D3 | BMS Pack Other Protection
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "BMS Pack Other Protection"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    device_class: problem
+    register_type: read
+    address: 0x3418
+    bitmask: 0x0008
+
+  # 0x3418 | D4 | BMS Pack Charging Over Temperature
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "BMS Pack Charging Over Temperature"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    device_class: problem
+    register_type: read
+    address: 0x3418
+    bitmask: 0x0010
+
+  # 0x3418 | D5 | BMS Pack Discharging Over Temperature
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "BMS Pack Discharging Over Temperature"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    device_class: problem
+    register_type: read
+    address: 0x3418
+    bitmask: 0x0020
+
+  # 0x3418 | D12 | BMS Full Charge Request
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "BMS Full Charge Request"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    register_type: read
+    address: 0x3418
+    bitmask: 0x1000
+
+  # 0x3418 | D13 | BMS Forced Charging Request
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "BMS Forced Charging Request"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    register_type: read
+    address: 0x3418
+    bitmask: 0x2000
+
+  # 0x3418 | D14 | BMS Discharging Disabled
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "BMS Discharging Disabled"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    register_type: read
+    address: 0x3418
+    bitmask: 0x4000
+
+  # 0x3418 | D15 | BMS Charging Disabled
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "BMS Charging Disabled"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    register_type: read
+    address: 0x3418
+    bitmask: 0x8000
+
+# +--------------------------------------+
+# | Sensor                               |
+# +--------------------------------------+
+sensor:
+
+  # 0x3400 | Number of cells
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "BMS Cells"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    register_type: read
+    address: 0x3400
+    value_type: U_WORD
+    icon: mdi:battery
+    accuracy_decimals: 0
+
+  # 0x3401 | Battery pack voltage
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "BMS Pack Voltage"
+    device_id: ${scc_id}
+    register_type: read
+    address: 0x3401
+    value_type: U_WORD
+    device_class: voltage
+    state_class: measurement
+    unit_of_measurement: "V"
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.01
+
+  # 0x3402 | Battery pack main circuit current (+ charging, - discharging). Documented as uint16, read as signed
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "BMS Pack Current"
+    device_id: ${scc_id}
+    register_type: read
+    address: 0x3402
+    value_type: S_WORD
+    device_class: current
+    state_class: measurement
+    unit_of_measurement: "A"
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.01
+
+  # 0x3403 + 0x3404 | Battery pack power (L, H)
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "BMS Pack Power"
+    device_id: ${scc_id}
+    register_type: read
+    address: 0x3403
+    value_type: U_DWORD_R
+    device_class: power
+    state_class: measurement
+    unit_of_measurement: "W"
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.01
+
+  # 0x3405 | Battery pack full charge capacity
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "BMS Pack Full Charge Capacity"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    register_type: read
+    address: 0x3405
+    value_type: U_WORD
+    unit_of_measurement: "Ah"
+    icon: mdi:car-battery
+    accuracy_decimals: 0
+
+  # 0x3406 | Battery pack remaining capacity
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "BMS Pack SOC"
+    device_id: ${scc_id}
+    register_type: read
+    address: 0x3406
+    value_type: U_WORD
+    device_class: battery
+    state_class: measurement
+    unit_of_measurement: "%"
+    accuracy_decimals: 0
+
+  # 0x3407 | Battery pack remaining operating time
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "BMS Pack Remaining Time"
+    device_id: ${scc_id}
+    register_type: read
+    address: 0x3407
+    value_type: U_WORD
+    device_class: duration
+    state_class: measurement
+    unit_of_measurement: "min"
+    accuracy_decimals: 0
+
+  # 0x3408 | Maximum cell temperature
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "BMS Cell Max Temperature"
+    device_id: ${scc_id}
+    register_type: read
+    address: 0x3408
+    value_type: S_WORD
+    device_class: temperature
+    state_class: measurement
+    unit_of_measurement: "°C"
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.01
+
+  # 0x3409 | Minimum cell temperature
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "BMS Cell Min Temperature"
+    device_id: ${scc_id}
+    register_type: read
+    address: 0x3409
+    value_type: S_WORD
+    device_class: temperature
+    state_class: measurement
+    unit_of_measurement: "°C"
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.01
+
+  # 0x340A | Balancing temperature
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "BMS Balancing Temperature"
+    device_id: ${scc_id}
+    register_type: read
+    address: 0x340A
+    value_type: S_WORD
+    device_class: temperature
+    state_class: measurement
+    unit_of_measurement: "°C"
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.01
+
+  # 0x340B | Ambient temperature
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "BMS Ambient Temperature"
+    device_id: ${scc_id}
+    register_type: read
+    address: 0x340B
+    value_type: S_WORD
+    device_class: temperature
+    state_class: measurement
+    unit_of_measurement: "°C"
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.01
+
+  # 0x340C | MOSFET temperature
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "BMS MOSFET Temperature"
+    device_id: ${scc_id}
+    register_type: read
+    address: 0x340C
+    value_type: S_WORD
+    device_class: temperature
+    state_class: measurement
+    unit_of_measurement: "°C"
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.01
+
+  # 0x340D | Charge / discharge cycles
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "BMS Cycles"
+    device_id: ${scc_id}
+    register_type: read
+    address: 0x340D
+    value_type: U_WORD
+    state_class: total_increasing
+    icon: mdi:battery-sync
+    accuracy_decimals: 0
+
+  # 0x340F | Battery pack voltage status
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    id: ${scc_id}_bms_raw_0x340f
+    internal: true
+    register_type: read
+    address: 0x340F
+    value_type: U_WORD
+    on_value:
+      then:
+        - text_sensor.template.publish:
+            id: ${scc_id}_bms_pack_voltage_status
+            state: !lambda |-
+              switch (int(x)) {
+                case 0x00: return "Normal";
+                case 0x01: return "Undervoltage Alarm";
+                case 0x02: return "Overvoltage Alarm";
+                case 0xF0: return "Cell Test";
+                case 0xF1: return "Undervoltage Protection";
+                case 0xF2: return "Overvoltage Protection";
+                default:   return "Unknown";
+              }
+
+  # 0x3410 | Battery pack current status
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    id: ${scc_id}_bms_raw_0x3410
+    internal: true
+    register_type: read
+    address: 0x3410
+    value_type: U_WORD
+    on_value:
+      then:
+        - text_sensor.template.publish:
+            id: ${scc_id}_bms_pack_current_status
+            state: !lambda |-
+              switch (int(x)) {
+                case 0x00: return "Normal";
+                case 0x01: return "Over Discharge Alarm";
+                case 0x02: return "Overcharge Alarm";
+                case 0xF1: return "Over Discharge Protection";
+                case 0xF2: return "Overcharge Protection";
+                default:   return "Unknown";
+              }
+
+  # 0x3412 | Cell temperature status
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    id: ${scc_id}_bms_raw_0x3412
+    internal: true
+    register_type: read
+    address: 0x3412
+    value_type: U_WORD
+    on_value:
+      then:
+        - text_sensor.template.publish:
+            id: ${scc_id}_bms_cell_temperature_status
+            state: !lambda |-
+              switch (int(x)) {
+                case 0x00: return "Normal";
+                case 0x01: return "Low Temperature Alarm";
+                case 0x02: return "High Temperature Alarm";
+                case 0xF0: return "NTC Fault";
+                case 0xF1: return "Low Temperature Protection";
+                case 0xF2: return "High Temperature Protection";
+                default:   return "Unknown";
+              }
+
+  # 0x3413 | Balancing temperature status
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    id: ${scc_id}_bms_raw_0x3413
+    internal: true
+    register_type: read
+    address: 0x3413
+    value_type: U_WORD
+    on_value:
+      then:
+        - text_sensor.template.publish:
+            id: ${scc_id}_bms_balancing_temperature_status
+            state: !lambda |-
+              switch (int(x)) {
+                case 0x00: return "Normal";
+                case 0x01: return "Low Temperature Alarm";
+                case 0x02: return "High Temperature Alarm";
+                case 0xF0: return "NTC Fault";
+                case 0xF1: return "Low Temperature Protection";
+                case 0xF2: return "High Temperature Protection";
+                default:   return "Unknown";
+              }
+
+  # 0x3414 | Ambient temperature status
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    id: ${scc_id}_bms_raw_0x3414
+    internal: true
+    register_type: read
+    address: 0x3414
+    value_type: U_WORD
+    on_value:
+      then:
+        - text_sensor.template.publish:
+            id: ${scc_id}_bms_ambient_temperature_status
+            state: !lambda |-
+              switch (int(x)) {
+                case 0x00: return "Normal";
+                case 0x01: return "Low Temperature Alarm";
+                case 0x02: return "High Temperature Alarm";
+                case 0xF0: return "NTC Fault";
+                case 0xF1: return "Low Temperature Protection";
+                case 0xF2: return "High Temperature Protection";
+                default:   return "Unknown";
+              }
+
+  # 0x3415 | MOSFET temperature status
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    id: ${scc_id}_bms_raw_0x3415
+    internal: true
+    register_type: read
+    address: 0x3415
+    value_type: U_WORD
+    on_value:
+      then:
+        - text_sensor.template.publish:
+            id: ${scc_id}_bms_mosfet_temperature_status
+            state: !lambda |-
+              switch (int(x)) {
+                case 0x00: return "Normal";
+                case 0x01: return "Low Temperature Alarm";
+                case 0x02: return "High Temperature Alarm";
+                case 0xF0: return "NTC Fault";
+                case 0xF1: return "Low Temperature Protection";
+                case 0xF2: return "High Temperature Protection";
+                default:   return "Unknown";
+              }
+
+  # 0x3416 | Cell status
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    id: ${scc_id}_bms_raw_0x3416
+    internal: true
+    register_type: read
+    address: 0x3416
+    value_type: U_WORD
+    on_value:
+      then:
+        - text_sensor.template.publish:
+            id: ${scc_id}_bms_cell_status
+            state: !lambda |-
+              switch (int(x)) {
+                case 0x00: return "Normal";
+                case 0x01: return "Undervoltage Alarm";
+                case 0x02: return "Overvoltage Alarm";
+                case 0xF0: return "Cell Test";
+                case 0xF1: return "Undervoltage Protection";
+                case 0xF2: return "Overvoltage Protection";
+                default:   return "Unknown";
+              }
+
+  # 0x3417 | BMS protocol of the battery
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "BMS Battery Protocol"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    register_type: read
+    address: 0x3417
+    value_type: U_WORD
+    accuracy_decimals: 0
+
+  # 0x341A | Battery bank voltage (/10)
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "BMS Bank Voltage"
+    device_id: ${scc_id}
+    register_type: read
+    address: 0x341A
+    value_type: U_WORD
+    device_class: voltage
+    state_class: measurement
+    unit_of_measurement: "V"
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.1
+
+  # 0x341B | Battery bank current (/10, + charging, - discharging). Documented as uint16, read as signed
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "BMS Bank Current"
+    device_id: ${scc_id}
+    register_type: read
+    address: 0x341B
+    value_type: S_WORD
+    device_class: current
+    state_class: measurement
+    unit_of_measurement: "A"
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.1
+
+  # 0x341C | Battery pack undervoltage protection
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "BMS Pack Undervoltage Protection"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    register_type: read
+    address: 0x341C
+    value_type: U_WORD
+    device_class: voltage
+    unit_of_measurement: "V"
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.01
+
+  # 0x341D | Battery pack overvoltage alarm
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "BMS Pack Overvoltage Alarm"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    register_type: read
+    address: 0x341D
+    value_type: U_WORD
+    device_class: voltage
+    unit_of_measurement: "V"
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.01
+
+  # 0x341E | Battery pack charging current limit
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "BMS Pack Charging Current Limit"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    register_type: read
+    address: 0x341E
+    value_type: U_WORD
+    device_class: current
+    unit_of_measurement: "A"
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.01
+
+  # 0x341F | Battery pack discharging current limit
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "BMS Pack Discharging Current Limit"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    register_type: read
+    address: 0x341F
+    value_type: U_WORD
+    device_class: current
+    unit_of_measurement: "A"
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.01
+
+  # 0x3420 | Battery bank undervoltage protection
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "BMS Bank Undervoltage Protection"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    register_type: read
+    address: 0x3420
+    value_type: U_WORD
+    device_class: voltage
+    unit_of_measurement: "V"
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.01
+
+  # 0x3421 | Battery bank overvoltage alarm
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "BMS Bank Overvoltage Alarm"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    register_type: read
+    address: 0x3421
+    value_type: U_WORD
+    device_class: voltage
+    unit_of_measurement: "V"
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.01
+
+  # 0x3422 | Battery bank charging current limit
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "BMS Bank Charging Current Limit"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    register_type: read
+    address: 0x3422
+    value_type: U_WORD
+    device_class: current
+    unit_of_measurement: "A"
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.01
+
+  # 0x3423 | Battery bank discharging current limit
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "BMS Bank Discharging Current Limit"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    register_type: read
+    address: 0x3423
+    value_type: U_WORD
+    device_class: current
+    unit_of_measurement: "A"
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.01
+
+# +--------------------------------------+
+# | Text Sensor                          |
+# +--------------------------------------+
+# Published by the `on_value` of the internal raw sensors above.
+text_sensor:
+
+  - platform: template
+    id: ${scc_id}_bms_pack_voltage_status
+    name: "BMS Pack Voltage Status"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+
+  - platform: template
+    id: ${scc_id}_bms_pack_current_status
+    name: "BMS Pack Current Status"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+
+  - platform: template
+    id: ${scc_id}_bms_cell_temperature_status
+    name: "BMS Cell Temperature Status"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+
+  - platform: template
+    id: ${scc_id}_bms_balancing_temperature_status
+    name: "BMS Balancing Temperature Status"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+
+  - platform: template
+    id: ${scc_id}_bms_ambient_temperature_status
+    name: "BMS Ambient Temperature Status"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+
+  - platform: template
+    id: ${scc_id}_bms_mosfet_temperature_status
+    name: "BMS MOSFET Temperature Status"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+
+  - platform: template
+    id: ${scc_id}_bms_cell_status
+    name: "BMS Cell Status"
+    device_id: ${scc_id}
+    entity_category: diagnostic

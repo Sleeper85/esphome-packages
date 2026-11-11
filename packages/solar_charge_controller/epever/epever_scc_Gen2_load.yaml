@@ -1,0 +1,583 @@
+# Updated : 2026.11.11
+# Version : 1.0.0
+# GitHub  : https://github.com/Sleeper85/esphome-packages
+
+# This YAML is free software: you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation, either version 3
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/gpl.html>.
+
+# EPEVER solar charge controller - Gen2 (ET-NC, IT-NC, TES, TIS series)
+# Load output: IT-NC and TIS series only.
+# Load control: mode (0x9022), light control thresholds and delays, night time, working durations
+# (Light ON + Timer mode) and the two ON/OFF time periods (Timer mode).
+# Register map: documents/Epever_Modbus_ET-NC_IT-NC_TES_TIS_Series_Solar_Charge_Controller_Protocol_V1.00.md
+
+# +--------------------------------------+
+# | Binary Sensor                        |
+# +--------------------------------------+
+binary_sensor:
+
+  # 0x3201 | D0 | Load: 1 running, 0 standby
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Load Running"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    device_class: running
+    register_type: read
+    address: 0x3201
+    bitmask: 0x0001
+
+  # 0x3201 | D1 | Load Fault
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Load Fault"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    device_class: problem
+    register_type: read
+    address: 0x3201
+    bitmask: 0x0002
+
+  # 0x3201 | D11 | Load Short Circuit
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Load Short Circuit"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    device_class: problem
+    register_type: read
+    address: 0x3201
+    bitmask: 0x0800
+
+  # 0x3201 | D13-D12 | Output power: 00 normal, 03 overload
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Load Overload"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    device_class: problem
+    register_type: read
+    address: 0x3201
+    bitmask: 0x3000
+
+# +--------------------------------------+
+# | Sensor                               |
+# +--------------------------------------+
+sensor:
+
+  # 0x300A | Load rated voltage
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Load Rated Voltage"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    register_type: read
+    address: 0x300A
+    value_type: U_WORD
+    device_class: voltage
+    unit_of_measurement: "V"
+    accuracy_decimals: 0
+    filters:
+      - multiply: 0.01
+
+  # 0x300B | Load rated current
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Load Rated Current"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    register_type: read
+    address: 0x300B
+    value_type: U_WORD
+    device_class: current
+    unit_of_measurement: "A"
+    accuracy_decimals: 0
+    filters:
+      - multiply: 0.01
+
+  # 0x300C + 0x300D | Load rated power (L, H)
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Load Rated Power"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    register_type: read
+    address: 0x300C
+    value_type: U_DWORD_R
+    device_class: power
+    unit_of_measurement: "W"
+    accuracy_decimals: 0
+    filters:
+      - multiply: 0.01
+
+  # 0x3110 | Load output voltage
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Load Voltage"
+    device_id: ${scc_id}
+    register_type: read
+    address: 0x3110
+    value_type: U_WORD
+    device_class: voltage
+    state_class: measurement
+    unit_of_measurement: "V"
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.01
+
+  # 0x3111 | Load output current
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Load Current"
+    device_id: ${scc_id}
+    register_type: read
+    address: 0x3111
+    value_type: U_WORD
+    device_class: current
+    state_class: measurement
+    unit_of_measurement: "A"
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.01
+
+  # 0x3112 + 0x3113 | Load output power (L, H)
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Load Power"
+    device_id: ${scc_id}
+    register_type: read
+    address: 0x3112
+    value_type: U_DWORD_R
+    device_class: power
+    state_class: measurement
+    unit_of_measurement: "W"
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.01
+
+  # 0x3303 | Consumed energy today (L, H)
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Load Consumed Energy Day"
+    device_id: ${scc_id}
+    register_type: read
+    address: 0x3303
+    value_type: U_DWORD_R
+    device_class: energy
+    state_class: total_increasing
+    unit_of_measurement: "kWh"
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.01
+
+  # 0x3305 | Consumed energy this month (L, H)
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Load Consumed Energy Month"
+    device_id: ${scc_id}
+    register_type: read
+    address: 0x3305
+    value_type: U_DWORD_R
+    device_class: energy
+    state_class: total_increasing
+    unit_of_measurement: "kWh"
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.01
+
+  # 0x3307 | Consumed energy this year (L, H)
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Load Consumed Energy Year"
+    device_id: ${scc_id}
+    register_type: read
+    address: 0x3307
+    value_type: U_DWORD_R
+    device_class: energy
+    state_class: total_increasing
+    unit_of_measurement: "kWh"
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.01
+
+  # 0x3309 | Total consumed energy (L, H)
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Load Consumed Energy Total"
+    device_id: ${scc_id}
+    register_type: read
+    address: 0x3309
+    value_type: U_DWORD_R
+    device_class: energy
+    state_class: total_increasing
+    unit_of_measurement: "kWh"
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.01
+
+# +--------------------------------------+
+# | Select                               |
+# +--------------------------------------+
+select:
+
+  # 0x9022 | Load control mode
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Load Control Mode"
+    device_id: ${scc_id}
+    entity_category: config
+    icon: mdi:lightbulb-auto
+    address: 0x9022
+    value_type: U_WORD
+    use_write_multiple: true
+    optionsmap:
+      "Manual": 0
+      "Light ON/OFF": 1
+      "Light ON + Timer": 2
+      "Timer": 3
+      "Always ON": 6
+      "ON at Sunrise": 7
+
+  # 0x9023 | Load state in manual mode at startup: 0 OFF, 1 ON
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Load Manual Mode Default State"
+    device_id: ${scc_id}
+    entity_category: config
+    icon: mdi:power-settings
+    address: 0x9023
+    value_type: U_WORD
+    use_write_multiple: true
+    optionsmap:
+      "OFF": 0
+      "ON": 1
+
+  # 0x9029 | Timer periods used: 0 one period, 1 two periods
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Load Timer Periods"
+    device_id: ${scc_id}
+    entity_category: config
+    icon: mdi:timer-cog-outline
+    address: 0x9029
+    value_type: U_WORD
+    use_write_multiple: true
+    optionsmap:
+      "One Period": 0
+      "Two Periods": 1
+
+# +--------------------------------------+
+# | Number                               |
+# +--------------------------------------+
+number:
+
+  # 0x9024 | Night threshold voltage (turn-on voltage): below this PV voltage, night is coming. Range 500 to 5000 (/100)
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Load Night Threshold Voltage"
+    device_id: ${scc_id}
+    entity_category: config
+    register_type: holding
+    address: 0x9024
+    value_type: U_WORD
+    use_write_multiple: true
+    unit_of_measurement: "V"
+    icon: mdi:weather-night
+    min_value: 5
+    max_value: 50
+    step: 0.1
+    multiply: 100
+    mode: ${scc_input_number_mode}
+
+  # 0x9025 | Night delay (turn-on delay): range 0 to 9900 as documented
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Load Night Delay"
+    device_id: ${scc_id}
+    entity_category: config
+    register_type: holding
+    address: 0x9025
+    value_type: U_WORD
+    use_write_multiple: true
+    unit_of_measurement: "min"
+    icon: mdi:timer-sand
+    min_value: 0
+    max_value: 9900
+    step: 1
+    mode: ${scc_input_number_mode}
+
+  # 0x9026 | Day threshold voltage (turn-off voltage): above this PV voltage, day is coming. Range 60 to 8000 (/100, see Errata)
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Load Day Threshold Voltage"
+    device_id: ${scc_id}
+    entity_category: config
+    register_type: holding
+    address: 0x9026
+    value_type: U_WORD
+    use_write_multiple: true
+    unit_of_measurement: "V"
+    icon: mdi:weather-sunny
+    min_value: 0.6
+    max_value: 80
+    step: 0.1
+    multiply: 100
+    mode: ${scc_input_number_mode}
+
+  # 0x9027 | Day delay (turn-off delay): range 0 to 9900 as documented
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Load Day Delay"
+    device_id: ${scc_id}
+    entity_category: config
+    register_type: holding
+    address: 0x9027
+    value_type: U_WORD
+    use_write_multiple: true
+    unit_of_measurement: "min"
+    icon: mdi:timer-sand
+    min_value: 0
+    max_value: 9900
+    step: 1
+    mode: ${scc_input_number_mode}
+
+  # 0x9028 | Night time: length of the whole night, 3 to 24 h
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Load Night Time"
+    device_id: ${scc_id}
+    entity_category: config
+    register_type: holding
+    address: 0x9028
+    value_type: U_WORD
+    use_write_multiple: true
+    unit_of_measurement: "min"
+    icon: mdi:weather-night
+    min_value: 180
+    max_value: 1440
+    step: 1
+    # Register: D15-D8 hours, D7-D0 minutes. Shown in minutes.
+    lambda: |-
+      const uint16_t raw = uint16_t(x);
+      return float((raw >> 8) * 60 + (raw & 0xFF));
+    write_lambda: |-
+      const uint16_t minutes = uint16_t(lroundf(x));
+      return float(((minutes / 60) << 8) | (minutes % 60));
+    mode: ${scc_input_number_mode}
+
+  # 0x902A | Working duration 1 (Light ON + Timer mode), 0 to 24 h
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Load Working Duration 1"
+    device_id: ${scc_id}
+    entity_category: config
+    register_type: holding
+    address: 0x902A
+    value_type: U_WORD
+    use_write_multiple: true
+    unit_of_measurement: "min"
+    icon: mdi:timer-outline
+    min_value: 0
+    max_value: 1440
+    step: 1
+    # Register: D15-D8 hours, D7-D0 minutes. Shown in minutes.
+    lambda: |-
+      const uint16_t raw = uint16_t(x);
+      return float((raw >> 8) * 60 + (raw & 0xFF));
+    write_lambda: |-
+      const uint16_t minutes = uint16_t(lroundf(x));
+      return float(((minutes / 60) << 8) | (minutes % 60));
+    mode: ${scc_input_number_mode}
+
+  # 0x902B | Working duration 2 (Light ON + Timer mode), 0 to 24 h
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Load Working Duration 2"
+    device_id: ${scc_id}
+    entity_category: config
+    register_type: holding
+    address: 0x902B
+    value_type: U_WORD
+    use_write_multiple: true
+    unit_of_measurement: "min"
+    icon: mdi:timer-outline
+    min_value: 0
+    max_value: 1440
+    step: 1
+    # Register: D15-D8 hours, D7-D0 minutes. Shown in minutes.
+    lambda: |-
+      const uint16_t raw = uint16_t(x);
+      return float((raw >> 8) * 60 + (raw & 0xFF));
+    write_lambda: |-
+      const uint16_t minutes = uint16_t(lroundf(x));
+      return float(((minutes / 60) << 8) | (minutes % 60));
+    mode: ${scc_input_number_mode}
+
+  # +--------------------------------------+
+  # | Timer mode: ON/OFF time periods      |
+  # +--------------------------------------+
+  # Each time uses 3 registers: seconds, minutes, hours. The seconds are not exposed.
+
+  # 0x902D | Timer 1 ON time, minutes
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Load Timer 1 ON Minute"
+    device_id: ${scc_id}
+    entity_category: config
+    register_type: holding
+    address: 0x902D
+    value_type: U_WORD
+    use_write_multiple: true
+    reuse_previous_range: true # spans the unused seconds register
+    unit_of_measurement: "min"
+    icon: mdi:clock-outline
+    min_value: 0
+    max_value: 59
+    step: 1
+    mode: ${scc_input_number_mode}
+
+  # 0x902E | Timer 1 ON time, hours
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Load Timer 1 ON Hour"
+    device_id: ${scc_id}
+    entity_category: config
+    register_type: holding
+    address: 0x902E
+    value_type: U_WORD
+    use_write_multiple: true
+    unit_of_measurement: "h"
+    icon: mdi:clock-outline
+    min_value: 0
+    max_value: 23
+    step: 1
+    mode: ${scc_input_number_mode}
+
+  # 0x9030 | Timer 1 OFF time, minutes
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Load Timer 1 OFF Minute"
+    device_id: ${scc_id}
+    entity_category: config
+    register_type: holding
+    address: 0x9030
+    value_type: U_WORD
+    use_write_multiple: true
+    reuse_previous_range: true # spans the unused seconds register
+    unit_of_measurement: "min"
+    icon: mdi:clock-outline
+    min_value: 0
+    max_value: 59
+    step: 1
+    mode: ${scc_input_number_mode}
+
+  # 0x9031 | Timer 1 OFF time, hours
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Load Timer 1 OFF Hour"
+    device_id: ${scc_id}
+    entity_category: config
+    register_type: holding
+    address: 0x9031
+    value_type: U_WORD
+    use_write_multiple: true
+    unit_of_measurement: "h"
+    icon: mdi:clock-outline
+    min_value: 0
+    max_value: 23
+    step: 1
+    mode: ${scc_input_number_mode}
+
+  # 0x9033 | Timer 2 ON time, minutes
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Load Timer 2 ON Minute"
+    device_id: ${scc_id}
+    entity_category: config
+    register_type: holding
+    address: 0x9033
+    value_type: U_WORD
+    use_write_multiple: true
+    reuse_previous_range: true # spans the unused seconds register
+    unit_of_measurement: "min"
+    icon: mdi:clock-outline
+    min_value: 0
+    max_value: 59
+    step: 1
+    mode: ${scc_input_number_mode}
+
+  # 0x9034 | Timer 2 ON time, hours
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Load Timer 2 ON Hour"
+    device_id: ${scc_id}
+    entity_category: config
+    register_type: holding
+    address: 0x9034
+    value_type: U_WORD
+    use_write_multiple: true
+    unit_of_measurement: "h"
+    icon: mdi:clock-outline
+    min_value: 0
+    max_value: 23
+    step: 1
+    mode: ${scc_input_number_mode}
+
+  # 0x9036 | Timer 2 OFF time, minutes
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Load Timer 2 OFF Minute"
+    device_id: ${scc_id}
+    entity_category: config
+    register_type: holding
+    address: 0x9036
+    value_type: U_WORD
+    use_write_multiple: true
+    reuse_previous_range: true # spans the unused seconds register
+    unit_of_measurement: "min"
+    icon: mdi:clock-outline
+    min_value: 0
+    max_value: 59
+    step: 1
+    mode: ${scc_input_number_mode}
+
+  # 0x9037 | Timer 2 OFF time, hours
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Load Timer 2 OFF Hour"
+    device_id: ${scc_id}
+    entity_category: config
+    register_type: holding
+    address: 0x9037
+    value_type: U_WORD
+    use_write_multiple: true
+    unit_of_measurement: "h"
+    icon: mdi:clock-outline
+    min_value: 0
+    max_value: 23
+    step: 1
+    mode: ${scc_input_number_mode}
+
+# +--------------------------------------+
+# | Switch                               |
+# +--------------------------------------+
+switch:
+
+  # Coil 0x0003 | Load ON/OFF (only when the load control mode is "Manual")
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Load"
+    device_id: ${scc_id}
+    icon: mdi:power-socket
+    register_type: coil
+    address: 0x0003

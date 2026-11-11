@@ -1,0 +1,990 @@
+# Updated : 2026.11.11
+# Version : 1.0.0
+# GitHub  : https://github.com/Sleeper85/esphome-packages
+
+# This YAML is free software: you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation, either version 3
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/gpl.html>.
+
+# EPEVER solar charge controller - Gen2 (ET-NC, IT-NC, TES, TIS series)
+# Read-only entities common to the 4 series.
+# Register map: documents/Epever_Modbus_ET-NC_IT-NC_TES_TIS_Series_Solar_Charge_Controller_Protocol_V1.00.md
+
+# +--------------------------------------+
+# | Binary Sensor                        |
+# +--------------------------------------+
+binary_sensor:
+
+  # 0x3200 | D9 | Lithium battery charging protection
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Lithium Charging Protection"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    device_class: problem
+    register_type: read
+    address: 0x3200
+    bitmask: 0x0200
+
+  # 0x3200 | D10 | Lithium battery discharging protection
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Lithium Discharging Protection"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    device_class: problem
+    register_type: read
+    address: 0x3200
+    bitmask: 0x0400
+
+  # 0x3205 | D0 | BMS online
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "BMS Online"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    device_class: connectivity
+    register_type: read
+    address: 0x3205
+    bitmask: 0x0001
+
+  # 0x3205 | D1 | Low SOC alarm (no action)
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Low SOC Alarm"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    device_class: problem
+    register_type: read
+    address: 0x3205
+    bitmask: 0x0002
+
+  # 0x3205 | D2 | BMS discharging protection (discharging OFF)
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "BMS Discharging Protection"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    device_class: problem
+    register_type: read
+    address: 0x3205
+    bitmask: 0x0004
+
+  # 0x3205 | D3 | BMS charging protection (charging OFF)
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "BMS Charging Protection"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    device_class: problem
+    register_type: read
+    address: 0x3205
+    bitmask: 0x0008
+
+  # 0x3205 | D4 | BMS over-discharge (discharging OFF)
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "BMS Over Discharge"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    device_class: problem
+    register_type: read
+    address: 0x3205
+    bitmask: 0x0010
+
+  # 0x3205 | D5 | BMS sensor fault (no action)
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "BMS Sensor Fault"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    device_class: problem
+    register_type: read
+    address: 0x3205
+    bitmask: 0x0020
+
+  # 0x3205 | D6 | Cell low temperature (no action)
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "BMS Cell Low Temperature"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    device_class: problem
+    register_type: read
+    address: 0x3205
+    bitmask: 0x0040
+
+  # 0x3205 | D7 | Cell over temperature (no action)
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "BMS Cell Over Temperature"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    device_class: problem
+    register_type: read
+    address: 0x3205
+    bitmask: 0x0080
+
+  # 0x3205 | D8 | Cell undervoltage (no action)
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "BMS Cell Undervoltage"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    device_class: problem
+    register_type: read
+    address: 0x3205
+    bitmask: 0x0100
+
+  # 0x3205 | D9 | Cell overvoltage (no action)
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "BMS Cell Overvoltage"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    device_class: problem
+    register_type: read
+    address: 0x3205
+    bitmask: 0x0200
+
+  # 0x3205 | D10 | BMS overcharge protection (charging OFF)
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "BMS Overcharge Protection"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    device_class: problem
+    register_type: read
+    address: 0x3205
+    bitmask: 0x0400
+
+  # 0x3205 | D11 | BMS other fault (charging and discharging OFF)
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "BMS Other Fault"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    device_class: problem
+    register_type: read
+    address: 0x3205
+    bitmask: 0x0800
+
+  # 0x3205 | D12 | SOC too low (discharging OFF)
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "SOC Too Low"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    device_class: problem
+    register_type: read
+    address: 0x3205
+    bitmask: 0x1000
+
+  # 0x3205 | D13 | SOC full
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "SOC Full"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    register_type: read
+    address: 0x3205
+    bitmask: 0x2000
+
+  # 0x3205 | D14 | DSP communication fault
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "DSP Communication Fault"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    device_class: problem
+    register_type: read
+    address: 0x3205
+    bitmask: 0x4000
+
+  # 0x3205 | D15 | Parallel ID duplicated
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Parallel ID Duplicated"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    device_class: problem
+    register_type: read
+    address: 0x3205
+    bitmask: 0x8000
+
+  # 0x3206 | Parallel charging status: documented for ET-NC only, but the 4 series support
+  # parallel operation (up to 6 controllers): the TIS protocol document is assumed to be incomplete.
+  # 0x3206 | D0 | 1 controller in parallel mode, 0 not in parallel
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Parallel Mode"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    register_type: read
+    address: 0x3206
+    bitmask: 0x0001
+
+  # 0x3206 | D1 | 1 charging, 0 not charging
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Parallel Charging"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    device_class: battery_charging
+    register_type: read
+    address: 0x3206
+    bitmask: 0x0002
+
+  # 0x3206 | D2 | 1 global scan in progress, 0 scan finished
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Parallel Global Scan"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    device_class: running
+    register_type: read
+    address: 0x3206
+    bitmask: 0x0004
+
+  # 0x3206 | D3 | 1 current limited constant duty cycle mode, 0 normal charging mode
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Constant Duty Cycle Mode"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    register_type: read
+    address: 0x3206
+    bitmask: 0x0008
+
+  # 0x3206 | D4 | 1 MPPT maximum power point reached
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "MPPT Max Power Point Reached"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    register_type: read
+    address: 0x3206
+    bitmask: 0x0010
+
+# +--------------------------------------+
+# | Sensor                               |
+# +--------------------------------------+
+sensor:
+
+  # +--------------------------------------+
+  # | Rated data (0x3002 - 0x3009)         |
+  # +--------------------------------------+
+
+  # 0x3002 | PV maximum input voltage
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "PV Rated Voltage"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    register_type: read
+    address: 0x3002
+    value_type: U_WORD
+    device_class: voltage
+    unit_of_measurement: "V"
+    accuracy_decimals: 0
+    filters:
+      - multiply: 0.01
+
+  # 0x3003 | PV maximum input current
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "PV Rated Current"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    register_type: read
+    address: 0x3003
+    value_type: U_WORD
+    device_class: current
+    unit_of_measurement: "A"
+    accuracy_decimals: 0
+    filters:
+      - multiply: 0.01
+
+  # 0x3004 + 0x3005 | PV input rated power (L, H)
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "PV Rated Power"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    register_type: read
+    address: 0x3004
+    value_type: U_DWORD_R
+    device_class: power
+    unit_of_measurement: "W"
+    accuracy_decimals: 0
+    filters:
+      - multiply: 0.01
+
+  # 0x3006 | Battery rated voltage
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Battery Rated Voltage"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    register_type: read
+    address: 0x3006
+    value_type: U_WORD
+    device_class: voltage
+    unit_of_measurement: "V"
+    accuracy_decimals: 0
+    filters:
+      - multiply: 0.01
+
+  # 0x3007 | Battery rated charging current
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Battery Rated Charging Current"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    register_type: read
+    address: 0x3007
+    value_type: U_WORD
+    device_class: current
+    unit_of_measurement: "A"
+    accuracy_decimals: 0
+    filters:
+      - multiply: 0.01
+
+  # 0x3008 + 0x3009 | Battery rated charging power (L, H)
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Battery Rated Charging Power"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    register_type: read
+    address: 0x3008
+    value_type: U_DWORD_R
+    device_class: power
+    unit_of_measurement: "W"
+    accuracy_decimals: 0
+    filters:
+      - multiply: 0.01
+
+  # +--------------------------------------+
+  # | Battery (0x3114 - 0x311A)            |
+  # +--------------------------------------+
+
+  # 0x3114 | Battery voltage
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    id: ${scc_id}_battery_voltage
+    name: "Battery Voltage"
+    device_id: ${scc_id}
+    register_type: read
+    address: 0x3114
+    value_type: U_WORD
+    device_class: voltage
+    state_class: measurement
+    unit_of_measurement: "V"
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.01
+
+  # 0x3115 | Battery total charging current
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Battery Charging Current"
+    device_id: ${scc_id}
+    register_type: read
+    address: 0x3115
+    value_type: U_WORD
+    device_class: current
+    state_class: measurement
+    unit_of_measurement: "A"
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.01
+
+  # 0x3116 | Battery total discharging current
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Battery Discharging Current"
+    device_id: ${scc_id}
+    register_type: read
+    address: 0x3116
+    value_type: U_WORD
+    device_class: current
+    state_class: measurement
+    unit_of_measurement: "A"
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.01
+
+  # 0x3117 | Battery total current
+  # Documented as uint16 but can be negative: read as signed (see Errata)
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    id: ${scc_id}_battery_current
+    name: "Battery Current"
+    device_id: ${scc_id}
+    register_type: read
+    address: 0x3117
+    value_type: S_WORD
+    device_class: current
+    state_class: measurement
+    unit_of_measurement: "A"
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.01
+
+  # 0x3118 | Remote battery temperature
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Battery Temperature"
+    device_id: ${scc_id}
+    register_type: read
+    address: 0x3118
+    value_type: S_WORD
+    device_class: temperature
+    state_class: measurement
+    unit_of_measurement: "°C"
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.01
+
+  # 0x3119 | Battery SOC
+  # Coefficient 100 according to both documents: to be checked on a real device
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Battery SOC"
+    device_id: ${scc_id}
+    register_type: read
+    address: 0x3119
+    value_type: U_WORD
+    device_class: battery
+    state_class: measurement
+    unit_of_measurement: "%"
+    accuracy_decimals: 0
+    filters:
+      - multiply: 0.01
+
+  # 0x311A | Device temperature
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Device Temperature"
+    device_id: ${scc_id}
+    register_type: read
+    address: 0x311A
+    value_type: S_WORD
+    device_class: temperature
+    state_class: measurement
+    unit_of_measurement: "°C"
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.01
+
+  # Battery power = battery voltage x battery current
+  - platform: template
+    name: "Battery Power"
+    device_id: ${scc_id}
+    update_interval: ${scc_update_interval}
+    device_class: power
+    state_class: measurement
+    unit_of_measurement: "W"
+    accuracy_decimals: 1
+    lambda: |-
+      return id(${scc_id}_battery_voltage).state * id(${scc_id}_battery_current).state;
+
+  # +--------------------------------------+
+  # | System and PV total (0x311D - 0x3121)|
+  # +--------------------------------------+
+
+  # 0x311D | Current system voltage
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "System Voltage"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    register_type: read
+    address: 0x311D
+    value_type: U_WORD
+    device_class: voltage
+    unit_of_measurement: "V"
+    accuracy_decimals: 0
+    filters:
+      - multiply: 0.01
+
+  # 0x311E | Highest PV voltage of the two inputs
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "PV Highest Voltage"
+    device_id: ${scc_id}
+    register_type: read
+    address: 0x311E
+    value_type: U_WORD
+    device_class: voltage
+    state_class: measurement
+    unit_of_measurement: "V"
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.01
+
+  # 0x311F | PV total charging current
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "PV Charging Current"
+    device_id: ${scc_id}
+    register_type: read
+    address: 0x311F
+    value_type: U_WORD
+    device_class: current
+    state_class: measurement
+    unit_of_measurement: "A"
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.01
+
+  # 0x3120 + 0x3121 | PV total charging power (L, H)
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "PV Charging Power"
+    device_id: ${scc_id}
+    register_type: read
+    address: 0x3120
+    value_type: U_DWORD_R
+    device_class: power
+    state_class: measurement
+    unit_of_measurement: "W"
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.01
+
+  # +--------------------------------------+
+  # | Status (0x3200)                      |
+  # +--------------------------------------+
+
+  # 0x3200 | Battery status
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    id: ${scc_id}_battery_status_raw
+    internal: true
+    register_type: read
+    address: 0x3200
+    value_type: U_WORD
+    on_value:
+      then:
+        # 0x3200 | D3-D0
+        - text_sensor.template.publish:
+            id: ${scc_id}_battery_voltage_status
+            state: !lambda |-
+              switch (int(x) & 0x000F) {
+                case 0x00: return "Normal";
+                case 0x01: return "Overvoltage";
+                case 0x02: return "Undervoltage";
+                case 0x03: return "Over Discharge";
+                default:   return "Unknown";
+              }
+        # 0x3200 | D7-D4
+        - text_sensor.template.publish:
+            id: ${scc_id}_battery_temperature_status
+            state: !lambda |-
+              switch ((int(x) >> 4) & 0x000F) {
+                case 0x00: return "Normal";
+                case 0x01: return "Over Temperature";
+                case 0x02: return "Low Temperature";
+                default:   return "Unknown";
+              }
+
+  # +--------------------------------------+
+  # | Statistics (0x3300 - 0x3314)         |
+  # +--------------------------------------+
+
+  # 0x3300 | Today maximum PV input voltage
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "PV Max Voltage Today"
+    device_id: ${scc_id}
+    register_type: read
+    address: 0x3300
+    value_type: U_WORD
+    device_class: voltage
+    state_class: measurement
+    unit_of_measurement: "V"
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.01
+
+  # 0x3301 | Today maximum battery voltage
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Battery Max Voltage Today"
+    device_id: ${scc_id}
+    register_type: read
+    address: 0x3301
+    value_type: U_WORD
+    device_class: voltage
+    state_class: measurement
+    unit_of_measurement: "V"
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.01
+
+  # 0x3302 | Today minimum battery voltage
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Battery Min Voltage Today"
+    device_id: ${scc_id}
+    register_type: read
+    address: 0x3302
+    value_type: U_WORD
+    device_class: voltage
+    state_class: measurement
+    unit_of_measurement: "V"
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.01
+
+  # 0x330B + 0x330C | Generated energy today (L, H)
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "PV Generated Energy Day"
+    device_id: ${scc_id}
+    register_type: read
+    address: 0x330B
+    value_type: U_DWORD_R
+    device_class: energy
+    state_class: total_increasing
+    unit_of_measurement: "kWh"
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.01
+
+  # 0x330D + 0x330E | Generated energy this month (L, H)
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "PV Generated Energy Month"
+    device_id: ${scc_id}
+    register_type: read
+    address: 0x330D
+    value_type: U_DWORD_R
+    device_class: energy
+    state_class: total_increasing
+    unit_of_measurement: "kWh"
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.01
+
+  # 0x330F + 0x3310 | Generated energy this year (L, H)
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "PV Generated Energy Year"
+    device_id: ${scc_id}
+    register_type: read
+    address: 0x330F
+    value_type: U_DWORD_R
+    device_class: energy
+    state_class: total_increasing
+    unit_of_measurement: "kWh"
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.01
+
+  # 0x3311 + 0x3312 | Total generated energy (L, H)
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "PV Generated Energy Total"
+    device_id: ${scc_id}
+    register_type: read
+    address: 0x3311
+    value_type: U_DWORD_R
+    device_class: energy
+    state_class: total_increasing
+    unit_of_measurement: "kWh"
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.01
+
+  # 0x3313 + 0x3314 | Learned battery capacity (L, H)
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Battery Learned Capacity"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    register_type: read
+    address: 0x3313
+    value_type: U_DWORD_R
+    unit_of_measurement: "Ah"
+    icon: mdi:car-battery
+    accuracy_decimals: 0
+
+  # +--------------------------------------+
+  # | Battery settings (read back)         |
+  # +--------------------------------------+
+  # Modbus Function Code 3 = Read Holding Registers.
+  # The writable settings are in epever_scc_Gen2_entities_number.yaml.
+
+  # 0x9000 | Battery type
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    id: ${scc_id}_battery_type_raw
+    internal: true
+    register_type: holding
+    address: 0x9000
+    value_type: U_WORD
+    on_value:
+      then:
+        - text_sensor.template.publish:
+            id: ${scc_id}_battery_type
+            state: !lambda |-
+              switch (int(x)) {
+                case 0x00: return "User";
+                case 0x01: return "Sealed (AGM)";
+                case 0x02: return "Gel";
+                case 0x03: return "Flooded";
+                case 0x04: return "LiFePO4 4S";
+                case 0x05: return "LiFePO4 8S";
+                case 0x06: return "LiFePO4 15S";
+                case 0x07: return "LiFePO4 16S";
+                case 0x08: return "Li(NiCoMn)O2 3S";
+                case 0x09: return "Li(NiCoMn)O2 6S";
+                case 0x0A: return "Li(NiCoMn)O2 7S";
+                case 0x0B: return "Li(NiCoMn)O2 13S";
+                case 0x0C: return "Li(NiCoMn)O2 14S";
+                default:   return "Unknown";
+              }
+
+  # 0x9006 | Rated voltage level
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    id: ${scc_id}_rated_voltage_level_raw
+    internal: true
+    register_type: holding
+    address: 0x9006
+    value_type: S_WORD
+    on_value:
+      then:
+        - text_sensor.template.publish:
+            id: ${scc_id}_rated_voltage_level
+            state: !lambda |-
+              switch (int(x)) {
+                case 0: return "Auto";
+                case 1: return "12V";
+                case 2: return "24V";
+                case 3: return "36V";
+                case 4: return "48V";
+                default: return "Unknown";
+              }
+
+  # 0x9007 | Overvoltage disconnect voltage
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Overvoltage Disconnect Voltage"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    register_type: holding
+    address: 0x9007
+    value_type: U_WORD
+    device_class: voltage
+    unit_of_measurement: "V"
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.01
+
+  # 0x9008 | Charging limit voltage
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Charging Limit Voltage"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    register_type: holding
+    address: 0x9008
+    value_type: U_WORD
+    device_class: voltage
+    unit_of_measurement: "V"
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.01
+
+  # 0x9009 | Overvoltage reconnect voltage
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Overvoltage Reconnect Voltage"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    register_type: holding
+    address: 0x9009
+    value_type: U_WORD
+    device_class: voltage
+    unit_of_measurement: "V"
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.01
+
+  # 0x900A | Equalization charging voltage
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Equalization Charging Voltage"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    register_type: holding
+    address: 0x900A
+    value_type: S_WORD
+    device_class: voltage
+    unit_of_measurement: "V"
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.01
+
+  # 0x900B | Boost charging voltage
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Boost Charging Voltage"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    register_type: holding
+    address: 0x900B
+    value_type: U_WORD
+    device_class: voltage
+    unit_of_measurement: "V"
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.01
+
+  # 0x900C | Float charging voltage
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Float Charging Voltage"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    register_type: holding
+    address: 0x900C
+    value_type: U_WORD
+    device_class: voltage
+    unit_of_measurement: "V"
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.01
+
+  # 0x900D | Boost reconnect charging voltage
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Boost Reconnect Charging Voltage"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    register_type: holding
+    address: 0x900D
+    value_type: U_WORD
+    device_class: voltage
+    unit_of_measurement: "V"
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.01
+
+  # 0x900E | Low voltage reconnect voltage
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Low Voltage Reconnect Voltage"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    register_type: holding
+    address: 0x900E
+    value_type: S_WORD
+    device_class: voltage
+    unit_of_measurement: "V"
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.01
+
+  # 0x900F | Undervoltage warning recover voltage
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Undervoltage Alarm Recovery Voltage"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    register_type: holding
+    address: 0x900F
+    value_type: U_WORD
+    device_class: voltage
+    unit_of_measurement: "V"
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.01
+
+  # 0x9010 | Undervoltage warning voltage
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Undervoltage Alarm Voltage"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    register_type: holding
+    address: 0x9010
+    value_type: U_WORD
+    device_class: voltage
+    unit_of_measurement: "V"
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.01
+
+  # 0x9011 | Low voltage disconnect voltage
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Low Voltage Disconnect Voltage"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    register_type: holding
+    address: 0x9011
+    value_type: U_WORD
+    device_class: voltage
+    unit_of_measurement: "V"
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.01
+
+  # 0x9012 | Discharging limit voltage
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Discharging Limit Voltage"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    register_type: holding
+    address: 0x9012
+    value_type: U_WORD
+    device_class: voltage
+    unit_of_measurement: "V"
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.01
+
+# +--------------------------------------+
+# | Text Sensor                          |
+# +--------------------------------------+
+# Published by the `on_value` of the internal raw sensors above.
+text_sensor:
+
+  - platform: template
+    id: ${scc_id}_battery_voltage_status
+    name: "Battery Voltage Status"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+
+  - platform: template
+    id: ${scc_id}_battery_temperature_status
+    name: "Battery Temperature Status"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+
+  - platform: template
+    id: ${scc_id}_battery_type
+    name: "Battery Type"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+
+  - platform: template
+    id: ${scc_id}_rated_voltage_level
+    name: "Rated Voltage Level"
+    device_id: ${scc_id}
+    entity_category: diagnostic

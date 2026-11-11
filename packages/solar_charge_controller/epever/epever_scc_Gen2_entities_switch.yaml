@@ -1,0 +1,35 @@
+# Updated : 2026.11.11
+# Version : 1.0.0
+# GitHub  : https://github.com/Sleeper85/esphome-packages
+
+# This YAML is free software: you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation, either version 3
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/gpl.html>.
+
+# EPEVER solar charge controller - Gen2 (ET-NC, IT-NC, TES, TIS series)
+# Coils common to the 4 series (read 0x01, write 0x05).
+# Register map: documents/Epever_Modbus_ET-NC_IT-NC_TES_TIS_Series_Solar_Charge_Controller_Protocol_V1.00.md
+
+# +--------------------------------------+
+# | Switch                               |
+# +--------------------------------------+
+switch:
+
+  # Coil 0x0000 | Charging ON/OFF
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Charging"
+    device_id: ${scc_id}
+    entity_category: config
+    icon: mdi:battery-charging
+    register_type: coil
+    address: 0x0000

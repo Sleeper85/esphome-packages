@@ -1,0 +1,235 @@
+# Updated : 2026.11.11
+# Version : 1.0.0
+# GitHub  : https://github.com/Sleeper85/esphome-packages
+
+# This YAML is free software: you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation, either version 3
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/gpl.html>.
+
+# EPEVER solar charge controller - Gen2 (ET-NC, IT-NC, TES, TIS series)
+# PV1 + PV2 inputs. Loaded by epever_scc_Gen2_full.yaml when `scc_pv_input` = 2.
+# 0x3203 is only read here: it shares a read range with 0x3202 and may not exist on single PV models.
+# Register map: documents/Epever_Modbus_ET-NC_IT-NC_TES_TIS_Series_Solar_Charge_Controller_Protocol_V1.00.md
+
+# +--------------------------------------+
+# | Packages                             |
+# +--------------------------------------+
+packages:
+  epever_gen2_pv1: !include epever_scc_Gen2_pv_1.yaml
+
+# +--------------------------------------+
+# | Binary Sensor                        |
+# +--------------------------------------+
+binary_sensor:
+
+  # 0x3203 | D0 | PV2 status: 1 running, 0 standby
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "PV2 Running"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    device_class: running
+    register_type: read
+    address: 0x3203
+    bitmask: 0x0001
+
+  # 0x3203 | D4 | PV2 Or Battery Reverse Connection
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "PV2 Or Battery Reverse Connection"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    device_class: problem
+    register_type: read
+    address: 0x3203
+    bitmask: 0x0010
+
+  # 0x3203 | D5 | MPPT Status
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "MPPT Status"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    register_type: read
+    address: 0x3203
+    bitmask: 0x0020
+
+  # 0x3203 | D6 | PV1 relay closing fault
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "PV1 Relay Fault"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    device_class: problem
+    register_type: read
+    address: 0x3203
+    bitmask: 0x0040
+
+  # 0x3203 | D7 | PV2 relay closing fault
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "PV2 Relay Fault"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    device_class: problem
+    register_type: read
+    address: 0x3203
+    bitmask: 0x0080
+
+  # 0x3203 | D8 | Hard dry contact: 0 charging allowed, 1 charging not allowed
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "Dry Contact Charging Not Allowed"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    register_type: read
+    address: 0x3203
+    bitmask: 0x0100
+
+  # 0x3203 | D9 | PLL Low Battery
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "PLL Low Battery"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    device_class: problem
+    register_type: read
+    address: 0x3203
+    bitmask: 0x0200
+
+  # 0x3203 | D10 | PV Mode Error Alarm 2
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "PV Mode Error Alarm 2"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    device_class: problem
+    register_type: read
+    address: 0x3203
+    bitmask: 0x0400
+
+  # 0x3203 | D11 | PV Mode Error Alarm 1
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "PV Mode Error Alarm 1"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    device_class: problem
+    register_type: read
+    address: 0x3203
+    bitmask: 0x0800
+
+  # 0x3203 | D15-D14 | PV2 input voltage status: 00 normal, 02H too high
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "PV2 Input Voltage Too High"
+    device_id: ${scc_id}
+    entity_category: diagnostic
+    device_class: problem
+    register_type: read
+    address: 0x3203
+    bitmask: 0x8000
+
+# +--------------------------------------+
+# | Sensor                               |
+# +--------------------------------------+
+sensor:
+
+  # 0x3108 | PV2 input voltage
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "PV2 Input Voltage"
+    device_id: ${scc_id}
+    register_type: read
+    address: 0x3108
+    value_type: U_WORD
+    device_class: voltage
+    state_class: measurement
+    unit_of_measurement: "V"
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.01
+
+  # 0x3109 | PV2 input current
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "PV2 Input Current"
+    device_id: ${scc_id}
+    register_type: read
+    address: 0x3109
+    value_type: U_WORD
+    device_class: current
+    state_class: measurement
+    unit_of_measurement: "A"
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.01
+
+  # 0x310A + 0x310B | PV2 input power (L, H)
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "PV2 Input Power"
+    device_id: ${scc_id}
+    register_type: read
+    address: 0x310A
+    value_type: U_DWORD_R
+    device_class: power
+    state_class: measurement
+    unit_of_measurement: "W"
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.01
+
+  # 0x310C | PV2 output voltage (output of the MPPT stage)
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "PV2 Output Voltage"
+    device_id: ${scc_id}
+    register_type: read
+    address: 0x310C
+    value_type: U_WORD
+    device_class: voltage
+    state_class: measurement
+    unit_of_measurement: "V"
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.01
+
+  # 0x310D | PV2 output current
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "PV2 Output Current"
+    device_id: ${scc_id}
+    register_type: read
+    address: 0x310D
+    value_type: U_WORD
+    device_class: current
+    state_class: measurement
+    unit_of_measurement: "A"
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.01
+
+  # 0x310E + 0x310F | PV2 output power (L, H)
+  - platform: modbus_controller
+    modbus_controller_id: ${scc_id}_modbus_controller
+    name: "PV2 Output Power"
+    device_id: ${scc_id}
+    register_type: read
+    address: 0x310E
+    value_type: U_DWORD_R
+    device_class: power
+    state_class: measurement
+    unit_of_measurement: "W"
+    accuracy_decimals: 1
+    filters:
+      - multiply: 0.01
